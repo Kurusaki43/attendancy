@@ -12,7 +12,7 @@ enum UserStatus {
   INACTIVE
   SUSPENDED
 }
- 
+
 enum Provider {
   LOCAL
   GOOGLE
@@ -27,7 +27,7 @@ model User {
   passwordHash    String?
   avatar          String?
   provider        Provider   @default(LOCAL)
-  status          UserStatus @default(ACTIVE)
+  status          UserStatus @default(INACTIVE)
 
   sessions Session[]
   roles    Role[]    @relation("UserRoles")
