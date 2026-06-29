@@ -16,4 +16,23 @@ export const sessionRepository = {
       data,
     });
   },
+
+  findById(sessionId: string) {
+    return prisma.session.findUnique({
+      where: {
+        id: sessionId,
+      },
+    });
+  },
+
+  revoke(sessionId: string) {
+    return prisma.session.update({
+      where: {
+        id: sessionId,
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+  },
 };
