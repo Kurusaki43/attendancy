@@ -1,0 +1,18 @@
+import ms from 'ms';
+
+import { env } from '@/lib/env';
+
+export const authConfig = {
+  accessToken: {
+    expiresIn: env.JWT_ACCESS_EXPIRES_IN,
+    maxAge: Math.floor(ms(env.JWT_ACCESS_EXPIRES_IN) / 1000),
+  },
+
+  refreshToken: {
+    expiresIn: env.JWT_REFRESH_EXPIRES_IN,
+    maxAge: Math.floor(ms(env.JWT_REFRESH_EXPIRES_IN) / 1000),
+    expiresAt() {
+      return new Date(Date.now() + ms(env.JWT_REFRESH_EXPIRES_IN));
+    },
+  },
+};

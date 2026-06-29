@@ -1,3 +1,4 @@
+import type { StringValue } from 'ms';
 import { z } from 'zod';
 
 const envSchema = z.object({
@@ -13,6 +14,11 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.email().default('noreply@attendance-app.local'),
+
+  JWT_ACCESS_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
+  JWT_ACCESS_EXPIRES_IN: z.custom<StringValue>(),
+  JWT_REFRESH_EXPIRES_IN: z.custom<StringValue>(),
 });
 
 export const env = envSchema.parse(process.env);
