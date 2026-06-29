@@ -29,7 +29,6 @@ export const sessionRepository = {
     return prisma.session.update({
       where: {
         id: sessionId,
-        
       },
       data: {
         revokedAt: new Date(),
