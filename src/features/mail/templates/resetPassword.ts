@@ -1,4 +1,4 @@
-export function passwordResetTemplate(firstName: string, code: string) {
+export function passwordResetTemplate(firstName: string, resetUrl: string) {
   return {
     subject: 'Reset your password 🔐',
 
@@ -25,27 +25,43 @@ export function passwordResetTemplate(firstName: string, code: string) {
         </p>
 
         <p style="font-size: 14px; line-height: 1.6;">
-          Use the verification code below to continue:
+          Click the button below to choose a new password:
         </p>
 
-        <div
-          style="
-            margin: 32px 0;
-            padding: 16px;
-            background: #111827;
-            color: #ffffff;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 8px;
-            border-radius: 8px;
-          "
-        >
-          ${code}
+        <div style="margin: 32px 0; text-align: center;">
+          <a
+            href="${resetUrl}"
+            style="
+              display: inline-block;
+              padding: 14px 28px;
+              background: #111827;
+              color: #ffffff;
+              text-decoration: none;
+              border-radius: 8px;
+              font-size: 16px;
+              font-weight: 600;
+            "
+          >
+            Reset Password
+          </a>
         </div>
 
         <p style="font-size: 14px; color: #6b7280;">
-          This code will expire in <strong>15 minutes</strong>.
+          This link will expire in <strong>15 minutes</strong>.
+        </p>
+
+        <p style="font-size: 14px; color: #6b7280;">
+          If the button doesn't work, copy and paste the following URL into your browser:
+        </p>
+
+        <p
+          style="
+            word-break: break-all;
+            font-size: 13px;
+            color: #2563eb;
+          "
+        >
+          ${resetUrl}
         </p>
 
         <p style="font-size: 14px; color: #6b7280;">

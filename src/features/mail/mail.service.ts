@@ -12,7 +12,7 @@ type SendMailParams = {
 };
 
 export type SendWelcome = { to: string; firstName: string };
-export type SendResetPassword = { to: string; code: string; firstName: string };
+export type SendResetPassword = { to: string; resetUrl: string; firstName: string };
 export type SendVerificationEmail = { to: string; code: string; firstName: string };
 
 export class MailService {
@@ -41,7 +41,7 @@ export class MailService {
     });
   }
   static sendResetPasswordEmail(emailData: SendResetPassword) {
-    const { html, subject } = passwordResetTemplate(emailData.firstName, emailData.code);
+    const { html, subject } = passwordResetTemplate(emailData.firstName, emailData.resetUrl);
     this.sendMail({
       ...emailData,
       subject,

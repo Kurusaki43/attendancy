@@ -1,5 +1,5 @@
 import { emailQueue } from './mail.queue';
-import type { SendVerificationEmail, SendWelcome } from './mail.service';
+import type { SendResetPassword, SendVerificationEmail, SendWelcome } from './mail.service';
 
 export const emailQueueService = {
   sendVerificationEmail(data: SendVerificationEmail) {
@@ -7,5 +7,8 @@ export const emailQueueService = {
   },
   sendWelcomeEmail(data: SendWelcome) {
     return emailQueue.add('send-welcome', data);
+  },
+  sendResetPasswordEmail(data: SendResetPassword) {
+    return emailQueue.add('send-reset-password', data);
   },
 };
