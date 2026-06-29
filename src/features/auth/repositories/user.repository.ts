@@ -1,4 +1,4 @@
-import type { UserCreateInput } from '@/generated/prisma/models';
+import type { UserCreateInput, UserUpdateInput } from '@/generated/prisma/models';
 import { prisma } from '@/lib/prisma';
 
 export const userRepository = {
@@ -23,6 +23,14 @@ export const userRepository = {
   create(newUser: UserCreateInput) {
     return prisma.user.create({
       data: newUser,
+    });
+  },
+  update({ userId, newData }: { userId: string; newData: UserUpdateInput }) {
+    return prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: newData,
     });
   },
 };
