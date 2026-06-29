@@ -1,6 +1,6 @@
-export function welcomeTemplate(firstName: string) {
+export function emailVerificationTemplate(firstName: string, code: string) {
   return {
-    subject: 'Welcome to Attendancy 🎉',
+    subject: 'Verify your email address ✉️',
 
     html: `
       <div
@@ -13,7 +13,7 @@ export function welcomeTemplate(firstName: string) {
         "
       >
         <h1 style="margin-bottom: 24px;">
-          Welcome aboard, ${firstName}! 🎉
+          Welcome to Attendancy 👋
         </h1>
 
         <p style="font-size: 14px; line-height: 1.6;">
@@ -21,36 +21,31 @@ export function welcomeTemplate(firstName: string) {
         </p>
 
         <p style="font-size: 14px; line-height: 1.6;">
-          Your account has been successfully verified and activated.
-        </p>
-
-        <p style="font-size: 14px; line-height: 1.6;">
-          You can now access all features of Attendancy and start managing
-          your attendance, schedules, and work activities.
+          Thanks for creating your account. Please verify your email address using the code below:
         </p>
 
         <div
           style="
             margin: 32px 0;
-            padding: 20px;
-            background: #f3f4f6;
-            border-radius: 8px;
+            padding: 16px;
+            background: #111827;
+            color: #ffffff;
             text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            border-radius: 8px;
           "
         >
-          <span
-            style="
-              font-size: 16px;
-              font-weight: bold;
-              color: #111827;
-            "
-          >
-            🚀 You're ready to get started!
-          </span>
+          ${code}
         </div>
 
         <p style="font-size: 14px; color: #6b7280;">
-          If you have any questions, feel free to contact our support team.
+          This code will expire in <strong>15 minutes</strong>.
+        </p>
+
+        <p style="font-size: 14px; color: #6b7280;">
+          If you didn't create this account, you can safely ignore this email.
         </p>
 
         <hr

@@ -1,8 +1,9 @@
 import { transporter } from '@/infrastructure/mail/transporter';
 import { env } from '@/lib/env';
 
-import { resetPasswordTemplate } from './templates/resetPassword';
-import { welcomeEmailTemplate } from './templates/welcome';
+import { emailVerificationTemplate } from './templates/emailVerification';
+import { passwordResetTemplate } from './templates/resetPassword';
+import { welcomeTemplate } from './templates/welcome';
 
 type SendMailParams = {
   to: string;
@@ -10,8 +11,9 @@ type SendMailParams = {
   html: string;
 };
 
-export type SendWelcome = { to: string; name: string };
-export type SendResetPassword = { to: string; token: string };
+export type SendWelcome = { to: string; firstName: string };
+export type SendResetPassword = { to: string; code: string; firstName: string };
+export type SendVerificationEmail = { to: string; code: string; firstName: string };
 
 export class MailService {
   private static async sendMail({ to, subject, html }: SendMailParams) {
@@ -22,9 +24,16 @@ export class MailService {
       html,
     });
   }
-
+  static sendVerificationEmail(emailData: SendVerificationEmail) {
+    const { html, subject } = emailVerificationTemplate(emailData.firstName, emailData.code);
+    this.sendMail({
+      ...emailData,
+      subject,
+      html,
+    });
+  }
   static sendWelcomeEmail(emailData: SendWelcome) {
-    const { html, subject } = welcomeEmailTemplate(emailData.name);
+    const { html, subject } = welcomeTemplate(emailData.firstName);
     this.sendMail({
       ...emailData,
       subject,
@@ -32,7 +41,7 @@ export class MailService {
     });
   }
   static sendResetPasswordEmail(emailData: SendResetPassword) {
-    const { html, subject } = resetPasswordTemplate(emailData.token);
+    const { html, subject } = passwordResetTemplate(emailData.firstName, emailData.code);
     this.sendMail({
       ...emailData,
       subject,
