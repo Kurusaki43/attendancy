@@ -40,7 +40,7 @@ model User {
 model Session {
   id        String    @id @default(cuid())
   userId    String
-  token     String    @unique
+  refreshTokenHash     String    @unique
   ipAddress String?
   userAgent String?
   expiresAt DateTime
@@ -94,6 +94,6 @@ model Otp {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, type, expiresAt])
+  @@index([userId, type, usedAt, expiresAt])
   @@index([expiresAt])
 }
