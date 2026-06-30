@@ -7,6 +7,11 @@ type InvalidateActiveOtpsParams = {
   type: OtpType;
 };
 
+type FindActiveOtpParams = {
+  userId: string;
+  type: OtpType;
+};
+
 export const otpRepository = {
   create(newOtp: OtpCreateInput) {
     return prisma.otp.create({
@@ -41,6 +46,19 @@ export const otpRepository = {
       },
       data: {
         usedAt: new Date(),
+      },
+    });
+  },
+  findActiveByUserIdAndType({ userId, type }: FindActiveOtpParams) {
+    return prisma.otp.findFirst({
+      where: {
+        userId,
+        type,
+        usedAt: null,
+        invalidatedAt: null,
+        expiresAt: {
+          gt: new Date(),
+        },
       },
     });
   },

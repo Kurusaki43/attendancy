@@ -1,17 +1,13 @@
+import { OtpType } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/prisma';
 
 import { verifyOtp } from '../lib/otp';
+import { otpRepository } from '../repositories/otp.repository';
 
 export async function emailVerification(code: string, userId: string) {
-  const otp = await prisma.otp.findFirst({
-    where: {
-      userId,
-      type: 'EMAIL_VERIFICATION',
-      usedAt: null,
-      expiresAt: {
-        gt: new Date(),
-      },
-    },
+  const otp = await otpRepository.findActiveByUserIdAndType({
+    type: OtpType.EMAIL_VERIFICATION,
+    userId,
   });
 
   if (!otp) {
