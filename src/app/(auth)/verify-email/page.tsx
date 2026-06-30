@@ -1,8 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BadgeCheck, MailCheck, TriangleAlert } from 'lucide-react';
-import Link from 'next/link';
+import { BadgeCheck, MailCheck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,6 +20,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { verifyEmailAction } from '@/features/auth/actions/email-verify.action';
+import { ResendButton } from '@/features/auth/components/ResendButtond';
 import {
   type VerifyEmailInput,
   verifyEmailSchema,
@@ -55,6 +55,7 @@ const VerifyEmail = () => {
             type: 'server',
             message: result.message,
           });
+          toast.error(result.message);
         }
 
         Object.entries(result.errors ?? {}).forEach(([field, messages]) => {
@@ -71,7 +72,7 @@ const VerifyEmail = () => {
 
       toast.success(result.message);
 
-      router.replace('/register');
+      router.replace(`/login?email=${email}`);
     });
   };
 
@@ -91,23 +92,18 @@ const VerifyEmail = () => {
           <span className="text-foreground ml-1 font-medium">{email}</span>.
         </p>
 
-        {form.formState.errors.root && (
+        {/* {form.formState.errors.root && (
           <div className="flex items-center justify-center gap-3 border border-dashed border-red-500 bg-red-50/20 px-3 py-2 text-sm text-red-500">
             <TriangleAlert className="size-4 shrink-0" />
 
             <span>{form.formState.errors.root.message}</span>
           </div>
-        )}
+        )} */}
       </CardHeader>
 
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit, (errors) =>
-              console.log('VALIDATION FAILED', errors),
-            )}
-            className="space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="code"
@@ -150,12 +146,7 @@ const VerifyEmail = () => {
       <CardFooter className="border-border/50 mb-2 flex justify-center border-t pt-4 pb-3">
         <p className="text-muted-foreground text-center text-sm">
           Did not receive the code?
-          <Link
-            href="/resend-verification"
-            className="ml-1 rounded-md px-2 py-1 font-medium text-violet-500 transition-all hover:bg-violet-500/10 hover:text-violet-400"
-          >
-            Resend →
-          </Link>
+          <ResendButton email={email} />
         </p>
       </CardFooter>
     </Card>
