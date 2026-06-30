@@ -1,26 +1,28 @@
-import { z } from 'zod';
+import z from 'zod';
 
-export const registerFormSchema = z
-  .object({
-    firstName: z
-      .string()
-      .trim()
-      .min(2, 'First name must be at least 2 characters.')
-      .max(50, 'First name must not exceed 50 characters.'),
+export const registerSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(2, 'First name must be at least 2 characters.')
+    .max(50, 'First name must not exceed 50 characters.'),
 
-    lastName: z
-      .string()
-      .trim()
-      .min(2, 'Last name must be at least 2 characters.')
-      .max(50, 'Last name must not exceed 50 characters.'),
+  lastName: z
+    .string()
+    .trim()
+    .min(2, 'Last name must be at least 2 characters.')
+    .max(50, 'Last name must not exceed 50 characters.'),
 
-    email: z.email('Please enter a valid email address.'),
+  email: z.email('Please enter a valid email address.'),
 
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters.')
-      .max(100, 'Password must not exceed 100 characters.'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters.')
+    .max(100, 'Password must not exceed 100 characters.'),
+});
 
+export const registerFormSchema = registerSchema
+  .extend({
     confirmPassword: z.string().min(1, 'Please confirm your password.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -28,9 +30,5 @@ export const registerFormSchema = z
     path: ['confirmPassword'],
   });
 
-export const registerSchema = registerFormSchema.omit({
-  confirmPassword: true,
-});
-
-export type RegisterFormInput = z.infer<typeof registerFormSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type RegisterFormInput = z.infer<typeof registerFormSchema>;
