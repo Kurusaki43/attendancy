@@ -7,5 +7,6 @@ export type ActionResult<TData = void> =
   | {
       success: false;
       message?: string;
+      code?: string;
       errors?: Record<string, string[]>;
     };

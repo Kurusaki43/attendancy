@@ -25,7 +25,7 @@ export async function login(credentials: LoginInput, ipAddress?: string, userAge
   }
 
   if (!user.emailVerifiedAt) {
-    throw new Error('Please verify your email first');
+    throw new Error('EMAIL_NOT_VERIFIED');
   }
 
   if (user.status !== UserStatus.ACTIVE) {
