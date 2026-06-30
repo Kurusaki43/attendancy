@@ -1,13 +1,9 @@
-import { randomUUID } from 'node:crypto';
-
 import { UserStatus } from '@/generated/prisma/client';
 
-import { authConfig } from '../lib/auth.config';
 import { verifyPassword } from '../lib/password';
-import { tokenService } from '../lib/token.service';
-import { sessionRepository } from '../repositories/session.repository';
 import { userRepository } from '../repositories/user.repository';
 import type { LoginInput } from '../schemas/login.schema';
+import { createSession } from './create-session.service';
 
 export async function login(credentials: LoginInput, ipAddress?: string, userAgent?: string) {
   const { email, password } = credentials;
@@ -36,31 +32,7 @@ export async function login(credentials: LoginInput, ipAddress?: string, userAge
     throw new Error('Your account is unavailable');
   }
 
-  const sessionId = randomUUID();
-
-  const payload = {
-    userId: user.id,
-    sessionId,
-  };
-
-  const accessToken = await tokenService.generateAccessToken(payload);
-
-  const refreshToken = await tokenService.generateRefreshToken(payload);
-
-  const refreshTokenHash = await tokenService.hashToken(refreshToken);
-
-  await sessionRepository.create({
-    id: sessionId,
-    user: {
-      connect: {
-        id: user.id,
-      },
-    },
-    refreshTokenHash,
-    ipAddress,
-    userAgent,
-    expiresAt: authConfig.refreshToken.expiresAt(),
-  });
+  const { accessToken, refreshToken } = await createSession(user, ipAddress, userAgent);
 
   return {
     accessToken,
