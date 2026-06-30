@@ -1,10 +1,9 @@
 'use server';
-
-import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 import type { ActionResult } from '@/types/action.types';
 
+import { clearPendingEmailVerificationCookie } from '../lib/cookies';
 import { type VerifyEmailInput, verifyEmailSchema } from '../schemas/email-verification.schema';
 import { emailVerification } from '../services/email-verification.service';
 import type { VerifyEmailResult } from '../types/auth.types';
@@ -25,10 +24,7 @@ export async function verifyEmailAction(
     const { code, userId } = validated.data;
 
     await emailVerification(code, userId);
-
-    const cookieStore = await cookies();
-
-    cookieStore.delete('pending_email_verification');
+    await clearPendingEmailVerificationCookie();
 
     return {
       success: true,

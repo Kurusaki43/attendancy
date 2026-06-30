@@ -1,6 +1,5 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 import {
@@ -8,10 +7,9 @@ import {
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
 import { register } from '@/features/auth/services/register.service';
-import { env } from '@/lib/env';
 import type { ActionResult } from '@/types/action.types';
 
-const FIFTEEN_MINUTES = 60 * 15;
+import { setPendingEmailVerificationCookie } from '../lib/cookies';
 
 export async function registerAction(input: RegisterFormInput): Promise<ActionResult<null>> {
   const validated = registerFormSchema.safeParse(input);
@@ -26,15 +24,7 @@ export async function registerAction(input: RegisterFormInput): Promise<ActionRe
   try {
     const user = await register(validated.data);
 
-    const cookieStore = await cookies();
-
-    cookieStore.set('pending_email_verification', user.id, {
-      httpOnly: true,
-      secure: env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: FIFTEEN_MINUTES,
-      path: '/',
-    });
+    await setPendingEmailVerificationCookie(user.id);
 
     return {
       success: true,
