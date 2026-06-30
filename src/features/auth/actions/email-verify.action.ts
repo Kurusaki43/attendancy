@@ -1,6 +1,7 @@
 'use server';
 
-import z from 'zod';
+import { cookies } from 'next/headers';
+import { z } from 'zod';
 
 import type { ActionResult } from '@/types/action.types';
 
@@ -8,9 +9,9 @@ import { type VerifyEmailInput, verifyEmailSchema } from '../schemas/email-verif
 import { emailVerification } from '../services/email-verification.service';
 import type { VerifyEmailResult } from '../types/auth.types';
 
-export const verifyEmailAction = async (
+export async function verifyEmailAction(
   input: VerifyEmailInput,
-): Promise<ActionResult<VerifyEmailResult>> => {
+): Promise<ActionResult<VerifyEmailResult>> {
   const validated = verifyEmailSchema.safeParse(input);
 
   if (!validated.success) {
@@ -19,10 +20,15 @@ export const verifyEmailAction = async (
       errors: z.flattenError(validated.error).fieldErrors,
     };
   }
-  await new Promise((res) => setTimeout(res, 3000));
+
   try {
     const { code, userId } = validated.data;
+
     await emailVerification(code, userId);
+
+    const cookieStore = await cookies();
+
+    cookieStore.delete('pending_email_verification');
 
     return {
       success: true,
@@ -37,4 +43,4 @@ export const verifyEmailAction = async (
       message: error instanceof Error ? error.message : 'Something went wrong.',
     };
   }
-};
+}

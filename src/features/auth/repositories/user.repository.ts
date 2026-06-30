@@ -17,6 +17,16 @@ export const userRepository = {
     });
   },
 
+  findByIdSafeFields(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+  },
+
   findByEmail(email: string) {
     return prisma.user.findUnique({
       where: { email },
