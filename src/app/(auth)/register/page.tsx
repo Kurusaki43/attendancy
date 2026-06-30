@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -53,6 +52,7 @@ const Register = () => {
             type: 'server',
             message: result.message,
           });
+          toast.error(result.message);
         }
 
         Object.entries(result.errors ?? {}).forEach(([field, messages]) => {
@@ -85,13 +85,13 @@ const Register = () => {
         <p className="text-muted-foreground text-center text-sm leading-relaxed">
           Get started by creating your account and managing attendance effortlessly.
         </p>
-
+        {/* 
         {form.formState.errors.root && (
           <p className="tracking wide flex items-center justify-center gap-4 border border-dashed border-red-500 bg-red-50/20 px-1 py-2 text-sm text-red-500 capitalize">
             <TriangleAlert size={16} />
             {form.formState.errors.root.message}
           </p>
-        )}
+        )} */}
       </CardHeader>
 
       <CardContent>
