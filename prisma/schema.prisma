@@ -27,6 +27,7 @@ model User {
   passwordHash    String?
   avatar          String?
   provider        Provider   @default(LOCAL)
+  providerId      String?
   status          UserStatus @default(INACTIVE)
 
   sessions Session[]
