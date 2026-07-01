@@ -19,6 +19,7 @@ export const registerSchema = z.object({
     .string()
     .min(8, 'Password must be at least 8 characters.')
     .max(100, 'Password must not exceed 100 characters.'),
+  captchaToken: z.string().min(1, 'Please complete the captcha'),
 });
 
 export const registerFormSchema = registerSchema

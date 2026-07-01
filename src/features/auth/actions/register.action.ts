@@ -10,6 +10,7 @@ import { register } from '@/features/auth/services/register.service';
 import type { ActionResult } from '@/types/action.types';
 
 import { setPendingEmailVerificationCookie } from '../lib/cookies';
+import { verifyCaptcha } from '../services/captcha.service';
 
 export async function registerAction(input: RegisterFormInput): Promise<ActionResult<null>> {
   const validated = registerFormSchema.safeParse(input);
@@ -18,6 +19,15 @@ export async function registerAction(input: RegisterFormInput): Promise<ActionRe
     return {
       success: false,
       errors: z.flattenError(validated.error).fieldErrors,
+    };
+  }
+
+  const isHuman = await verifyCaptcha(validated.data.captchaToken);
+
+  if (!isHuman) {
+    return {
+      success: false,
+      message: 'Captcha verification failed.',
     };
   }
 

@@ -25,6 +25,8 @@ import {
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
 
+import { TurnstileField } from './TurnstileCaptcha';
+
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -37,6 +39,7 @@ const RegisterForm = () => {
       email: '',
       password: '',
       confirmPassword: '',
+      captchaToken: '',
     },
   });
 
@@ -89,7 +92,7 @@ const RegisterForm = () => {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">
             <div className="grid items-start gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
@@ -210,10 +213,19 @@ const RegisterForm = () => {
               )}
             />
 
+            <TurnstileField
+              onVerify={(token) => {
+                form.setValue('captchaToken', token, {
+                  shouldValidate: true,
+                });
+              }}
+            />
+
             <SubmitButton
               className="h-11 w-full bg-violet-600 text-sm font-semibold hover:bg-violet-500"
               loadingText="Creating account..."
-              pending={isPending}
+              pending={form.formState.isSubmitting}
+              disabled={!form.watch('captchaToken') || form.formState.isSubmitting}
             >
               Create account
             </SubmitButton>
