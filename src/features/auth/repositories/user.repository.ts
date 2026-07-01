@@ -23,6 +23,7 @@ export const userRepository = {
       select: {
         id: true,
         email: true,
+        emailVerifiedAt: true,
       },
     });
   },

@@ -1,13 +1,11 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import VerifyEmail from '@/features/auth/components/VerifyEmail';
+import { getPendingEmailVerificationCookie } from '@/features/auth/lib/cookies';
 import { userRepository } from '@/features/auth/repositories/user.repository';
 
 const VerifyEmailPage = async () => {
-  const cookieStore = await cookies();
-
-  const userId = cookieStore.get('pending_email_verification')?.value;
+  const userId = await getPendingEmailVerificationCookie();
 
   if (!userId) {
     redirect('/register');
@@ -16,7 +14,11 @@ const VerifyEmailPage = async () => {
   const user = await userRepository.findByIdSafeFields(userId);
 
   if (!user) {
-    redirect('/register');
+    redirect('/api/auth/clear-pending-verification');
+  }
+
+  if (user.emailVerifiedAt) {
+    redirect('/login');
   }
 
   return <VerifyEmail userId={user.id} email={user.email} />;
