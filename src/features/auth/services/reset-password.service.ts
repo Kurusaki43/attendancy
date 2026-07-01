@@ -6,9 +6,9 @@ import { hashPassword } from '../lib/password';
 import { otpRepository } from '../repositories/otp.repository';
 import { sessionRepository } from '../repositories/session.repository';
 import { userRepository } from '../repositories/user.repository';
-import type { ResetPasswordType } from '../schemas/reset-password.schema';
+import type { ResetPasswordInput } from '../schemas/reset-password.schema';
 
-export async function resetPassword(payload: ResetPasswordType) {
+export async function resetPassword(payload: ResetPasswordInput) {
   const { id, token, newPassword } = payload;
 
   const otp = await otpRepository.findById(id);
@@ -20,13 +20,17 @@ export async function resetPassword(payload: ResetPasswordType) {
     otp.invalidatedAt ||
     otp.expiresAt < new Date()
   ) {
-    throw new Error('Invalid or expired reset link');
+    throw new Error(
+      'Invalid or expired reset link. Please go to the Forgot Password page to request a new one.',
+    );
   }
 
   const isMatch = await verifyOtp(token, otp.codeHash);
 
   if (!isMatch) {
-    throw new Error('Invalid or expired reset link');
+    throw new Error(
+      'Invalid or expired reset link. Please go to the Forgot Password page to request a new one.',
+    );
   }
 
   const newPasswordHashed = await hashPassword(newPassword);
