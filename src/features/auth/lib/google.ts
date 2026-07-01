@@ -1,6 +1,6 @@
 import { Google } from 'arctic';
 
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 export const google = new Google(
   env.GOOGLE_CLIENT_ID,

@@ -1,6 +1,6 @@
 import ms from 'ms';
 
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 export const authConfig = {
   accessToken: {

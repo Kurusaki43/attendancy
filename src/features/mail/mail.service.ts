@@ -1,5 +1,5 @@
 import { transporter } from '@/infrastructure/mail/transporter';
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 import { emailVerificationTemplate } from './templates/emailVerification';
 import { passwordResetTemplate } from './templates/resetPassword';

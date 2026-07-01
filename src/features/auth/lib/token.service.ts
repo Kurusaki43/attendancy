@@ -1,7 +1,7 @@
 import { hash, verify } from '@node-rs/argon2';
 import { jwtVerify, SignJWT } from 'jose';
 
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 const accessSecret = new TextEncoder().encode(env.JWT_ACCESS_SECRET);
 

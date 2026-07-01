@@ -3,7 +3,7 @@ import { addMinutes } from 'date-fns';
 
 import { emailQueueService } from '@/features/mail/email-queue.service';
 import { OtpType } from '@/generated/prisma/enums';
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 import { hashOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';
