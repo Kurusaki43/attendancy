@@ -76,7 +76,7 @@ export default function Login() {
 
       toast.success(result.message);
 
-      router.replace('/');
+      router.replace('/dashboard');
     });
   };
 

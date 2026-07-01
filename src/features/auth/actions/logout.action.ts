@@ -18,5 +18,5 @@ export async function logoutAction() {
     logger.error(error, 'Failed to logout user internally');
   }
   await clearAuthCookies();
-  redirect('/login');
+  redirect('/');
 }
