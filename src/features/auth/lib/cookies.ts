@@ -44,7 +44,10 @@ export async function setPendingEmailVerificationCookie(userId: string) {
     getCookieOptions(authConfig.otp.maxAge),
   );
 }
-
+export async function getAccessTokenCookie() {
+  const cookieStore = await cookies();
+  return cookieStore.get(AUTH_COOKIES.ACCESS_TOKEN)?.value;
+}
 export async function getPendingEmailVerificationCookie() {
   const cookieStore = await cookies();
   return cookieStore.get(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION)?.value;
