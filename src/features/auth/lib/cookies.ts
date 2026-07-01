@@ -60,4 +60,5 @@ export async function clearAuthCookies() {
 
   cookieStore.delete(AUTH_COOKIES.ACCESS_TOKEN);
   cookieStore.delete(AUTH_COOKIES.REFRESH_TOKEN);
+  cookieStore.delete(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION);
 }

@@ -5,7 +5,10 @@ import { logger } from '@/lib/logger';
 import { tokenService } from '../lib/token.service';
 import { sessionRepository } from '../repositories/session.repository';
 
-export async function logout(refreshToken: string) {
+export async function logout(refreshToken?: string) {
+  if (!refreshToken) {
+    return;
+  }
   try {
     const { sessionId } = await tokenService.verifyRefreshToken(refreshToken);
 
