@@ -20,11 +20,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { verifyEmailAction } from '@/features/auth/actions/email-verify.action';
-import { ResendButton } from '@/features/auth/components/ResendButtond';
 import {
   type VerifyEmailInput,
   verifyEmailSchema,
 } from '@/features/auth/schemas/email-verification.schema';
+
+import { resendVerificationOtpAction } from '../actions/resend-email-verify';
+import { ResendButton } from './ResendButtond';
 
 type VerifyEmailProps = {
   userId: string;
@@ -138,7 +140,7 @@ const VerifyEmail = ({ userId, email }: VerifyEmailProps) => {
       <CardFooter className="border-border/50 mb-2 flex justify-center border-t pt-4 pb-3">
         <p className="text-muted-foreground text-center text-sm">
           Did not receive the code?
-          <ResendButton email={email} />
+          <ResendButton onAction={() => resendVerificationOtpAction(email)} />
         </p>
       </CardFooter>
     </Card>

@@ -4,7 +4,7 @@ import { type ActionResult } from '@/types/action.types';
 
 import { resendEmailVerification } from '../services/resend-email-verification.service';
 
-export async function resendVerificationAction(email: string): Promise<ActionResult<null>> {
+export async function resendVerificationOtpAction(email: string): Promise<ActionResult<null>> {
   try {
     await resendEmailVerification(email);
 

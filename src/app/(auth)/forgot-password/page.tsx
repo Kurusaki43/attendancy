@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SendHorizontal } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,7 +44,6 @@ const ForgotPasswordPage = () => {
       const result = await forgotPasswordAction(data);
 
       if (!result.success) {
-        // Handle server-side validation errors
         if (result.message) {
           form.setError('root', {
             type: 'server',
@@ -53,7 +53,6 @@ const ForgotPasswordPage = () => {
           toast.error(result.message);
         }
 
-        // Handle field-specific errors
         Object.entries(result.errors ?? {}).forEach(([field, messages]) => {
           if (!messages?.length) return;
 
@@ -83,7 +82,6 @@ const ForgotPasswordPage = () => {
           Enter your email address and we&apos;ll send you a link to reset your password.
         </p>
       </CardHeader>
-
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -121,11 +119,24 @@ const ForgotPasswordPage = () => {
         </Form>
       </CardContent>
 
-      <CardFooter className="border-border/50 mb-2 flex justify-center border-t pt-4 pb-3">
-        <p className="text-muted-foreground text-center text-sm">
-          Did not receive the code?
-          {/* <ResendButton email={form.getValues('email')} /> */}
-        </p>
+      <CardFooter className="border-border/50 justify-center border-t pt-5">
+        <div className="text-muted-foreground flex items-center gap-3 text-sm">
+          <Link
+            href="/login"
+            className="font-medium text-violet-500 transition-colors hover:text-violet-400"
+          >
+            Back to sign in
+          </Link>
+
+          <span className="text-border">•</span>
+
+          <Link
+            href="/register"
+            className="font-medium text-violet-500 transition-colors hover:text-violet-400"
+          >
+            Create an account
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );

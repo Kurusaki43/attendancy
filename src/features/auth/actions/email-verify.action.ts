@@ -1,4 +1,5 @@
 'use server';
+
 import { z } from 'zod';
 
 import type { ActionResult } from '@/types/action.types';

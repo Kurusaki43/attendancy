@@ -5,43 +5,53 @@ import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import type { ActionResult } from '@/types/action.types';
 
-import { resendVerificationAction } from '../actions/resen-email-verify';
+type Props = {
+  onAction: () => Promise<ActionResult<null>>;
+  idleText?: string;
+  pendingText?: string;
+  disabled?: boolean;
+};
 
-export function ResendButton({ email }: { email: string }) {
+export function ResendButton({
+  onAction,
+  idleText = 'Resend code',
+  pendingText = 'Sending...',
+  disabled = false,
+}: Props) {
   const [isPending, startTransition] = useTransition();
 
-  const handleResend = () => {
+  const handleClick = () => {
     startTransition(async () => {
-      await new Promise((res) => setTimeout(res, 3000));
-      const res = await resendVerificationAction(email);
+      const result = await onAction();
 
-      if (!res.success) {
-        toast.error(res.message);
+      if (!result.success) {
+        toast.error(result.message);
         return;
       }
 
-      toast.success(res.message);
+      toast.success(result.message);
     });
   };
 
   return (
     <Button
-      onClick={handleResend}
-      disabled={isPending}
+      onClick={handleClick}
+      disabled={isPending || disabled}
       variant="outline"
       size="xs"
       className="mt-2 ml-2 w-fit gap-2 border-violet-500/30 text-violet-500 hover:bg-violet-500/10 hover:text-violet-400"
     >
       {isPending ? (
         <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Sending...
+          <Loader2 className="size-4 animate-spin" />
+          {pendingText}
         </>
       ) : (
         <>
-          <RefreshCw className="h-4 w-4" />
-          Resend code
+          <RefreshCw className="size-4" />
+          {idleText}
         </>
       )}
     </Button>
