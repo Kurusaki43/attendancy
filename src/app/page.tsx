@@ -1,13 +1,18 @@
 import { ArrowRight, CalendarCheck2, Clock3, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
+import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      <section className="mx-auto flex max-w-7xl flex-col items-center px-6 py-24 text-center">
+      <header className="mx-auto flex max-w-7xl items-center justify-end px-6 pt-6">
+        <ThemeToggle />
+      </header>
+
+      <section className="mx-auto flex max-w-7xl flex-col items-center px-6 py-16 text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2">
           <CalendarCheck2 className="size-4 text-violet-500" />
           <span className="text-sm font-medium text-violet-500">Smart Attendance Management</span>
