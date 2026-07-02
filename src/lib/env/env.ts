@@ -1,8 +1,10 @@
+import type { StringValue } from 'ms';
 import { z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+  APP_URL: z.url().default('http://localhost:3000'),
   DATABASE_URL: z.url(),
 
   REDIS_HOST: z.string().default('localhost'),
@@ -13,6 +15,18 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.email().default('noreply@attendance-app.local'),
+
+  JWT_ACCESS_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
+  JWT_ACCESS_EXPIRES_IN: z.custom<StringValue>(),
+  JWT_REFRESH_EXPIRES_IN: z.custom<StringValue>(),
+  OTP_EXPIRED_IN: z.custom<StringValue>(),
+
+  GOOGLE_CLIENT_ID: z.string().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().min(1),
+  GOOGLE_REDIRECT_URI: z.url(),
+
+  TURNSTILE_SITE_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

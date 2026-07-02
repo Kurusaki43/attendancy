@@ -1,6 +1,6 @@
 import Redis from 'ioredis';
 
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 const globalForRedis = globalThis as unknown as { redis: Redis };
 

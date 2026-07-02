@@ -1,22 +1,68 @@
-export function welcomeEmailTemplate(name: string) {
+export function welcomeTemplate(firstName: string) {
   return {
-    subject: 'Welcome to Attendance App 👋',
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
-        <h2 style="color: #111;">Welcome ${name} 👋</h2>
+    subject: 'Welcome to Attendancy 🎉',
 
-        <p style="font-size: 14px; color: #444;">
-          Your account has been created successfully.
+    html: `
+      <div
+        style="
+          font-family: Arial, sans-serif;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 32px;
+          color: #111827;
+        "
+      >
+        <h1 style="margin-bottom: 24px;">
+          Welcome aboard, ${firstName}! 🎉
+        </h1>
+
+        <p style="font-size: 14px; line-height: 1.6;">
+          Hi <strong>${firstName}</strong>,
         </p>
 
-        <div style="margin-top: 20px; padding: 12px; background: #f5f5f5; border-radius: 6px;">
-          <p style="margin: 0; font-size: 13px;">
-            You can now log in and start using the attendance system.
-          </p>
+        <p style="font-size: 14px; line-height: 1.6;">
+          Your account has been successfully verified and activated.
+        </p>
+
+        <p style="font-size: 14px; line-height: 1.6;">
+          You can now access all features of Attendancy and start managing
+          your attendance, schedules, and work activities.
+        </p>
+
+        <div
+          style="
+            margin: 32px 0;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            text-align: center;
+          "
+        >
+          <span
+            style="
+              font-size: 16px;
+              font-weight: bold;
+              color: #111827;
+            "
+          >
+            🚀 You're ready to get started!
+          </span>
         </div>
 
-        <p style="margin-top: 30px; font-size: 12px; color: #888;">
-          If you didn’t request this account, you can ignore this email.
+        <p style="font-size: 14px; color: #6b7280;">
+          If you have any questions, feel free to contact our support team.
+        </p>
+
+        <hr
+          style="
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 32px 0;
+          "
+        />
+
+        <p style="font-size: 12px; color: #9ca3af;">
+          © 2026 Attendancy. All rights reserved.
         </p>
       </div>
     `,

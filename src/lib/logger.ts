@@ -1,6 +1,6 @@
 import pino from 'pino';
 
-import { env } from '@/lib/env';
+import { env } from '@/lib/env/env';
 
 const isDev = env.NODE_ENV !== 'production';
 
