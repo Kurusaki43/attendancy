@@ -67,12 +67,13 @@ model Role {
 }
 
 model Permission {
-  id        String   @id @default(cuid())
-  resource  String
-  action    String
-  roles     Role[]   @relation("RolePermissions")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  resource    String
+  action      String
+  description String?
+  roles       Role[]   @relation("RolePermissions")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@unique([resource, action])
 }
