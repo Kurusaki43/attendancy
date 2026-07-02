@@ -1,5 +1,4 @@
-// src/features/auth/dal/auth.dal.ts
-
+import { redirect } from 'next/dist/client/components/navigation';
 import { cache } from 'react';
 
 import { requireAuth } from '../lib/require-auth';
@@ -11,7 +10,7 @@ export const getCurrentUser = cache(async () => {
   const user = await userRepository.findById(payload.userId);
 
   if (!user) {
-    throw new Error('Authenticated user not found');
+    redirect('/api/auth/invalid-session');
   }
 
   return user;

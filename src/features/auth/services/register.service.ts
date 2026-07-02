@@ -1,7 +1,6 @@
-import { addMinutes } from 'date-fns';
-
 import { emailQueueService } from '@/features/mail/email-queue.service';
 
+import { authConfig } from '../lib/auth.config';
 import { generateOtp, hashOtp } from '../lib/otp';
 import { hashPassword } from '../lib/password';
 import { otpRepository } from '../repositories/otp.repository';
@@ -39,7 +38,7 @@ export async function register(body: RegisterInput) {
     },
     type: 'EMAIL_VERIFICATION',
     codeHash: hashedCode,
-    expiresAt: addMinutes(new Date(), 15),
+    expiresAt: authConfig.otp.expiresAt(),
   });
 
   // 5- Enque email

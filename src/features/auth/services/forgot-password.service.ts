@@ -1,10 +1,10 @@
 import { randomBytes } from 'crypto';
-import { addMinutes } from 'date-fns';
 
 import { emailQueueService } from '@/features/mail/email-queue.service';
 import { OtpType } from '@/generated/prisma/enums';
 import { env } from '@/lib/env/env';
 
+import { authConfig } from '../lib/auth.config';
 import { hashOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';
 import { userRepository } from '../repositories/user.repository';
@@ -32,7 +32,7 @@ export async function forgotPassword(email: string) {
     },
     type: OtpType.PASSWORD_RESET,
     codeHash,
-    expiresAt: addMinutes(new Date(), 15),
+    expiresAt: authConfig.otp.expiresAt(),
   });
 
   const url = `${env.APP_URL}/reset-password?id=${otp.id}&token=${token}`;
