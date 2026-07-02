@@ -3,6 +3,9 @@
 import { headers } from 'next/dist/server/request/headers';
 import { z } from 'zod';
 
+import { AppError } from '@/lib/errors/ app.error';
+import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import type { ActionResult } from '@/types/action.types';
 
 import {
@@ -42,7 +45,10 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
       },
     };
   } catch (error) {
-    if (error instanceof Error && error.message === 'EMAIL_NOT_VERIFIED') {
+    if (
+      error instanceof UnauthorizedError &&
+      error.code === ERROR_CODES.UNAUTHORIZED
+    ) {
       const user = await userRepository.findByEmail(validated.data.email);
 
       if (user) {
@@ -51,14 +57,22 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
 
       return {
         success: false,
-        code: 'EMAIL_NOT_VERIFIED',
+        code: ERROR_CODES.UNAUTHORIZED,
         message: 'Please verify your email first.',
+      };
+    }
+
+    if (error instanceof AppError) {
+      return {
+        success: false,
+        code: error.code,
+        message: error.message,
       };
     }
 
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Something went wrong.',
+      message: 'Something went wrong.',
     };
   }
 }

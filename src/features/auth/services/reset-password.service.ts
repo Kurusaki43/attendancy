@@ -1,4 +1,6 @@
 import { OtpType } from '@/generated/prisma/enums';
+import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { prisma } from '@/lib/prisma';
 
 import { verifyOtp } from '../lib/otp';
@@ -20,16 +22,18 @@ export async function resetPassword(payload: ResetPasswordInput) {
     otp.invalidatedAt ||
     otp.expiresAt < new Date()
   ) {
-    throw new Error(
-      'Invalid or expired reset link. Please go to the Forgot Password page to request a new one.',
+    throw new BadRequestError(
+      ERROR_CODES.INVALID_RESET_TOKEN,
+      'Invalid or expired reset link. Please request a new password reset email.',
     );
   }
 
   const isMatch = await verifyOtp(token, otp.codeHash);
 
   if (!isMatch) {
-    throw new Error(
-      'Invalid or expired reset link. Please go to the Forgot Password page to request a new one.',
+    throw new BadRequestError(
+      ERROR_CODES.INVALID_RESET_TOKEN,
+      'Invalid or expired reset link. Please request a new password reset email.',
     );
   }
 

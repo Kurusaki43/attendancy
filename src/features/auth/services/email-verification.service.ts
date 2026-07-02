@@ -1,4 +1,6 @@
 import { OtpType } from '@/generated/prisma/enums';
+import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { prisma } from '@/lib/prisma';
 
 import { verifyOtp } from '../lib/otp';
@@ -11,13 +13,13 @@ export async function emailVerification(code: string, userId: string) {
   });
 
   if (!otp) {
-    throw new Error('Invalid or expired verification code.');
+    throw new BadRequestError(ERROR_CODES.INVALID_RESET_TOKEN, 'Invalid or expired verification code.');
   }
 
   const isValid = await verifyOtp(code, otp.codeHash);
 
   if (!isValid) {
-    throw new Error('Invalid or expired verification code.');
+    throw new BadRequestError(ERROR_CODES.INVALID_RESET_TOKEN, 'Invalid or expired verification code.');
   }
 
   await prisma.$transaction([

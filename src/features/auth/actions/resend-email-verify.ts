@@ -1,5 +1,6 @@
 'use server';
 
+import { AppError } from '@/lib/errors/ app.error';
 import { type ActionResult } from '@/types/action.types';
 
 import { resendEmailVerification } from '../services/resend-email-verification.service';
@@ -14,11 +15,17 @@ export async function resendVerificationOtpAction(email: string): Promise<Action
       data: null,
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to resend verification code';
+    if (error instanceof AppError) {
+      return {
+        success: false,
+        code: error.code,
+        message: error.message,
+      };
+    }
 
     return {
       success: false,
-      message,
+      message: 'Failed to resend verification code.',
     };
   }
 }

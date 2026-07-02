@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 
+import { AppError } from '@/lib/errors/ app.error';
 import type { ActionResult } from '@/types/action.types';
 
 import { type ForgotPasswordInput, forgotPasswordSchema } from '../schemas/forgot-password.schema';
@@ -28,9 +29,17 @@ export async function forgotPasswordAction(
       data: null,
     };
   } catch (error) {
+    if (error instanceof AppError) {
+      return {
+        success: false,
+        code: error.code,
+        message: error.message,
+      };
+    }
+
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Something went wrong.',
+      message: 'Something went wrong.',
     };
   }
 }

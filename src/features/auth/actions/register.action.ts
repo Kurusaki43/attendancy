@@ -7,6 +7,7 @@ import {
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
 import { register } from '@/features/auth/services/register.service';
+import { AppError } from '@/lib/errors/ app.error';
 import type { ActionResult } from '@/types/action.types';
 
 import { setPendingEmailVerificationCookie } from '../lib/cookies';
@@ -42,9 +43,17 @@ export async function registerAction(input: RegisterFormInput): Promise<ActionRe
       data: null,
     };
   } catch (error) {
+    if (error instanceof AppError) {
+      return {
+        success: false,
+        code: error.code,
+        message: error.message,
+      };
+    }
+
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Something went wrong.',
+      message: 'Something went wrong.',
     };
   }
 }
