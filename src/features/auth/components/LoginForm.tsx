@@ -37,7 +37,6 @@ const LoginForm = ({ email }: { email?: string }) => {
       const result = await loginAction(data);
 
       if (!result.success) {
-        console.log(result);
         if (result.code === ERROR_CODES.EMAIL_NOT_VERIFIED) {
           toast.info(result.message);
 

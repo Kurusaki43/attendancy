@@ -37,10 +37,17 @@ const RegisterForm = () => {
     },
   });
 
-  const captchaToken = useWatch({
+  const watchedFields = useWatch({
     control: form.control,
-    name: 'captchaToken',
   });
+
+  const isFormFilled =
+    !!watchedFields.firstName?.trim() &&
+    !!watchedFields.lastName?.trim() &&
+    !!watchedFields.email?.trim() &&
+    !!watchedFields.password?.trim() &&
+    !!watchedFields.confirmPassword?.trim() &&
+    !!watchedFields.captchaToken;
 
   const onSubmit = (data: RegisterFormInput) => {
     form.clearErrors();
@@ -162,7 +169,7 @@ const RegisterForm = () => {
               className="h-11 w-full bg-violet-600 text-sm font-semibold hover:bg-violet-500"
               loadingText="Creating account..."
               pending={form.formState.isSubmitting}
-              disabled={!captchaToken || isPending}
+              disabled={!isFormFilled || isPending}
             >
               Create account
             </SubmitButton>

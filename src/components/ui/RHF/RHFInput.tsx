@@ -34,7 +34,7 @@ const RHFInput = <T extends FieldValues>({
         return (
           <FormItem>
             {label && (
-              <FormLabel className="inline-block text-black" htmlFor={name}>
+              <FormLabel className="text-foreground" htmlFor={name}>
                 {label}
               </FormLabel>
             )}
