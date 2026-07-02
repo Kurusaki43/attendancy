@@ -25,6 +25,7 @@ import {
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
 
+import { GoogleLoginButton } from './GoogleLoginButton';
 import { TurnstileField } from './TurnstileCaptcha';
 
 const RegisterForm = () => {
@@ -80,7 +81,7 @@ const RegisterForm = () => {
   };
   return (
     <Card className="border-border/50 bg-background/40 w-full max-w-md shadow-2xl backdrop-blur-2xl">
-      <CardHeader className="space-y-3 pb-8 text-center">
+      <CardHeader className="space-y-3 pb-2 text-center">
         <CardTitle className="text-foreground text-3xl font-bold tracking-tight">
           Create your account
         </CardTitle>
@@ -162,57 +163,57 @@ const RegisterForm = () => {
                 </FormItem>
               )}
             />
+            <div className="grid items-start gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-foreground! text-sm font-medium">Password</FormLabel>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-foreground! text-sm font-medium">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                        className="bg-background/50 border-border focus-visible:border-violet-500"
+                        {...field}
+                      />
+                    </FormControl>
 
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
+                    <FormDescription className="text-xs">
+                      Must contain at least 8 characters.
+                    </FormDescription>
 
-                  <FormDescription className="text-xs">
-                    Must contain at least 8 characters.
-                  </FormDescription>
+                    <FormMessage className="text-xs tracking-wide" />
+                  </FormItem>
+                )}
+              />
 
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-foreground! text-sm font-medium">
+                      Confirm Password
+                    </FormLabel>
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-foreground! text-sm font-medium">
-                    Confirm Password
-                  </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                        className="bg-background/50 border-border focus-visible:border-violet-500"
+                        {...field}
+                      />
+                    </FormControl>
 
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
-            />
-
+                    <FormMessage className="text-xs tracking-wide" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <TurnstileField
               onVerify={(token) => {
                 form.setValue('captchaToken', token, {
@@ -225,10 +226,23 @@ const RegisterForm = () => {
               className="h-11 w-full bg-violet-600 text-sm font-semibold hover:bg-violet-500"
               loadingText="Creating account..."
               pending={form.formState.isSubmitting}
-              disabled={!form.watch('captchaToken') || form.formState.isSubmitting}
+              disabled={!form.watch('captchaToken') || isPending}
             >
               Create account
             </SubmitButton>
+
+            {/* Divider */}
+            <div className="flex items-center gap-4">
+              <div className="bg-border h-px flex-1" />
+
+              <span className="text-muted-foreground text-xs font-medium tracking-[0.2em] uppercase">
+                Or continue with
+              </span>
+
+              <div className="bg-border h-px flex-1" />
+            </div>
+
+            <GoogleLoginButton />
           </form>
         </Form>
       </CardContent>

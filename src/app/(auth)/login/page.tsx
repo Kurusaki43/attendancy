@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { loginAction } from '@/features/auth/actions/login.action';
+import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton';
 import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';
 
 export default function Login() {
@@ -156,6 +157,19 @@ export default function Login() {
             >
               Sign in
             </SubmitButton>
+
+            {/* Divider */}
+            <div className="flex items-center gap-4">
+              <div className="bg-border h-px flex-1" />
+
+              <span className="text-muted-foreground text-xs font-medium tracking-[0.2em] uppercase">
+                Or continue with
+              </span>
+
+              <div className="bg-border h-px flex-1" />
+            </div>
+
+            <GoogleLoginButton />
           </form>
         </Form>
       </CardContent>

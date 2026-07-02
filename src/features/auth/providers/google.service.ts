@@ -1,16 +1,8 @@
 import { OAuth2RequestError } from 'arctic';
 
+import { getGoogleProfile } from '../lib/get-google-profile';
 import { google } from '../lib/google';
 import { userRepository } from '../repositories/user.repository';
-
-type GoogleUser = {
-  sub: string;
-  email: string;
-  email_verified: boolean;
-  given_name: string;
-  family_name: string;
-  picture?: string;
-};
 
 export async function authenticateWithGoogle(code: string, codeVerifier: string) {
   let tokens;
@@ -25,26 +17,16 @@ export async function authenticateWithGoogle(code: string, codeVerifier: string)
     throw error;
   }
 
-  const response = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
-    headers: {
-      Authorization: `Bearer ${tokens.accessToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch Google profile');
-  }
-
-  const profile: GoogleUser = await response.json();
+  const profile = await getGoogleProfile(tokens.accessToken());
 
   if (!profile.email_verified) {
     throw new Error('Google email is not verified');
   }
 
-  let user = await userRepository.findByEmail(profile.email);
+  const user = await userRepository.findByEmail(profile.email);
 
   if (!user) {
-    user = await userRepository.create({
+    return userRepository.create({
       email: profile.email,
       firstName: profile.given_name,
       lastName: profile.family_name,
@@ -52,21 +34,18 @@ export async function authenticateWithGoogle(code: string, codeVerifier: string)
       provider: 'GOOGLE',
       providerId: profile.sub,
       emailVerifiedAt: new Date(),
+      status: 'ACTIVE',
     });
-
-    return user;
   }
 
   if (user.provider === 'LOCAL') {
-    user = await userRepository.update({
-      userId: user.id,
-      newData: {
-        provider: 'GOOGLE',
-        providerId: profile.sub,
-        avatar: profile.picture,
-        emailVerifiedAt: user.emailVerifiedAt ? user.emailVerifiedAt : new Date(),
-      },
-    });
+    throw new Error(
+      'An account with this email already exists. Please sign in with your password.',
+    );
+  }
+
+  if (user.providerId !== profile.sub) {
+    throw new Error('Invalid Google account');
   }
 
   return user;

@@ -1,16 +1,14 @@
 import { randomUUID } from 'node:crypto';
 
-import type { User } from '@/generated/prisma/client';
-
 import { authConfig } from '../lib/auth.config';
 import { tokenService } from '../lib/token.service';
 import { sessionRepository } from '../repositories/session.repository';
 
-export async function createSession(user: User, ipAddress?: string, userAgent?: string) {
+export async function createSession(userId: string, ipAddress?: string, userAgent?: string) {
   const sessionId = randomUUID();
 
   const payload = {
-    userId: user.id,
+    userId,
     sessionId,
   };
 
@@ -24,7 +22,7 @@ export async function createSession(user: User, ipAddress?: string, userAgent?: 
     id: sessionId,
     user: {
       connect: {
-        id: user.id,
+        id: userId,
       },
     },
     refreshTokenHash,

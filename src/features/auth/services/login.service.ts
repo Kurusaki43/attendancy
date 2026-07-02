@@ -32,7 +32,7 @@ export async function login(credentials: LoginInput, ipAddress?: string, userAge
     throw new Error('Your account is unavailable');
   }
 
-  const { accessToken, refreshToken } = await createSession(user, ipAddress, userAgent);
+  const { accessToken, refreshToken } = await createSession(user.id, ipAddress, userAgent);
 
   return {
     accessToken,

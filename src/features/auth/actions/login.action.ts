@@ -1,5 +1,6 @@
 'use server';
 
+import { headers } from 'next/dist/server/request/headers';
 import { z } from 'zod';
 
 import type { ActionResult } from '@/types/action.types';
@@ -15,8 +16,8 @@ import { login } from '../services/login.service';
 import type { LoginResult } from '../types/auth.types';
 
 export async function loginAction(input: LoginInput): Promise<ActionResult<LoginResult>> {
+  const headerStore = await headers();
   const validated = loginSchema.safeParse(input);
-
   if (!validated.success) {
     return {
       success: false,
@@ -26,7 +27,10 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
   }
 
   try {
-    const { accessToken, refreshToken, user } = await login(validated.data);
+    const ipAddress = headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    const userAgent = headerStore.get('user-agent') ?? 'unknown';
+
+    const { accessToken, refreshToken, user } = await login(validated.data, ipAddress, userAgent);
 
     await Promise.all([setAccessTokenCookie(accessToken), setRefreshTokenCookie(refreshToken)]);
 
