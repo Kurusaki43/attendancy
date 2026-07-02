@@ -1,6 +1,6 @@
 'use server';
 
-import { AppError } from '@/lib/errors/ app.error';
+import { AppError } from '@/lib/errors/app.error';
 import { type ActionResult } from '@/types/action.types';
 
 import { resendEmailVerification } from '../services/resend-email-verification.service';

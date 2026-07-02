@@ -5,21 +5,31 @@ import { prisma } from '@/lib/prisma';
 
 import { verifyOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';
+import type { ServiceEmailVerificationResult } from '../types/service-results';
 
-export async function emailVerification(code: string, userId: string) {
+export async function emailVerification(
+  code: string,
+  userId: string,
+): Promise<ServiceEmailVerificationResult> {
   const otp = await otpRepository.findActiveByUserIdAndType({
     type: OtpType.EMAIL_VERIFICATION,
     userId,
   });
 
   if (!otp) {
-    throw new BadRequestError(ERROR_CODES.INVALID_RESET_TOKEN, 'Invalid or expired verification code.');
+    throw new BadRequestError(
+      ERROR_CODES.INVALID_RESET_TOKEN,
+      'Invalid or expired verification code.',
+    );
   }
 
   const isValid = await verifyOtp(code, otp.codeHash);
 
   if (!isValid) {
-    throw new BadRequestError(ERROR_CODES.INVALID_RESET_TOKEN, 'Invalid or expired verification code.');
+    throw new BadRequestError(
+      ERROR_CODES.INVALID_RESET_TOKEN,
+      'Invalid or expired verification code.',
+    );
   }
 
   await prisma.$transaction([
@@ -42,4 +52,8 @@ export async function emailVerification(code: string, userId: string) {
       },
     }),
   ]);
+
+  return {
+    success: true,
+  };
 }

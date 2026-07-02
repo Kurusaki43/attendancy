@@ -25,8 +25,8 @@ import {
   verifyEmailSchema,
 } from '@/features/auth/schemas/email-verification.schema';
 
-import { resendVerificationOtpAction } from '../actions/resend-email-verify';
-import { ResendButton } from './ResendButtond';
+import { resendVerificationOtpAction } from '../actions/resend-email-verify.action';
+import { ResendButton } from './ResendButton';
 
 type VerifyEmailProps = {
   userId: string;

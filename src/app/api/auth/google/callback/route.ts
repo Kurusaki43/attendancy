@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 
 import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
 import { setAccessTokenCookie, setRefreshTokenCookie } from '@/features/auth/lib/cookies';
-import { authenticateWithGoogle } from '@/features/auth/providers/google.service';
 import { createSession } from '@/features/auth/services/create-session.service';
+import { authenticateWithGoogle } from '@/features/auth/services/google-auth.service';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

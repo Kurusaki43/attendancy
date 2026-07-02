@@ -3,7 +3,7 @@
 import { headers } from 'next/dist/server/request/headers';
 import { z } from 'zod';
 
-import { AppError } from '@/lib/errors/ app.error';
+import { AppError } from '@/lib/errors/app.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import type { ActionResult } from '@/types/action.types';
@@ -16,7 +16,7 @@ import {
 import { userRepository } from '../repositories/user.repository';
 import { type LoginInput, loginSchema } from '../schemas/login.schema';
 import { login } from '../services/login.service';
-import type { LoginResult } from '../types/auth.types';
+import type { LoginResult } from '../types/action-results';
 
 export async function loginAction(input: LoginInput): Promise<ActionResult<LoginResult>> {
   const headerStore = await headers();
@@ -45,10 +45,7 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
       },
     };
   } catch (error) {
-    if (
-      error instanceof UnauthorizedError &&
-      error.code === ERROR_CODES.UNAUTHORIZED
-    ) {
+    if (error instanceof UnauthorizedError && error.code === ERROR_CODES.UNAUTHORIZED) {
       const user = await userRepository.findByEmail(validated.data.email);
 
       if (user) {

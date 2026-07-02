@@ -4,7 +4,7 @@ import { BadgeCheck, CalendarDays, KeyRound, ShieldCheck, User, Users } from 'lu
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { logoutAction } from '@/features/auth/actions/logout.action';
 import { LogoutButton } from '@/features/auth/components/LogoutButton';
-import { getCurrentUser } from '@/features/auth/dal/auth.dal';
+import { getCurrentUser } from '@/features/auth/lib/get-current-user';
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();

@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { AppError } from '@/lib/errors/ app.error';
+import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/types/action.types';
 
 import type { ResetPasswordInput } from '../schemas/reset-password.schema';

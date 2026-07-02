@@ -3,11 +3,12 @@ import { NotFoundError } from '@/lib/errors/not-found.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 
 import { authConfig } from '../lib/auth.config';
-import { tokenService } from '../lib/token.service';
 import { sessionRepository } from '../repositories/session.repository';
 import { userRepository } from '../repositories/user.repository';
+import type { ServiceRefreshSessionResult } from '../types/service-results';
+import { tokenService } from './token.service';
 
-export async function refreshSession(refreshToken: string) {
+export async function refreshSession(refreshToken: string): Promise<ServiceRefreshSessionResult> {
   const refreshPayload = await tokenService.verifyRefreshToken(refreshToken);
 
   if (!refreshPayload) {

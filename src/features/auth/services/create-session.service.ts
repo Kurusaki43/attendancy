@@ -1,10 +1,15 @@
 import { randomUUID } from 'node:crypto';
 
 import { authConfig } from '../lib/auth.config';
-import { tokenService } from '../lib/token.service';
 import { sessionRepository } from '../repositories/session.repository';
+import type { ServiceCreateSessionResult } from '../types/service-results';
+import { tokenService } from './token.service';
 
-export async function createSession(userId: string, ipAddress?: string, userAgent?: string) {
+export async function createSession(
+  userId: string,
+  ipAddress?: string,
+  userAgent?: string,
+): Promise<ServiceCreateSessionResult> {
   const sessionId = randomUUID();
 
   const payload = {

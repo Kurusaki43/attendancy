@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { SubmitButton } from '@/components/shared/SubmitButton';
@@ -42,6 +42,11 @@ const RegisterForm = () => {
       confirmPassword: '',
       captchaToken: '',
     },
+  });
+
+  const captchaToken = useWatch({
+    control: form.control,
+    name: 'captchaToken',
   });
 
   const onSubmit = (data: RegisterFormInput) => {
@@ -226,7 +231,7 @@ const RegisterForm = () => {
               className="h-11 w-full bg-violet-600 text-sm font-semibold hover:bg-violet-500"
               loadingText="Creating account..."
               pending={form.formState.isSubmitting}
-              disabled={!form.watch('captchaToken') || isPending}
+              disabled={!captchaToken || isPending}
             >
               Create account
             </SubmitButton>

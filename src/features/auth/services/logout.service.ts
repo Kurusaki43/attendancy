@@ -1,5 +1,5 @@
-import { tokenService } from '../lib/token.service';
 import { sessionRepository } from '../repositories/session.repository';
+import { tokenService } from './token.service';
 
 export async function logout(refreshToken?: string) {
   if (!refreshToken) {

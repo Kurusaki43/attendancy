@@ -7,9 +7,14 @@ import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import { verifyPassword } from '../lib/password';
 import { userRepository } from '../repositories/user.repository';
 import type { LoginInput } from '../schemas/login.schema';
+import type { ServiceLoginResult } from '../types/service-results';
 import { createSession } from './create-session.service';
 
-export async function login(credentials: LoginInput, ipAddress?: string, userAgent?: string) {
+export async function login(
+  credentials: LoginInput,
+  ipAddress?: string,
+  userAgent?: string,
+): Promise<ServiceLoginResult> {
   const { email, password } = credentials;
 
   const user = await userRepository.findByEmail(email);

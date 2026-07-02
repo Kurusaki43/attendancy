@@ -2,13 +2,13 @@
 
 import { z } from 'zod';
 
-import { AppError } from '@/lib/errors/ app.error';
+import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/types/action.types';
 
 import { clearPendingEmailVerificationCookie } from '../lib/cookies';
 import { type VerifyEmailInput, verifyEmailSchema } from '../schemas/email-verification.schema';
 import { emailVerification } from '../services/email-verification.service';
-import type { VerifyEmailResult } from '../types/auth.types';
+import type { VerifyEmailResult } from '../types/action-results';
 
 export async function verifyEmailAction(
   input: VerifyEmailInput,

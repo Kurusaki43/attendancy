@@ -1,5 +1,8 @@
+import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { ForbiddenError } from '@/lib/errors/forbidden.error';
+
 import { type PermissionDefinition } from '../constants/permissions';
-import { getCurrentUser } from '../dal/auth.dal';
+import { getCurrentUser } from '../lib/get-current-user';
 import type { AuthUser } from '../types/auth-user';
 
 export function hasPermission(user: AuthUser, permission: PermissionDefinition) {
@@ -14,7 +17,10 @@ export async function requirePermission(permission: PermissionDefinition) {
   const user = await getCurrentUser();
 
   if (!hasPermission(user, permission)) {
-    throw new Error(`Missing permission: ${permission.resource}:${permission.action}`);
+    throw new ForbiddenError(
+      ERROR_CODES.FORBIDDEN,
+      `Missing permission: ${permission.resource}:${permission.action}`,
+    );
   }
 
   return user;

@@ -1,9 +1,9 @@
-// src/features/auth/dal/auth.dal.ts
+// src/features/auth/lib/get-current-user.ts
 
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
-import { requireAuth } from '../lib/require-auth';
+import { requireAuth } from '../guards/require-auth';
 import { userRepository } from '../repositories/user.repository';
 
 export const getCurrentUser = cache(async (returnTo: string = '/dashboard') => {

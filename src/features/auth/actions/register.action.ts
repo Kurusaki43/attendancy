@@ -7,11 +7,11 @@ import {
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
 import { register } from '@/features/auth/services/register.service';
-import { AppError } from '@/lib/errors/ app.error';
+import { verifyCaptcha } from '@/lib/captcha';
+import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/types/action.types';
 
 import { setPendingEmailVerificationCookie } from '../lib/cookies';
-import { verifyCaptcha } from '../services/captcha.service';
 
 export async function registerAction(input: RegisterFormInput): Promise<ActionResult<null>> {
   const validated = registerFormSchema.safeParse(input);

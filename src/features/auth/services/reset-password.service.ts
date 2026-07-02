@@ -9,8 +9,11 @@ import { otpRepository } from '../repositories/otp.repository';
 import { sessionRepository } from '../repositories/session.repository';
 import { userRepository } from '../repositories/user.repository';
 import type { ResetPasswordInput } from '../schemas/reset-password.schema';
+import type { ServiceResetPasswordResult } from '../types';
 
-export async function resetPassword(payload: ResetPasswordInput) {
+export async function resetPassword(
+  payload: ResetPasswordInput,
+): Promise<ServiceResetPasswordResult> {
   const { id, token, newPassword } = payload;
 
   const otp = await otpRepository.findById(id);
@@ -49,4 +52,8 @@ export async function resetPassword(payload: ResetPasswordInput) {
     sessionRepository.revokeAllUserSessions(otp.userId),
     otpRepository.markAsUsed(otp.id),
   ]);
+
+  return {
+    success: true,
+  };
 }
