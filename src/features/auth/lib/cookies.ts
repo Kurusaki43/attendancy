@@ -5,7 +5,7 @@ import { env } from '@/lib/env/env';
 import { AUTH_COOKIES } from '../constants/auth.constant';
 import { authConfig } from './auth.config';
 
-function getCookieOptions(maxAge: number) {
+export function getCookieOptions(maxAge: number) {
   return {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
@@ -46,11 +46,16 @@ export async function setPendingEmailVerificationCookie(userId: string) {
 }
 export async function getAccessTokenCookie() {
   const cookieStore = await cookies();
-  return cookieStore.get(AUTH_COOKIES.ACCESS_TOKEN)?.value;
+  return cookieStore.get(AUTH_COOKIES.ACCESS_TOKEN)?.value ?? null;
+}
+
+export async function getRefreshTokenCookie() {
+  const cookieStore = await cookies();
+  return cookieStore.get(AUTH_COOKIES.REFRESH_TOKEN)?.value ?? null;
 }
 export async function getPendingEmailVerificationCookie() {
   const cookieStore = await cookies();
-  return cookieStore.get(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION)?.value;
+  return cookieStore.get(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION)?.value ?? null;
 }
 
 export async function clearPendingEmailVerificationCookie() {

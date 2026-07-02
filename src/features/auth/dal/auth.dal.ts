@@ -1,11 +1,13 @@
-import { redirect } from 'next/dist/client/components/navigation';
+// src/features/auth/dal/auth.dal.ts
+
+import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 import { requireAuth } from '../lib/require-auth';
 import { userRepository } from '../repositories/user.repository';
 
-export const getCurrentUser = cache(async () => {
-  const payload = await requireAuth();
+export const getCurrentUser = cache(async (returnTo: string = '/dashboard') => {
+  const payload = await requireAuth(returnTo);
 
   const user = await userRepository.findById(payload.userId);
 

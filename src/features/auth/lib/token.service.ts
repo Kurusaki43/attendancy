@@ -30,19 +30,27 @@ export const tokenService = {
   },
 
   async verifyAccessToken(token: string) {
-    const { payload } = await jwtVerify<TokenPayload>(token, accessSecret, {
-      algorithms: ['HS256'],
-    });
+    try {
+      const { payload } = await jwtVerify<TokenPayload>(token, accessSecret, {
+        algorithms: ['HS256'],
+      });
 
-    return payload;
+      return payload as TokenPayload;
+    } catch {
+      return null;
+    }
   },
 
   async verifyRefreshToken(token: string) {
-    const { payload } = await jwtVerify<TokenPayload>(token, refreshSecret, {
-      algorithms: ['HS256'],
-    });
+    try {
+      const { payload } = await jwtVerify<TokenPayload>(token, refreshSecret, {
+        algorithms: ['HS256'],
+      });
 
-    return payload;
+      return payload as TokenPayload;
+    } catch {
+      return null;
+    }
   },
 
   async hashToken(token: string) {
