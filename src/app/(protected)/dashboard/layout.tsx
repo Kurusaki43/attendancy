@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="bg-background min-h-screen">
-      <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>
-    </div>
-  );
+import { getCurrentUser } from '@/features/auth/lib/get-current-user';
+import { DashboardLayout } from '@/features/dashboard/components/DashboardLayout';
+
+export default async function Layout({ children }: { children: ReactNode }) {
+  const user = await getCurrentUser();
+
+  return <DashboardLayout user={user}>{children}</DashboardLayout>;
 }
