@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SendHorizontal } from 'lucide-react';
+import { Mail, SendHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -10,15 +10,8 @@ import { toast } from 'sonner';
 
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
+import RHFInput from '@/components/ui/RHF/RHFInput';
 import { forgotPasswordAction } from '@/features/auth/actions/forgot-password.action';
 import {
   type ForgotPasswordInput,
@@ -82,29 +75,19 @@ const ForgotPasswordPage = () => {
           Enter your email address and we&apos;ll send you a link to reset your password.
         </p>
       </CardHeader>
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
+            <RHFInput
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="john@example.com"
-                      autoComplete="email"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="Email"
+              type="email"
+              placeholder="john@example.com"
+              autoComplete="email"
+              icon={Mail}
+              className="bg-background/50 border-border focus-visible:border-violet-500"
             />
 
             <SubmitButton

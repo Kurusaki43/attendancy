@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BadgeCheck, MailCheck } from 'lucide-react';
+import { BadgeCheck, MailCheck, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -9,16 +9,8 @@ import { toast } from 'sonner';
 
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
+import RHFInput from '@/components/ui/RHF/RHFInput';
 import { verifyEmailAction } from '@/features/auth/actions/email-verify.action';
 import {
   type VerifyEmailInput,
@@ -98,31 +90,16 @@ const VerifyEmail = ({ userId, email }: VerifyEmailProps) => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
+            <RHFInput
               control={form.control}
               name="code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Verification Code</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      placeholder="123456"
-                      maxLength={6}
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      className="bg-background/50 border-border text-center text-lg tracking-[0.5em] focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormDescription className="text-xs">
-                    Enter the 6-digit code sent to your email.
-                  </FormDescription>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="Verification Code"
+              placeholder="123456"
+              maxLength={6}
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              icon={ShieldCheck}
+              className="bg-background/50 border-border text-center text-lg tracking-[0.5em] focus-visible:border-violet-500"
             />
 
             <SubmitButton

@@ -34,7 +34,7 @@ export async function login(
   }
 
   if (!user.emailVerifiedAt) {
-    throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Email not verified');
+    throw new UnauthorizedError(ERROR_CODES.EMAIL_NOT_VERIFIED, 'Email not verified');
   }
 
   if (user.status !== UserStatus.ACTIVE) {

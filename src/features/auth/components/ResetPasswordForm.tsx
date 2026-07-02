@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { KeyRound } from 'lucide-react';
+import { KeyRound, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -10,15 +10,8 @@ import { toast } from 'sonner';
 
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
+import RHFInput from '@/components/ui/RHF/RHFInput';
 import { resetPasswordAction } from '@/features/auth/actions/reset-password.action';
 import type { ResetPasswordFormInput } from '@/features/auth/schemas/reset-password.schema';
 import {
@@ -104,48 +97,26 @@ const ResetPasswordForm = ({ token, id }: ResetPasswordPageProps) => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
+            <RHFInput
               control={form.control}
               name="newPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-foreground!">New Password</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="New Password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="new-password"
+              icon={Lock}
+              className="bg-background/50 border-border focus-visible:border-violet-500"
             />
 
-            <FormField
+            <RHFInput
               control={form.control}
               name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-foreground!">Confirm Password</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="Confirm Password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="new-password"
+              icon={Lock}
+              className="bg-background/50 border-border focus-visible:border-violet-500"
             />
 
             <SubmitButton

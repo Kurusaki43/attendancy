@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Lock, Mail, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -9,16 +10,8 @@ import { toast } from 'sonner';
 
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
+import RHFInput from '@/components/ui/RHF/RHFInput';
 import { registerAction } from '@/features/auth/actions/register.action';
 import {
   type RegisterFormInput,
@@ -84,6 +77,7 @@ const RegisterForm = () => {
       router.push('/verify-email');
     });
   };
+
   return (
     <Card className="border-border/50 bg-background/40 w-full max-w-md shadow-2xl backdrop-blur-2xl">
       <CardHeader className="space-y-3 pb-2 text-center">
@@ -100,125 +94,62 @@ const RegisterForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">
             <div className="grid items-start gap-4 sm:grid-cols-2">
-              <FormField
+              <RHFInput
                 control={form.control}
                 name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground! text-sm font-medium">
-                      First Name
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="John"
-                        autoComplete="given-name"
-                        className="bg-background/50 border-border focus-visible:border-violet-500"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage className="text-xs tracking-wide" />
-                  </FormItem>
-                )}
+                label="First Name"
+                placeholder="John"
+                autoComplete="given-name"
+                icon={UserRound}
+                className="bg-background/50 border-border focus-visible:border-violet-500"
               />
 
-              <FormField
+              <RHFInput
                 control={form.control}
                 name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground! text-sm font-medium">
-                      Last Name
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        placeholder="Doe"
-                        autoComplete="family-name"
-                        className="bg-background/50 border-border focus-visible:border-violet-500"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage className="text-xs tracking-wide" />
-                  </FormItem>
-                )}
+                label="Last Name"
+                placeholder="Doe"
+                autoComplete="family-name"
+                icon={UserRound}
+                className="bg-background/50 border-border focus-visible:border-violet-500"
               />
             </div>
 
-            <FormField
+            <RHFInput
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-foreground! text-sm font-medium">Email</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="john@example.com"
-                      autoComplete="email"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="Email"
+              type="email"
+              placeholder="john@example.com"
+              autoComplete="email"
+              icon={Mail}
+              className="bg-background/50 border-border focus-visible:border-violet-500"
             />
+
             <div className="grid items-start gap-4 sm:grid-cols-2">
-              <FormField
+              <RHFInput
                 control={form.control}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground! text-sm font-medium">Password</FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        autoComplete="new-password"
-                        className="bg-background/50 border-border focus-visible:border-violet-500"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormDescription className="text-xs">
-                      Must contain at least 8 characters.
-                    </FormDescription>
-
-                    <FormMessage className="text-xs tracking-wide" />
-                  </FormItem>
-                )}
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete="new-password"
+                icon={Lock}
+                className="bg-background/50 border-border focus-visible:border-violet-500"
               />
 
-              <FormField
+              <RHFInput
                 control={form.control}
                 name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-foreground! text-sm font-medium">
-                      Confirm Password
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        autoComplete="new-password"
-                        className="bg-background/50 border-border focus-visible:border-violet-500"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage className="text-xs tracking-wide" />
-                  </FormItem>
-                )}
+                label="Confirm Password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete="new-password"
+                icon={Lock}
+                className="bg-background/50 border-border focus-visible:border-violet-500"
               />
             </div>
+
             <TurnstileField
               onVerify={(token) => {
                 form.setValue('captchaToken', token, {

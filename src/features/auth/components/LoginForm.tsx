@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LogIn } from 'lucide-react';
+import { Lock, LogIn, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
@@ -10,18 +10,12 @@ import { toast } from 'sonner';
 
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
+import RHFInput from '@/components/ui/RHF/RHFInput';
 import { loginAction } from '@/features/auth/actions/login.action';
 import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton';
 import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';
+import { ERROR_CODES } from '@/lib/errors/error-codes';
 
 const LoginForm = ({ email }: { email?: string }) => {
   const router = useRouter();
@@ -43,7 +37,8 @@ const LoginForm = ({ email }: { email?: string }) => {
       const result = await loginAction(data);
 
       if (!result.success) {
-        if (result.code === 'EMAIL_NOT_VERIFIED') {
+        console.log(result);
+        if (result.code === ERROR_CODES.EMAIL_NOT_VERIFIED) {
           toast.info(result.message);
 
           router.push('/verify-email');
@@ -95,48 +90,26 @@ const LoginForm = ({ email }: { email?: string }) => {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
+            <RHFInput
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="john@example.com"
-                      autoComplete="email"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="Email"
+              type="email"
+              placeholder="john@example.com"
+              autoComplete="email"
+              icon={Mail}
+              className="bg-background/50 border-border focus-visible:border-violet-500"
             />
 
-            <FormField
+            <RHFInput
               control={form.control}
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="current-password"
-                      className="bg-background/50 border-border focus-visible:border-violet-500"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage className="text-xs tracking-wide" />
-                </FormItem>
-              )}
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="current-password"
+              icon={Lock}
+              className="bg-background/50 border-border focus-visible:border-violet-500"
             />
 
             <div className="flex justify-end">
