@@ -1,3 +1,7 @@
+import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { NotFoundError } from '@/lib/errors/not-found.error';
+import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+
 import { authConfig } from '../lib/auth.config';
 import { tokenService } from '../lib/token.service';
 import { sessionRepository } from '../repositories/session.repository';
@@ -7,19 +11,19 @@ export async function refreshSession(refreshToken: string) {
   const refreshPayload = await tokenService.verifyRefreshToken(refreshToken);
 
   if (!refreshPayload) {
-    throw new Error('Invalid refresh token');
+    throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Invalid refresh token');
   }
 
   const session = await sessionRepository.findById(refreshPayload.sessionId);
 
   if (!session || session.revokedAt) {
-    throw new Error('Invalid session');
+    throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Invalid session');
   }
 
   if (session.expiresAt < new Date()) {
     await sessionRepository.revoke(session.id);
 
-    throw new Error('Session expired');
+    throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Session expired');
   }
 
   const isValid = await tokenService.compareTokens(refreshToken, session.refreshTokenHash);
@@ -27,7 +31,7 @@ export async function refreshSession(refreshToken: string) {
   if (!isValid) {
     await sessionRepository.revoke(session.id);
 
-    throw new Error('Invalid refresh token');
+    throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Invalid refresh token');
   }
 
   const user = await userRepository.findById(refreshPayload.userId);
@@ -35,7 +39,7 @@ export async function refreshSession(refreshToken: string) {
   if (!user) {
     await sessionRepository.revoke(session.id);
 
-    throw new Error('User not found');
+    throw new NotFoundError(ERROR_CODES.USER_NOT_FOUND, 'User not found');
   }
 
   const payload = {

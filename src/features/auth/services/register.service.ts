@@ -1,4 +1,5 @@
 import { emailQueueService } from '@/features/mail/email-queue.service';
+import { ConflictError } from '@/lib/errors/conflict.error';
 
 import { authConfig } from '../lib/auth.config';
 import { generateOtp, hashOtp } from '../lib/otp';
@@ -11,7 +12,7 @@ export async function register(body: RegisterInput) {
   // 1- verify if user exists before
   const existingUser = await userRepository.findByEmail(body.email);
   if (existingUser) {
-    throw new Error('User Already exists');
+    throw new ConflictError('EMAIL_ALREADY_EXISTS', 'Email already exists');
   }
 
   // 2- create a password hash

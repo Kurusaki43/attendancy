@@ -2,6 +2,8 @@ import { addMinutes } from 'date-fns';
 
 import { emailQueueService } from '@/features/mail/email-queue.service';
 import { OtpType } from '@/generated/prisma/enums';
+import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { NotFoundError } from '@/lib/errors/not-found.error';
 
 import { generateOtp, hashOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';
@@ -11,11 +13,11 @@ export async function resendEmailVerification(email: string) {
   const user = await userRepository.findByEmail(email);
 
   if (!user) {
-    throw new Error('User not found');
+    throw new NotFoundError(ERROR_CODES.USER_NOT_FOUND, 'User not found');
   }
 
   if (user.emailVerifiedAt) {
-    throw new Error('Email already verified');
+    throw new NotFoundError(ERROR_CODES.EMAIL_ALREADY_VERIFIED, 'Email already verified');
   }
 
   await otpRepository.invalidateActiveOtps({
