@@ -55,4 +55,4 @@ export const PERMISSIONS = {
   PROFILE_UPDATE_SELF: permission('profile', 'update:self', 'Update personal profile'),
 } as const;
 
-export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+export type PermissionDefinition = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
