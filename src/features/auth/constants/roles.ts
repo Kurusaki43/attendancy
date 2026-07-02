@@ -1,5 +1,3 @@
-// src/features/auth/constants/roles.ts
-
 export const ROLES = {
   ADMIN: {
     name: 'ADMIN',
@@ -23,4 +21,4 @@ export const ROLE_NAMES = {
   EMPLOYEE: ROLES.EMPLOYEE.name,
 } as const;
 
-export type Role = (typeof ROLE_NAMES)[keyof typeof ROLE_NAMES];
+export type RoleName = (typeof ROLE_NAMES)[keyof typeof ROLE_NAMES];
