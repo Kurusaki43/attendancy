@@ -1,17 +1,21 @@
 import { getAllDepartmentsAction } from '@/features/departments';
+import { AddDepartmentDialog } from '@/features/departments/components/AddDepartmentDialog';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 
 export default async function DepartmentsPage() {
   const result = await getAllDepartmentsAction();
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto space-y-8 lg:max-w-7xl">
       {/* Page header */}
-      <div className="pb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Departments</h1>
-        <p className="text-muted-foreground mt-1.5 text-sm">
-          Manage your organisation&apos;s departments and their status.
-        </p>
+      <div className="flex items-start justify-between pb-6">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Departments</h1>
+          <p className="text-muted-foreground mt-1.5 text-sm">
+            Manage your organisation&apos;s departments and their status.
+          </p>
+        </div>
+        <AddDepartmentDialog />
       </div>
 
       {/* Content */}
