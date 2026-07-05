@@ -1,7 +1,7 @@
 'use server';
 
 import { AppError } from '@/lib/errors/app.error';
-import type { ActionResult } from '@/types/action.types';
+import type { ActionResult } from '@/shared/types/action.types';
 
 import { getAllDepartments } from '../services/get-all-departments.service';
 import type { GetAllDepartmentsActionResult } from '../types/action-results';

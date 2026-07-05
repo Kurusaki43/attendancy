@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { AppError } from '@/lib/errors/app.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
-import type { ActionResult } from '@/types/action.types';
+import type { ActionResult } from '@/shared/types/action.types';
 
 import {
   setAccessTokenCookie,

@@ -9,7 +9,7 @@ import {
 import { register } from '@/features/auth/services/register.service';
 import { verifyCaptcha } from '@/lib/captcha';
 import { AppError } from '@/lib/errors/app.error';
-import type { ActionResult } from '@/types/action.types';
+import type { ActionResult } from '@/shared/types/action.types';
 
 import { setPendingEmailVerificationCookie } from '../lib/cookies';
 

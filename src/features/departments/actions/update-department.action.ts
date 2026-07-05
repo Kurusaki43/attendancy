@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 import { AppError } from '@/lib/errors/app.error';
-import type { ActionResult } from '@/types/action.types';
+import type { ActionResult } from '@/shared/types/action.types';
 
 import {
   type UpdateDepartmentInput,

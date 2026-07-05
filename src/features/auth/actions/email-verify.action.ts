@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 import { AppError } from '@/lib/errors/app.error';
-import type { ActionResult } from '@/types/action.types';
+import type { ActionResult } from '@/shared/types/action.types';
 
 import { clearPendingEmailVerificationCookie } from '../lib/cookies';
 import { type VerifyEmailInput, verifyEmailSchema } from '../schemas/email-verification.schema';
