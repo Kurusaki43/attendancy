@@ -1,3 +1,5 @@
+import DataTablePagination from '@/components/shared/data-table/DataTablePagination';
+import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { getAllDepartmentsAction } from '@/features/departments';
 import { AddDepartmentDialog } from '@/features/departments/components/AddDepartmentDialog';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
@@ -27,10 +29,13 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
         </div>
         <AddDepartmentDialog />
       </div>
-
+      <DataTableToolbar />
       {/* Content */}
       {result.success ? (
-        <DepartmentsTable departments={result.data} />
+        <>
+          <DepartmentsTable departments={result.data} />
+          <DataTablePagination limit={10} page={1} totalPages={4} totalItems={20} />
+        </>
       ) : (
         <div className="bg-destructive/5 border-destructive/20 rounded-md border px-4 py-3">
           <p className="text-destructive text-sm font-medium">
