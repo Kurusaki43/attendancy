@@ -8,14 +8,8 @@ export const updateDepartmentSchema = z.object({
     .max(100, 'Department name must not exceed 100 characters.')
     .optional(),
 
-  description: z
-    .string()
-    .trim()
-    .max(500, 'Description must not exceed 500 characters.')
-    .optional()
-    .nullable(),
-
+  description: z.string().trim().max(500, 'Description must not exceed 500 characters.').optional(),
   isActive: z.boolean().optional(),
 });
 
-export type UpdateDepartmentInput = z.infer<typeof updateDepartmentSchema>;
+export type UpdateDepartmentInput = z.input<typeof updateDepartmentSchema>;
