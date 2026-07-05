@@ -6,7 +6,9 @@ import type { ActionResult } from '@/types/action.types';
 import { getAllDepartments } from '../services/get-all-departments.service';
 import type { GetAllDepartmentsActionResult } from '../types/action-results';
 
-export async function getAllDepartmentsAction(): Promise<ActionResult<GetAllDepartmentsActionResult>> {
+export async function getAllDepartmentsAction(): Promise<
+  ActionResult<GetAllDepartmentsActionResult>
+> {
   try {
     const departments = await getAllDepartments();
 

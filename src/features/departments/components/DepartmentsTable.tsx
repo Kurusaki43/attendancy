@@ -1,27 +1,50 @@
 'use client';
 
-import { type ColumnDef, DataTable } from '@/components/ui/DataTable';
-import type { DepartmentResult } from '@/features/departments/types/action-results';
-import { cn } from '@/lib/utils';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
-function StatusBadge({ isActive }: { isActive: boolean }) {
+import { type ColumnDef, DataTable } from '@/components/ui/DataTable';
+import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
+import type { DepartmentResult } from '@/features/departments/types/action-results';
+
+import { updateDepartmentAction } from '../actions/update-department.action';
+import DeleteDepartementDialog from './DeleteDepartementDialog';
+import { EditDepartmentDialog } from './EditDepartmentDialog';
+
+function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActive: boolean }) {
+  const [checked, setChecked] = useState(isActive);
+  const [isPending, startTransition] = useTransition();
+
+  const handleToggleStatus = () => {
+    const nextValue = !checked;
+
+    // Optimistic update
+    setChecked(nextValue);
+
+    startTransition(async () => {
+      const result = await updateDepartmentAction(id, {
+        isActive: nextValue,
+      });
+
+      if (!result.success) {
+        setChecked(!nextValue);
+
+        toast.error(`Failed to ${nextValue ? 'activate' : 'deactivate'} ${name} department`);
+
+        return;
+      }
+
+      toast.success(`${name} Department ${nextValue ? 'activated' : 'deactivated'} successfully`);
+    });
+  };
+
   return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium',
-        isActive
-          ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400'
-          : 'border-border bg-muted text-muted-foreground',
-      )}
-    >
-      <span
-        className={cn(
-          'size-1.5 rounded-full',
-          isActive ? 'bg-emerald-500 dark:bg-emerald-400' : 'bg-muted-foreground/50',
-        )}
-      />
-      {isActive ? 'Active' : 'Inactive'}
-    </span>
+    <div className="flex items-center gap-2">
+      <Switch checked={checked} onCheckedChange={handleToggleStatus} disabled={isPending} />
+
+      {isPending && <Spinner />}
+    </div>
   );
 }
 
@@ -35,16 +58,16 @@ const columns: ColumnDef<DepartmentResult>[] = [
     key: 'description',
     header: 'Description',
     cell: (row) => (
-      <span className="text-muted-foreground max-w-sm truncate">
+      <p className="text-muted-foreground max-w-sm truncate">
         {row.description ?? <span className="italic opacity-50">No description</span>}
-      </span>
+      </p>
     ),
     cellClassName: 'max-w-sm',
   },
   {
     key: 'status',
     header: 'Status',
-    cell: (row) => <StatusBadge isActive={row.isActive} />,
+    cell: (row) => <StatusSwitch id={row.id} name={row.name} isActive={row.isActive} />,
   },
   {
     key: 'createdAt',
@@ -58,6 +81,17 @@ const columns: ColumnDef<DepartmentResult>[] = [
         })}
       </span>
     ),
+  },
+  {
+    key: 'actions',
+    header: 'Actions',
+    cell: (row) => (
+      <div className="flex gap-2">
+        <EditDepartmentDialog department={row} />
+        <DeleteDepartementDialog department={row} />
+      </div>
+    ),
+    cellClassName: 'text-right',
   },
 ];
 

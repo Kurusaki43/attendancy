@@ -34,15 +34,15 @@ export function DataTable<TData>({
   getRowKey,
 }: DataTableProps<TData>) {
   return (
-    <div className={cn('overflow-hidden rounded-lg border shadow-sm', className)}>
-      <Table>
+    <div className={cn('w-full overflow-x-auto border shadow-sm', className)}>
+      <Table className="min-w-175">
         <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/50">
+          <TableRow className="bg-primary hover:bg-primary">
             {columns.map((col) => (
               <TableHead
                 key={col.key}
                 className={cn(
-                  'text-muted-foreground h-11 px-4 text-xs font-semibold tracking-wide uppercase',
+                  'h-11 px-4 text-xs font-semibold tracking-wide text-white uppercase',
                   col.headerClassName,
                 )}
               >
@@ -53,7 +53,7 @@ export function DataTable<TData>({
         </TableHeader>
         <TableBody>
           {data.length === 0 ? (
-            <TableRow className="hover:bg-transparent">
+            <TableRow className="odd:bg-accent-foreground hover:bg-transparent">
               <TableCell
                 colSpan={columns.length}
                 className="text-muted-foreground h-32 text-center text-sm"
@@ -63,9 +63,12 @@ export function DataTable<TData>({
             </TableRow>
           ) : (
             data.map((row) => (
-              <TableRow key={getRowKey(row)} className="hover:bg-muted/30 transition-colors">
+              <TableRow
+                key={getRowKey(row)}
+                className="hover:bg-muted/30 even:bg-muted-foreground/5 transition-colors"
+              >
                 {columns.map((col) => (
-                  <TableCell key={col.key} className={cn('px-4 py-3.5 text-sm', col.cellClassName)}>
+                  <TableCell key={col.key} className={cn('px-4 py-2 text-sm', col.cellClassName)}>
                     {col.cell(row)}
                   </TableCell>
                 ))}

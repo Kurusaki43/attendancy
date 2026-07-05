@@ -5,9 +5,7 @@ import type { ActionResult } from '@/types/action.types';
 
 import { deleteDepartment } from '../services/delete-department.service';
 
-export async function deleteDepartmentAction(
-  departmentId: string,
-): Promise<ActionResult<void>> {
+export async function deleteDepartmentAction(departmentId: string): Promise<ActionResult<void>> {
   try {
     await deleteDepartment(departmentId);
 
