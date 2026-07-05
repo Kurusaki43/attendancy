@@ -19,16 +19,16 @@ type SidebarProps = {
 
 function NavItemLink({ item }: { item: NavItem }) {
   const pathname = usePathname();
-  const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+  const isActive = pathname === item.href;
 
   return (
     <Link
       href={item.href}
       className={cn(
-        'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out',
+        'group flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out',
         isActive
-          ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
-          : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground',
+          ? 'bg-primary text-sidebar-primary-foreground shadow-sm'
+          : 'text-sidebar-foreground/80 hover:bg-primary/10 hover:text-sidebar-accent-foreground',
       )}
     >
       <item.icon
@@ -96,7 +96,7 @@ export function Sidebar({ user, navGroups, isOpen, onClose }: SidebarProps) {
       >
         {/* Logo / Brand */}
         <div className="border-sidebar-border flex h-16 shrink-0 items-center gap-3 border-b px-4 sm:px-6">
-          <div className="bg-sidebar-primary flex size-9 items-center justify-center rounded-lg shadow-sm">
+          <div className="bg-primary flex size-9 items-center justify-center rounded-lg shadow-sm">
             <span className="text-sidebar-primary-foreground text-sm font-bold">A</span>
           </div>
           <div className="min-w-0">
