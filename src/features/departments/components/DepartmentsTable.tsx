@@ -41,7 +41,12 @@ function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActi
 
   return (
     <div className="flex items-center gap-2">
-      <Switch checked={checked} onCheckedChange={handleToggleStatus} disabled={isPending} />
+      <Switch
+        checked={checked}
+        onCheckedChange={handleToggleStatus}
+        disabled={isPending}
+        className="select-none"
+      />
 
       {isPending && <Spinner />}
     </div>
@@ -106,6 +111,7 @@ export function DepartmentsTable({ departments }: DepartmentsTableProps) {
       columns={columns}
       emptyMessage="No departments found."
       getRowKey={(row) => row.id}
+      className="border"
     />
   );
 }

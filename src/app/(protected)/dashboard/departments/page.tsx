@@ -6,7 +6,7 @@ export default async function DepartmentsPage() {
   const result = await getAllDepartmentsAction();
 
   return (
-    <div className="mx-auto space-y-8 lg:max-w-7xl">
+    <div className="space-y-8">
       {/* Page header */}
       <div className="flex items-start justify-between pb-6">
         <div>
