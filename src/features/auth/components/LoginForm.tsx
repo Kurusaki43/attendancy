@@ -8,10 +8,10 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import RHFInput from '@/components/shared/RHF/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import RHFInput from '@/components/ui/RHF/RHFInput';
 import { loginAction } from '@/features/auth/actions/login.action';
 import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton';
 import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';

@@ -2,8 +2,18 @@ import { getAllDepartmentsAction } from '@/features/departments';
 import { AddDepartmentDialog } from '@/features/departments/components/AddDepartmentDialog';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 
-export default async function DepartmentsPage() {
-  const result = await getAllDepartmentsAction();
+type DepartmentsPageProps = {
+  searchParams: {
+    seach?: string;
+    sort?: string;
+    page?: string;
+    status?: string;
+  };
+};
+
+export default async function DepartmentsPage({ searchParams }: DepartmentsPageProps) {
+  const params = await searchParams;
+  const result = await getAllDepartmentsAction(params);
 
   return (
     <div className="space-y-8">

@@ -4,10 +4,9 @@ import { Eye, EyeOff, type LucideIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import type { Control, FieldValues, Path } from 'react-hook-form';
 
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../form';
-import { Input } from '../input';
 
 type RHFInputProps<T extends FieldValues> = {
   control: Control<T>;
