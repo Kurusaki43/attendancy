@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
-import { type ColumnDef, DataTable } from '@/components/ui/DataTable';
+import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import type { DepartmentResult } from '@/features/departments/types/action-results';
