@@ -1,6 +1,7 @@
 'use client';
 
 import { CirclePlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -17,9 +18,10 @@ import { DepartmentForm } from './DepartmentForm';
 
 export function AddDepartmentDialog() {
   const [open, setOpen] = useState(false);
-
+  const router = useRouter();
   const handleSuccess = () => {
     setOpen(false);
+    router.refresh();
   };
 
   return (
