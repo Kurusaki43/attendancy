@@ -1,9 +1,9 @@
 // Actions (server actions for client-side consumption)
-export { createDepartmentAction } from './actions/create-department.action';
-export { deleteDepartmentAction } from './actions/delete-department.action';
-export { getAllDepartmentsAction } from './actions/get-all-departments.action';
-export { getDepartmentAction } from './actions/get-department.action';
-export { updateDepartmentAction } from './actions/update-department.action';
+export { createDepartmentAction } from '@/server/departments/actions/create-department.action';
+export { deleteDepartmentAction } from '@/server/departments/actions/delete-department.action';
+export { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
+export { getDepartmentAction } from '@/server/departments/actions/get-department.action';
+export { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
 
 // Components
 export { AddDepartmentDialog } from './components/AddDepartmentDialog';

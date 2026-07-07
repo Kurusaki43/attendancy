@@ -3,16 +3,16 @@
 import { z } from 'zod';
 
 import { PERMISSIONS } from '@/features/auth/constants/permissions';
-import { requirePermission } from '@/features/auth/guards/require-permission';
-import type { ActionResult } from '@/shared/types/action.types';
-import { runAction } from '@/shared/utils/run-action';
-
 import {
   type CreateDepartmentInput,
   createDepartmentSchema,
-} from '../schemas/create-department.schema';
+} from '@/features/departments/schemas/create-department.schema';
+import type { CreateDepartmentActionResult } from '@/features/departments/types/action-results';
+import { requirePermission } from '@/server/auth/guards/require-permission';
+import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
+
 import { createDepartment } from '../services/create-department.service';
-import type { CreateDepartmentActionResult } from '../types/action-results';
 
 export async function createDepartmentAction(
   input: CreateDepartmentInput,

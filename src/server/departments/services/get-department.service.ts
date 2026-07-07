@@ -1,19 +1,15 @@
-import type { DepartmentUpdateInput } from '@/generated/prisma/models';
+import type { GetDepartmentServiceResult } from '@/features/departments/types';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 
 import { departmentRepository } from '../repositories/department.repository';
-import type { UpdateDepartmentServiceResult } from '../types';
 
-export async function updateDepartment(
-  departmentId: string,
-  departmentInput: DepartmentUpdateInput,
-): Promise<UpdateDepartmentServiceResult> {
+export async function getDepartment(departmentId: string): Promise<GetDepartmentServiceResult> {
   const department = await departmentRepository.findById(departmentId);
 
   if (!department) {
     throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Department not found!');
   }
 
-  return await departmentRepository.update(departmentId, departmentInput);
+  return department;
 }

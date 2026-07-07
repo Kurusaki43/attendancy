@@ -1,3 +1,5 @@
+import type { DepartmentQueryInput } from '@/features/departments/schemas/get-all-departments-query-schema';
+import { departmentQuerySchema } from '@/features/departments/schemas/get-all-departments-query-schema';
 import type { Prisma } from '@/generated/prisma/client';
 import { BadRequestError } from '@/lib/errors/bad-request-error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
@@ -5,8 +7,6 @@ import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
 import { departmentRepository } from '../repositories/department.repository';
-import type { DepartmentQueryInput } from '../schemas/get-all-departments-query-schema';
-import { departmentQuerySchema } from '../schemas/get-all-departments-query-schema';
 
 const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'description'];
 const DEPARTMENT_FILTERABLE_FIELDS = ['isActive'];

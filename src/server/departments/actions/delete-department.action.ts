@@ -1,7 +1,7 @@
 'use server';
 
 import { PERMISSIONS } from '@/features/auth/constants/permissions';
-import { requirePermission } from '@/features/auth/guards/require-permission';
+import { requirePermission } from '@/server/auth/guards/require-permission';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 

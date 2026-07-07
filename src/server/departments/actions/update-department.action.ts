@@ -3,16 +3,16 @@
 import { z } from 'zod';
 
 import { PERMISSIONS } from '@/features/auth/constants/permissions';
-import { requirePermission } from '@/features/auth/guards/require-permission';
-import type { ActionResult } from '@/shared/types/action.types';
-import { runAction } from '@/shared/utils/run-action';
-
 import {
   type UpdateDepartmentInput,
   updateDepartmentSchema,
-} from '../schemas/update-department.schema';
+} from '@/features/departments/schemas/update-department.schema';
+import type { UpdateDepartmentActionResult } from '@/features/departments/types/action-results';
+import { requirePermission } from '@/server/auth/guards/require-permission';
+import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
+
 import { updateDepartment } from '../services/update-department.service';
-import type { UpdateDepartmentActionResult } from '../types/action-results';
 
 export async function updateDepartmentAction(
   departmentId: string,

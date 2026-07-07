@@ -15,8 +15,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { deleteDepartmentAction } from '@/server/departments/actions/delete-department.action';
 
-import { deleteDepartmentAction } from '../actions/delete-department.action';
 import type { DepartmentResult } from '../types';
 
 type DeleteDepartmentDialogProps = {

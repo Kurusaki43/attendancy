@@ -1,17 +1,19 @@
+import type { UpdateDepartmentServiceResult } from '@/features/departments/types';
+import type { DepartmentUpdateInput } from '@/generated/prisma/models';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 
 import { departmentRepository } from '../repositories/department.repository';
-import type { DeleteDepartmentServiceResult } from '../types';
 
-export async function deleteDepartment(
+export async function updateDepartment(
   departmentId: string,
-): Promise<DeleteDepartmentServiceResult> {
+  departmentInput: DepartmentUpdateInput,
+): Promise<UpdateDepartmentServiceResult> {
   const department = await departmentRepository.findById(departmentId);
 
   if (!department) {
     throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Department not found!');
   }
 
-  await departmentRepository.delete(departmentId);
+  return await departmentRepository.update(departmentId, departmentInput);
 }

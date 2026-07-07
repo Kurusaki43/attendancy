@@ -17,9 +17,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { createDepartmentAction } from '@/server/departments/actions/create-department.action';
+import { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
 
-import { createDepartmentAction } from '../actions/create-department.action';
-import { updateDepartmentAction } from '../actions/update-department.action';
 import {
   type CreateDepartmentInput,
   createDepartmentSchema,

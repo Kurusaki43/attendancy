@@ -7,8 +7,8 @@ import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTa
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import type { DepartmentResult } from '@/features/departments/types/action-results';
+import { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
 
-import { updateDepartmentAction } from '../actions/update-department.action';
 import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
 import { EditDepartmentDialog } from './EditDepartmentDialog';
 
