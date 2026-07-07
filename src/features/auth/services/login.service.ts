@@ -24,7 +24,7 @@ export async function login(
   }
 
   if (!user.passwordHash) {
-    throw new BadRequestError('SOCIAL_LOGIN_ONLY', 'This account uses social login');
+    throw new BadRequestError(ERROR_CODES.SOCIAL_LOGIN_ONLY, 'This account uses social login');
   }
 
   const isPasswordValid = await verifyPassword(password, user.passwordHash);

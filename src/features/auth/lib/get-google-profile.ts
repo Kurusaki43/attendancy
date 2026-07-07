@@ -1,4 +1,5 @@
 import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { ERROR_CODES } from '@/lib/errors/error-codes';
 
 export type GoogleUser = {
   sub: string;
@@ -17,7 +18,10 @@ export async function getGoogleProfile(accessToken: string): Promise<GoogleUser>
   });
 
   if (!response.ok) {
-    throw new BadRequestError('GOOGLE_PROFILE_FETCH_FAILED', 'Failed to fetch Google profile');
+    throw new BadRequestError(
+      ERROR_CODES.GOOGLE_PROFILE_FETCH_FAILED,
+      'Failed to fetch Google profile',
+    );
   }
 
   return response.json();

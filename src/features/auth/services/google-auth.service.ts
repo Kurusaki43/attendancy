@@ -32,7 +32,10 @@ export async function authenticateWithGoogle(
   const profile = await getGoogleProfile(tokens.accessToken());
 
   if (!profile.email_verified) {
-    throw new BadRequestError('GOOGLE_EMAIL_NOT_VERIFIED', 'Google email is not verified');
+    throw new BadRequestError(
+      ERROR_CODES.GOOGLE_EMAIL_NOT_VERIFIED,
+      'Google email is not verified',
+    );
   }
 
   const user = await userRepository.findByEmail(profile.email);
@@ -45,7 +48,7 @@ export async function authenticateWithGoogle(
 
     if (!employeeRole) {
       throw new InternalServerError(
-        'ROLE_NOT_FOUND',
+        ERROR_CODES.ROLE_NOT_FOUND,
         'EMPLOYEE role not found. Please run database seeds.',
       );
     }
@@ -69,7 +72,7 @@ export async function authenticateWithGoogle(
 
   if (user.provider === 'LOCAL') {
     throw new ConflictError(
-      'EMAIL_EXISTS_WITH_PASSWORD',
+      ERROR_CODES.EMAIL_EXISTS_WITH_PASSWORD,
       'An account with this email already exists. Please sign in with your password.',
     );
   }

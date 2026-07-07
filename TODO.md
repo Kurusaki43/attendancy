@@ -32,11 +32,17 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## 🟠 High
 
-- [ ] **`BadRequestError.code` is typed `string`, not `ErrorCode`.** Every other AppError subclass
+- [x] **`BadRequestError.code` is typed `string`, not `ErrorCode`.** Every other AppError subclass
       (`NotFoundError`, `ConflictError`, `ForbiddenError`, `UnauthorizedError`, `InternalServerError`)
       takes `code: ErrorCode` from [`error-codes.ts`](src/lib/errors/error-codes.ts).
       `BadRequestError` ([`bad-request-error.ts`](src/lib/errors/bad-request-error.ts)) is the odd
       one out — a typo'd code there won't be caught at compile time. Change to `ErrorCode`.
+      Tightening the type surfaced 3 codes that were never registered
+      (`GOOGLE_PROFILE_FETCH_FAILED`, `SOCIAL_LOGIN_ONLY`, `GOOGLE_EMAIL_NOT_VERIFIED`) — added them
+      to `ERROR_CODES` and switched every raw string-literal call site (including two on
+      `ConflictError`/`InternalServerError` that happened to match by coincidence) to reference
+      `ERROR_CODES.*` instead, so a future typo fails to compile instead of silently minting a new
+      untracked code.
 
 - [ ] **`ApiFeaturesBuilder.filter()` has no field allowlist.** In
       [`api-features.builder.ts`](src/shared/builders/api-features.builder.ts), `filter()` builds
