@@ -24,15 +24,13 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      <div className="flex h-full w-full flex-col">
+      <div className="flex h-full w-full flex-col overflow-auto">
         <Header
           user={user}
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        <main className="mx-auto w-full max-w-7xl overflow-auto px-4 py-10 sm:px-6 lg:px-8">
-          {children}
-        </main>
+        <main className="mx-auto w-full max-w-7xl px-2 py-8 sm:px-4 lg:px-6">{children}</main>
       </div>
     </div>
   );

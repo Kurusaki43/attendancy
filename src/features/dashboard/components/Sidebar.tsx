@@ -106,7 +106,7 @@ export function Sidebar({ user, navGroups, isOpen, onClose }: SidebarProps) {
         </div>
 
         {/* Nav groups */}
-        <nav className="flex-1 scrollbar-thin overflow-y-auto px-3 py-6">
+        <nav className="flex-1 scrollbar-thin overflow-y-auto px-3 py-2">
           <div className="space-y-6">
             {navGroups.map((group) => (
               <NavGroupSection key={group.label} group={group} user={user} />

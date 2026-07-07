@@ -4,42 +4,102 @@ import { prisma } from '@/lib/prisma';
 const DEPARTMENTS = [
   {
     name: 'Engineering',
-    description: 'Software development, infrastructure, and technical operations.',
+    description: 'Software development, infrastructure, architecture, and technical operations.',
+    isActive: true,
+  },
+  {
+    name: 'Information Technology',
+    description: 'IT support, hardware, networking, and system administration.',
     isActive: true,
   },
   {
     name: 'Human Resources',
-    description: 'Recruitment, onboarding, employee relations, and compliance.',
+    description: 'Recruitment, onboarding, employee relations, benefits, and compliance.',
     isActive: true,
   },
   {
     name: 'Finance',
-    description: 'Budgeting, payroll, accounting, and financial reporting.',
+    description: 'Budgeting, accounting, payroll, financial planning, and reporting.',
     isActive: true,
   },
   {
     name: 'Sales',
-    description: 'Business development, account management, and revenue growth.',
+    description: 'Business development, customer acquisition, and account management.',
     isActive: true,
   },
   {
     name: 'Marketing',
-    description: 'Brand strategy, campaigns, content, and market research.',
+    description: 'Brand management, digital marketing, advertising, and market research.',
     isActive: true,
   },
   {
     name: 'Customer Support',
-    description: 'Customer service, technical support, and issue resolution.',
+    description: 'Customer assistance, issue resolution, and technical support.',
     isActive: true,
   },
   {
     name: 'Legal',
-    description: 'Contract management, regulatory compliance, and corporate governance.',
+    description: 'Contracts, litigation, regulatory compliance, and corporate governance.',
     isActive: true,
   },
   {
     name: 'Operations',
-    description: 'Day-to-day business operations, logistics, and process improvement.',
+    description: 'Business operations, logistics, process optimization, and execution.',
+    isActive: true,
+  },
+  {
+    name: 'Procurement',
+    description: 'Vendor management, purchasing, sourcing, and contract negotiations.',
+    isActive: true,
+  },
+  {
+    name: 'Research & Development',
+    description: 'Innovation, product research, prototyping, and emerging technologies.',
+    isActive: true,
+  },
+  {
+    name: 'Quality Assurance',
+    description: 'Quality control, testing, audits, and continuous improvement.',
+    isActive: true,
+  },
+  {
+    name: 'Product Management',
+    description: 'Product strategy, roadmap planning, and stakeholder coordination.',
+    isActive: true,
+  },
+  {
+    name: 'Data & Analytics',
+    description: 'Business intelligence, reporting, data engineering, and analytics.',
+    isActive: true,
+  },
+  {
+    name: 'Cybersecurity',
+    description: 'Information security, risk management, incident response, and compliance.',
+    isActive: true,
+  },
+  {
+    name: 'Communications',
+    description: 'Internal communications, public relations, and corporate messaging.',
+    isActive: true,
+  },
+  {
+    name: 'Administration',
+    description: 'Administrative support, office management, and organizational services.',
+    isActive: true,
+  },
+  {
+    name: 'Facilities Management',
+    description: 'Building maintenance, workplace services, and physical security.',
+    isActive: true,
+  },
+  {
+    name: 'Training & Development',
+    description: 'Employee learning, professional development, and organizational training.',
+    isActive: true,
+  },
+  {
+    name: 'Internal Audit',
+    description: 'Risk assessment, internal controls, compliance audits, and governance.',
     isActive: false,
   },
 ] as const;

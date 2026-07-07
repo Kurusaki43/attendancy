@@ -52,7 +52,7 @@ export function DataTable<TData>({
       </TableHeader>
       <TableBody>
         {data.length === 0 ? (
-          <TableRow className="odd:bg-accent-foreground hover:bg-transparent">
+          <TableRow className="hover:bg-transparent">
             <TableCell
               colSpan={columns.length}
               className="text-muted-foreground h-32 text-center text-sm"

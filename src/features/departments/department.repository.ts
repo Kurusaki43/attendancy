@@ -1,5 +1,13 @@
+import type { Prisma } from '@/generated/prisma/client';
 import type { DepartmentCreateInput, DepartmentUpdateInput } from '@/generated/prisma/models';
 import { prisma } from '@/lib/prisma';
+import type { PrismaQueryOptions } from '@/shared/types/api-feature';
+
+export type DepartmentFindManyQuery = PrismaQueryOptions<
+  Prisma.DepartmentWhereInput,
+  Prisma.DepartmentOrderByWithRelationInput,
+  Prisma.DepartmentSelect
+>;
 
 export const departmentRepository = {
   create(data: DepartmentCreateInput) {
@@ -21,5 +29,13 @@ export const departmentRepository = {
 
   delete(departmentID: string) {
     return prisma.department.delete({ where: { id: departmentID } });
+  },
+
+  async findMany(query: DepartmentFindManyQuery) {
+    return prisma.department.findMany(query);
+  },
+
+  async count(where?: Prisma.DepartmentWhereInput) {
+    return prisma.department.count({ where });
   },
 };

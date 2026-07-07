@@ -9,23 +9,23 @@ const DataTableToolbar = () => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
       <SearchInput placeholder="Search by name" />
-      <div className="ml-auto flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <FilterSelect
-          queryKey="status"
-          label="status"
+          queryKey="isActive"
+          label="isActive"
           options={[
-            { label: 'Active', value: 'active' },
-            { label: 'NOT-Active', value: 'not-active' },
+            { label: 'Active', value: 'true' },
+            { label: 'NOT-Active', value: 'false' },
           ]}
         />
         <SortInput
           queryKey="sort"
           options={[
-            { label: 'Newest First', value: 'createdAt-desc' },
-            { label: 'Oldest First', value: 'createdAt-asc' },
-            { label: 'Name (A-Z)', value: 'name-asc' },
-            { label: 'Name (Z-A)', value: 'name-desc' },
-            { label: 'Recently Updated', value: 'updatedAt-desc' },
+            { label: 'Newest First', value: '-createdAt' },
+            { label: 'Oldest First', value: 'createdAt' },
+            { label: 'Name (A-Z)', value: 'name' },
+            { label: 'Name (Z-A)', value: '-name' },
+            { label: 'Recently Updated', value: '-updatedAt' },
           ]}
         />
         <ClearFiltersButton />

@@ -67,7 +67,7 @@ export default function DataTablePagination({ page, limit, totalItems, totalPage
   }
 
   return (
-    <div className="flex flex-col gap-4 border-t pt-4 md:flex-row md:items-center md:justify-between">
+    <div className="pt- flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div className="text-muted-foreground text-sm">
         Showing{' '}
         <span className="text-foreground font-medium">
