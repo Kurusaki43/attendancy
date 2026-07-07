@@ -1,4 +1,4 @@
-import { emailQueueService } from '@/features/mail/email-queue.service';
+import { emailQueueService } from '@/features/mail/services/email-queue.service';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { prisma } from '@/lib/prisma';

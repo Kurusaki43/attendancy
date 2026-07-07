@@ -2,7 +2,7 @@ import type {
   SendResetPassword,
   SendVerificationEmail,
   SendWelcome,
-} from '@/features/mail/mail.service';
+} from '@/features/mail/services/mail.service';
 
 export interface JobMap {
   email: {

@@ -5,7 +5,7 @@ import {
   type SendResetPassword,
   type SendVerificationEmail,
   type SendWelcome,
-} from './mail.service';
+} from '../services/mail.service';
 
 type EmailJobData = SendVerificationEmail | SendWelcome | SendResetPassword;
 

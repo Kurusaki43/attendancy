@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto';
 
-import { emailQueueService } from '@/features/mail/email-queue.service';
+import { emailQueueService } from '@/features/mail/services/email-queue.service';
 import { OtpType } from '@/generated/prisma/enums';
 import { env } from '@/lib/env/env';
 
