@@ -5,7 +5,12 @@ import { prisma } from '@/lib/prisma';
 
 import { verifyOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';
+import { userRepository } from '../repositories/user.repository';
 import type { ServiceEmailVerificationResult } from '../types/service-results';
+
+export async function getPendingVerificationUser(userId: string) {
+  return userRepository.findByIdSafeFields(userId);
+}
 
 export async function emailVerification(
   code: string,

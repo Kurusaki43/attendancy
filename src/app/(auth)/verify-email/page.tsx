@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import VerifyEmail from '@/features/auth/components/VerifyEmail';
 import { getPendingEmailVerificationCookie } from '@/features/auth/lib/cookies';
-import { userRepository } from '@/features/auth/repositories/user.repository';
+import { getPendingVerificationUser } from '@/features/auth/services/email-verification.service';
 
 const VerifyEmailPage = async () => {
   const userId = await getPendingEmailVerificationCookie();
@@ -11,7 +11,7 @@ const VerifyEmailPage = async () => {
     redirect('/register');
   }
 
-  const user = await userRepository.findByIdSafeFields(userId);
+  const user = await getPendingVerificationUser(userId);
 
   if (!user) {
     redirect('/api/auth/clear-pending-verification');
