@@ -2,10 +2,10 @@
 
 import { z } from 'zod';
 
+import { type ForgotPasswordInput, forgotPasswordSchema } from '@/features/auth/schemas/forgot-password.schema';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 
-import { type ForgotPasswordInput, forgotPasswordSchema } from '../schemas/forgot-password.schema';
 import { forgotPassword } from '../services/forgot-password.service';
 
 export async function forgotPasswordAction(

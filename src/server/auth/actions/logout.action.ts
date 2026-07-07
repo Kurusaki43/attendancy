@@ -3,9 +3,9 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
 import { logger } from '@/lib/logger';
 
-import { AUTH_COOKIES } from '../constants/auth.constant';
 import { clearAuthCookies } from '../lib/cookies';
 import { logout } from '../services/logout.service';
 

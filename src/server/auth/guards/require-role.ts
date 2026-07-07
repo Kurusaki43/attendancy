@@ -1,9 +1,9 @@
+import type { RoleName } from '@/features/auth/constants/roles';
+import type { AuthUser } from '@/features/auth/types/auth-user';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ForbiddenError } from '@/lib/errors/forbidden.error';
 
-import type { RoleName } from '../constants/roles';
 import { getCurrentUser } from '../lib/get-current-user';
-import type { AuthUser } from '../types/auth-user';
 
 export function hasRole(user: AuthUser, role: RoleName) {
   return user.roles.some((r) => r.name === role);

@@ -2,13 +2,13 @@
 
 import { z } from 'zod';
 
+import { type VerifyEmailInput, verifyEmailSchema } from '@/features/auth/schemas/email-verification.schema';
+import type { VerifyEmailResult } from '@/features/auth/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 
 import { clearPendingEmailVerificationCookie } from '../lib/cookies';
-import { type VerifyEmailInput, verifyEmailSchema } from '../schemas/email-verification.schema';
 import { emailVerification } from '../services/email-verification.service';
-import type { VerifyEmailResult } from '../types/action-results';
 
 export async function verifyEmailAction(
   input: VerifyEmailInput,

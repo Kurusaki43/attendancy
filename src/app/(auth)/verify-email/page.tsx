@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 
 import VerifyEmail from '@/features/auth/components/VerifyEmail';
-import { getPendingEmailVerificationCookie } from '@/features/auth/lib/cookies';
-import { getPendingVerificationUser } from '@/features/auth/services/email-verification.service';
+import { getPendingEmailVerificationCookie } from '@/server/auth/lib/cookies';
+import { getPendingVerificationUser } from '@/server/auth/services/email-verification.service';
 
 const VerifyEmailPage = async () => {
   const userId = await getPendingEmailVerificationCookie();

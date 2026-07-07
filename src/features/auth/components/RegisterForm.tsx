@@ -12,11 +12,11 @@ import RHFInput from '@/components/shared/RHF/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { registerAction } from '@/features/auth/actions/register.action';
 import {
   type RegisterFormInput,
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
+import { registerAction } from '@/server/auth/actions/register.action';
 
 import { GoogleLoginButton } from './GoogleLoginButton';
 import { TurnstileField } from './TurnstileCaptcha';

@@ -1,3 +1,5 @@
+import type { LoginInput } from '@/features/auth/schemas/login.schema';
+import type { ServiceLoginResult } from '@/features/auth/types/service-results';
 import { UserStatus } from '@/generated/prisma/client';
 import { BadRequestError } from '@/lib/errors/bad-request-error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
@@ -6,8 +8,6 @@ import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 
 import { verifyPassword } from '../lib/password';
 import { userRepository } from '../repositories/user.repository';
-import type { LoginInput } from '../schemas/login.schema';
-import type { ServiceLoginResult } from '../types/service-results';
 import { createSession } from './create-session.service';
 
 export async function login(

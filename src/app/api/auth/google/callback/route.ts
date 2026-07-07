@@ -2,9 +2,9 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
-import { setAccessTokenCookie, setRefreshTokenCookie } from '@/features/auth/lib/cookies';
-import { createSession } from '@/features/auth/services/create-session.service';
-import { authenticateWithGoogle } from '@/features/auth/services/google-auth.service';
+import { setAccessTokenCookie, setRefreshTokenCookie } from '@/server/auth/lib/cookies';
+import { createSession } from '@/server/auth/services/create-session.service';
+import { authenticateWithGoogle } from '@/server/auth/services/google-auth.service';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

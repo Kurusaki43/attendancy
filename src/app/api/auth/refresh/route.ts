@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
-import { authConfig } from '@/features/auth/lib/auth.config';
-import { getCookieOptions } from '@/features/auth/lib/cookies';
-import { refreshSession } from '@/features/auth/services/refresh-session.service';
+import { authConfig } from '@/server/auth/lib/auth.config';
+import { getCookieOptions } from '@/server/auth/lib/cookies';
+import { refreshSession } from '@/server/auth/services/refresh-session.service';
 
 export async function GET(request: NextRequest) {
   const refreshToken = request.cookies.get(AUTH_COOKIES.REFRESH_TOKEN)?.value;

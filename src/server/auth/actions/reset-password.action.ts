@@ -2,11 +2,11 @@
 
 import { z } from 'zod';
 
+import type { ResetPasswordInput } from '@/features/auth/schemas/reset-password.schema';
+import { resetPasswordSchema } from '@/features/auth/schemas/reset-password.schema';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 
-import type { ResetPasswordInput } from '../schemas/reset-password.schema';
-import { resetPasswordSchema } from '../schemas/reset-password.schema';
 import { resetPassword } from '../services/reset-password.service';
 
 export async function resetPasswordAction(input: ResetPasswordInput): Promise<ActionResult<null>> {

@@ -11,13 +11,13 @@ import RHFInput from '@/components/shared/RHF/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { verifyEmailAction } from '@/features/auth/actions/email-verify.action';
 import {
   type VerifyEmailInput,
   verifyEmailSchema,
 } from '@/features/auth/schemas/email-verification.schema';
+import { verifyEmailAction } from '@/server/auth/actions/email-verify.action';
+import { resendVerificationOtpAction } from '@/server/auth/actions/resend-email-verify.action';
 
-import { resendVerificationOtpAction } from '../actions/resend-email-verify.action';
 import { ResendButton } from './ResendButton';
 
 type VerifyEmailProps = {

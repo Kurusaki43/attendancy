@@ -3,6 +3,8 @@
 import { headers } from 'next/dist/server/request/headers';
 import { z } from 'zod';
 
+import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';
+import type { LoginResult } from '@/features/auth/types/action-results';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import type { ActionResult } from '@/shared/types/action.types';
@@ -14,9 +16,7 @@ import {
   setRefreshTokenCookie,
 } from '../lib/cookies';
 import { userRepository } from '../repositories/user.repository';
-import { type LoginInput, loginSchema } from '../schemas/login.schema';
 import { login } from '../services/login.service';
-import type { LoginResult } from '../types/action-results';
 
 export async function loginAction(input: LoginInput): Promise<ActionResult<LoginResult>> {
   const headerStore = await headers();

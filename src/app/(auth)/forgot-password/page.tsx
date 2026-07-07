@@ -12,11 +12,11 @@ import RHFInput from '@/components/shared/RHF/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { forgotPasswordAction } from '@/features/auth/actions/forgot-password.action';
 import {
   type ForgotPasswordInput,
   forgotPasswordSchema,
 } from '@/features/auth/schemas/forgot-password.schema';
+import { forgotPasswordAction } from '@/server/auth/actions/forgot-password.action';
 
 const ForgotPasswordPage = () => {
   const router = useRouter();

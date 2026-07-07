@@ -1,3 +1,4 @@
+import type { ServiceRefreshSessionResult } from '@/features/auth/types/service-results';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
@@ -5,7 +6,6 @@ import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import { authConfig } from '../lib/auth.config';
 import { sessionRepository } from '../repositories/session.repository';
 import { userRepository } from '../repositories/user.repository';
-import type { ServiceRefreshSessionResult } from '../types/service-results';
 import { tokenService } from './token.service';
 
 export async function refreshSession(refreshToken: string): Promise<ServiceRefreshSessionResult> {

@@ -6,8 +6,8 @@ import {
   type RegisterFormInput,
   registerFormSchema,
 } from '@/features/auth/schemas/register.schema';
-import { register } from '@/features/auth/services/register.service';
 import { verifyCaptcha } from '@/lib/captcha';
+import { register } from '@/server/auth/services/register.service';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 

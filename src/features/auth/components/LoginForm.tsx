@@ -12,10 +12,10 @@ import RHFInput from '@/components/shared/RHF/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { loginAction } from '@/features/auth/actions/login.action';
 import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton';
 import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { loginAction } from '@/server/auth/actions/login.action';
 
 const LoginForm = ({ email }: { email?: string }) => {
   const router = useRouter();

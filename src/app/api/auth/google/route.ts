@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
-import { google } from '@/features/auth/lib/google';
+import { google } from '@/server/auth/lib/google';
 
 export async function GET() {
   const state = generateState();

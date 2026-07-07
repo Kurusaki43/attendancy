@@ -1,3 +1,5 @@
+import type { ResetPasswordInput } from '@/features/auth/schemas/reset-password.schema';
+import type { ServiceResetPasswordResult } from '@/features/auth/types';
 import { OtpType } from '@/generated/prisma/enums';
 import { BadRequestError } from '@/lib/errors/bad-request-error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
@@ -8,8 +10,6 @@ import { hashPassword } from '../lib/password';
 import { otpRepository } from '../repositories/otp.repository';
 import { sessionRepository } from '../repositories/session.repository';
 import { userRepository } from '../repositories/user.repository';
-import type { ResetPasswordInput } from '../schemas/reset-password.schema';
-import type { ServiceResetPasswordResult } from '../types';
 
 export async function resetPassword(
   payload: ResetPasswordInput,

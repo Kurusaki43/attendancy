@@ -1,16 +1,16 @@
+import { ROLE_NAMES } from '@/features/auth/constants/roles';
+import type { RegisterInput } from '@/features/auth/schemas/register.schema';
+import type { ServiceRegisterResult } from '@/features/auth/types/service-results';
 import { emailQueueService } from '@/features/mail/services/email-queue.service';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { prisma } from '@/lib/prisma';
 
-import { ROLE_NAMES } from '../constants/roles';
 import { authConfig } from '../lib/auth.config';
 import { generateOtp, hashOtp } from '../lib/otp';
 import { hashPassword } from '../lib/password';
 import { otpRepository } from '../repositories/otp.repository';
 import { userRepository } from '../repositories/user.repository';
-import type { RegisterInput } from '../schemas/register.schema';
-import type { ServiceRegisterResult } from '../types/service-results';
 
 export async function register(body: RegisterInput): Promise<ServiceRegisterResult> {
   // 1- verify if user exists before
