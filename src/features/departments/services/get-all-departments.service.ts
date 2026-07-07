@@ -4,7 +4,7 @@ import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
-import { departmentRepository } from '../department.repository';
+import { departmentRepository } from '../repositories/department.repository';
 import type { DepartmentQueryInput } from '../schemas/get-all-departments-query-schema';
 import { departmentQuerySchema } from '../schemas/get-all-departments-query-schema';
 

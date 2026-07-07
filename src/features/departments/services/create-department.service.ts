@@ -2,7 +2,7 @@ import type { DepartmentCreateInput } from '@/generated/prisma/models';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 
-import { departmentRepository } from '../department.repository';
+import { departmentRepository } from '../repositories/department.repository';
 import type { CreateDepartmentServiceResult } from '../types';
 
 export async function createDepartment(

@@ -2,7 +2,7 @@ import type { DepartmentUpdateInput } from '@/generated/prisma/models';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 
-import { departmentRepository } from '../department.repository';
+import { departmentRepository } from '../repositories/department.repository';
 import type { UpdateDepartmentServiceResult } from '../types';
 
 export async function updateDepartment(

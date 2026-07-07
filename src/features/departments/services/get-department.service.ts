@@ -1,7 +1,7 @@
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 
-import { departmentRepository } from '../department.repository';
+import { departmentRepository } from '../repositories/department.repository';
 import type { GetDepartmentServiceResult } from '../types';
 
 export async function getDepartment(departmentId: string): Promise<GetDepartmentServiceResult> {
