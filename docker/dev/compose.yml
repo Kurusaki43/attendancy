@@ -68,6 +68,78 @@ services:
     networks:
       - app-network
 
+  app:
+    build:
+      context: ../..
+      dockerfile: docker/dev/Dockerfile
+      target: dev
+
+    container_name: attendance-app
+    restart: unless-stopped
+
+    env_file:
+      - ../../.env.development
+
+    # Inside the compose network, services reach each other by name — localhost
+    # (what .env.development uses for running the app on the host) won't work here.
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      REDIS_HOST: redis
+      SMTP_HOST: mailpit
+
+    ports:
+      - '3000:3000'
+
+    volumes:
+      - ../..:/app
+      - /app/node_modules
+      - /app/.next
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+    networks:
+      - app-network
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: docker/dev/Dockerfile
+      target: dev
+
+    container_name: attendance-worker
+    restart: unless-stopped
+    command: pnpm worker:email
+
+    env_file:
+      - ../../.env.development
+
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      REDIS_HOST: redis
+      SMTP_HOST: mailpit
+
+    volumes:
+      - ../..:/app
+      - /app/node_modules
+      - /app/.next
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+    networks:
+      - app-network
+
 volumes:
   postgres_data:
   redis_data:

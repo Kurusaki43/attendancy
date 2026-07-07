@@ -103,5 +103,29 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
       fail on a missing required field. Consider `@default(true)` for defense in depth.
       Added `@default(true)` to both columns and generated migration
       `20260707212711_add_default_true_to_department_position_is_active`.
-- [ ] Confirm `docker/dev/Dockerfile` is intentionally a placeholder (currently ~empty) — fine for
+- [x] Confirm `docker/dev/Dockerfile` is intentionally a placeholder (currently ~empty) — fine for
       dev-infra-only compose today, but flag before assuming a prod image exists.
+      User asked for a real Dockerfile, not a placeholder. Wrote a multi-stage
+      `docker/dev/Dockerfile` (`deps` → `dev` / `builder` → `runner`), added `output: 'standalone'` + `serverExternalPackages` for the native (`@node-rs/argon2`, `@prisma/client`) deps in
+      `next.config.ts`, added a repo-root `.dockerignore`, and wired `app` + `worker` services into
+      `docker/dev/compose.yml` (the worker service runs `pnpm worker:email`, so `docker compose up`
+      now actually runs the whole app, not just its infra dependencies).
+  - [x] **Verified by actually running it**, not just reading the Dockerfile:
+    - Built both the `dev` and `runner` targets from scratch.
+    - Hit a real build-time bug: `next build`'s page-data-collection phase eagerly imports
+      `src/lib/env/env.ts`, which Zod-validates `process.env` — with no secrets available inside
+      the build stage (by design, `.dockerignore` excludes `.env*`), the production build crashed.
+      Fixed by setting throwaway placeholder values for the build-only stage (documented inline in
+      the Dockerfile); they satisfy the schema's shape but are discarded when the final `runner`
+      stage starts fresh from `node:24-alpine` — real secrets come from compose's
+      `env_file`/`environment` at container runtime, never baked into the image.
+    - Smoke-tested the built `runner` image directly against the real dev Postgres: `/` and
+      `/login` returned 200, `/dashboard` correctly 307-redirected when unauthenticated.
+    - Brought up `app` + `worker` through `docker compose ... up -d`: worker logged
+      `Worker ready` on the `email` queue; app served 200s on `/` and `/login` and 307s on the
+      protected routes, confirming the `DATABASE_URL`/`REDIS_HOST`/`SMTP_HOST` service-name
+      overrides in compose actually route correctly inside the network (`.env.development`'s
+      `localhost` values only work for the app running on the host, not inside the compose
+      network).
+    - Tore down and removed all test containers/images afterward; the pre-existing
+      postgres/redis/mailpit containers were left untouched.
