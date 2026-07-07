@@ -7,7 +7,6 @@ export { updateDepartmentAction } from './actions/update-department.action';
 
 // Components
 export { AddDepartmentDialog } from './components/AddDepartmentDialog';
-export { DepartmentDialog } from './components/DepartmentDialog';
 export { DepartmentForm } from './components/DepartmentForm';
 export { EditDepartmentDialog } from './components/EditDepartmentDialog';
 

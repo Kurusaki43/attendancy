@@ -59,7 +59,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **Identical try/catch error-mapping duplicated 11 times.** Every action in
       `src/features/auth/actions/` (6 files) and `src/features/departments/actions/` (5 files)
       repeats the same `if (error instanceof AppError) { ... } return { success: false, message:
-    'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
+  'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
       `src/shared/` so the mapping logic — including future additions like Zod-error formatting —
       lives in one place.
   - [x] Added `runAction()` in [`shared/utils/run-action.ts`](src/shared/utils/run-action.ts):
@@ -79,7 +79,11 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## 🟡 Medium
 
-- [ ] **Dead code left over from the query/pagination refactor:** - [ ] `departmentRepository.getAll()` in [`department.repository.ts`](src/features/departments/department.repository.ts) — unused; `getAllDepartments` service uses `findMany` instead. - [ ] `PaginationUtil` class in [`pagination.ts`](src/shared/utils/pagination.ts) — fully superseded by `buildPaginationMeta` in `api-features.ts`; nothing calls it. - [ ] `GetAllDepartmentsServiceResult` type in [`service-results.ts`](src/features/departments/types/service-results.ts) — unused; service returns an inline interface instead. - [ ] `DepartmentDialog.tsx` — generalized create/update dialog exported from `index.ts` but never rendered anywhere; superseded by `AddDepartmentDialog` + `EditDepartmentDialog`.
+- [x] **Dead code left over from the query/pagination refactor:**
+  - [x] `departmentRepository.getAll()` — removed; `getAllDepartments` service uses `findMany` instead.
+  - [x] `PaginationUtil` class in `shared/utils/pagination.ts` — file deleted; fully superseded by `buildPaginationMeta` in `api-features.ts`.
+  - [x] `GetAllDepartmentsServiceResult` type — removed from `service-results.ts`; service returns an inline interface instead.
+  - [x] `DepartmentDialog.tsx` — deleted; was exported from `index.ts` but never rendered anywhere, superseded by `AddDepartmentDialog` + `EditDepartmentDialog`.
 
 - [ ] **Filename/naming inconsistencies:** - [ ] `DeleteDepartementDialog.tsx` (typo in filename) exports `DeleteDepartmentDialog`
       (correct spelling) as default — rename file to match, decide on named vs default export. - [ ] `DepartmentsPageProps.searchParams` in
