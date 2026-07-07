@@ -2,7 +2,7 @@
 
 import { type ReactNode, useState } from 'react';
 
-import type { AuthUser } from '@/features/auth/types';
+import type { AuthUser } from '@/server/auth/types';
 
 import { NAV_GROUPS } from '../config/navigation.config';
 import { Header } from './Header';

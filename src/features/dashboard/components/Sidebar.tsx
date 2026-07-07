@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import type { AuthUser } from '@/features/auth/types';
 import { cn } from '@/lib/utils';
+import type { AuthUser } from '@/server/auth/types';
 
 import { canSeeNavItem } from '../lib/navigation-utils';
 import type { NavGroup, NavItem } from '../types/navigation.types';

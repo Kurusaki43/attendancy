@@ -2,8 +2,8 @@
 
 import { z } from 'zod';
 
-import type { ResetPasswordInput } from '@/features/auth/schemas/reset-password.schema';
-import { resetPasswordSchema } from '@/features/auth/schemas/reset-password.schema';
+import type { ResetPasswordInput } from '@/server/auth/schemas/reset-password.schema';
+import { resetPasswordSchema } from '@/server/auth/schemas/reset-password.schema';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 

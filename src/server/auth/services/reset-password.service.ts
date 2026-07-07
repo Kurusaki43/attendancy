@@ -1,9 +1,9 @@
-import type { ResetPasswordInput } from '@/features/auth/schemas/reset-password.schema';
-import type { ServiceResetPasswordResult } from '@/features/auth/types';
 import { OtpType } from '@/generated/prisma/enums';
-import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { prisma } from '@/lib/prisma';
+import type { ResetPasswordInput } from '@/server/auth/schemas/reset-password.schema';
+import type { ServiceResetPasswordResult } from '@/server/auth/types';
 
 import { verifyOtp } from '../lib/otp';
 import { hashPassword } from '../lib/password';

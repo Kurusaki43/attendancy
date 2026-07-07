@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 
-import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
 import { env } from '@/lib/env/env';
+import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
 
 import { authConfig } from './auth.config';
 

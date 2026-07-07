@@ -1,10 +1,10 @@
-import type { LoginInput } from '@/features/auth/schemas/login.schema';
-import type { ServiceLoginResult } from '@/features/auth/types/service-results';
 import { UserStatus } from '@/generated/prisma/client';
-import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ForbiddenError } from '@/lib/errors/forbidden.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+import type { LoginInput } from '@/server/auth/schemas/login.schema';
+import type { ServiceLoginResult } from '@/server/auth/types/service-results';
 
 import { verifyPassword } from '../lib/password';
 import { userRepository } from '../repositories/user.repository';

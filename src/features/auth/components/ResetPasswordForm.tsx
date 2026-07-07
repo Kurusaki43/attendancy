@@ -8,16 +8,16 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import RHFInput from '@/components/shared/RHF/RHFInput';
+import RHFInput from '@/components/shared/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import type { ResetPasswordFormInput } from '@/features/auth/schemas/reset-password.schema';
+import { resetPasswordAction } from '@/server/auth/actions/reset-password.action';
+import type { ResetPasswordFormInput } from '@/server/auth/schemas/reset-password.schema';
 import {
   resetPasswordFormSchema,
   type ResetPasswordInput,
-} from '@/features/auth/schemas/reset-password.schema';
-import { resetPasswordAction } from '@/server/auth/actions/reset-password.action';
+} from '@/server/auth/schemas/reset-password.schema';
 
 type ResetPasswordPageProps = {
   token: string;

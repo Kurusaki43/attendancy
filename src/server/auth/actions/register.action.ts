@@ -2,11 +2,8 @@
 
 import { z } from 'zod';
 
-import {
-  type RegisterFormInput,
-  registerFormSchema,
-} from '@/features/auth/schemas/register.schema';
 import { verifyCaptcha } from '@/lib/captcha';
+import { type RegisterFormInput, registerFormSchema } from '@/server/auth/schemas/register.schema';
 import { register } from '@/server/auth/services/register.service';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';

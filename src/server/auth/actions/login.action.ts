@@ -3,10 +3,10 @@
 import { headers } from 'next/dist/server/request/headers';
 import { z } from 'zod';
 
-import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';
-import type { LoginResult } from '@/features/auth/types/action-results';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+import { type LoginInput, loginSchema } from '@/server/auth/schemas/login.schema';
+import type { LoginResult } from '@/server/auth/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 
@@ -34,11 +34,7 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
       const ipAddress = headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
       const userAgent = headerStore.get('user-agent') ?? 'unknown';
 
-      const { accessToken, refreshToken, user } = await login(
-        validated.data,
-        ipAddress,
-        userAgent,
-      );
+      const { accessToken, refreshToken, user } = await login(validated.data, ipAddress, userAgent);
 
       await Promise.all([setAccessTokenCookie(accessToken), setRefreshTokenCookie(refreshToken)]);
 
@@ -65,5 +61,7 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
     },
   );
 
-  return result.success ? { ...result, message: `Welcome back, ${result.data.user.firstName}!` } : result;
+  return result.success
+    ? { ...result, message: `Welcome back, ${result.data.user.firstName}!` }
+    : result;
 }

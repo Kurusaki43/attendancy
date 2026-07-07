@@ -3,7 +3,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
+import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
 
 const GUEST_ONLY_ROUTES = [
   '/login',

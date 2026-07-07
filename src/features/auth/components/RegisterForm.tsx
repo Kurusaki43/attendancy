@@ -8,15 +8,12 @@ import { useTransition } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import RHFInput from '@/components/shared/RHF/RHFInput';
+import RHFInput from '@/components/shared/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import {
-  type RegisterFormInput,
-  registerFormSchema,
-} from '@/features/auth/schemas/register.schema';
 import { registerAction } from '@/server/auth/actions/register.action';
+import { type RegisterFormInput, registerFormSchema } from '@/server/auth/schemas/register.schema';
 
 import { GoogleLoginButton } from './GoogleLoginButton';
 import { TurnstileField } from './TurnstileCaptcha';

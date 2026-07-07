@@ -2,7 +2,7 @@ import { generateCodeVerifier, generateState } from 'arctic';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
+import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
 import { google } from '@/server/auth/lib/google';
 
 export async function GET() {

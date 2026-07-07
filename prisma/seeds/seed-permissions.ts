@@ -1,6 +1,6 @@
-import { PERMISSIONS } from '@/features/auth/constants/permissions';
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
+import { PERMISSIONS } from '@/server/auth/constants/permissions';
 
 export async function seedPermissions() {
   logger.info('🌱 Seeding permissions...');

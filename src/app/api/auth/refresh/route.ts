@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
+import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
 import { authConfig } from '@/server/auth/lib/auth.config';
 import { getCookieOptions } from '@/server/auth/lib/cookies';
 import { refreshSession } from '@/server/auth/services/refresh-session.service';

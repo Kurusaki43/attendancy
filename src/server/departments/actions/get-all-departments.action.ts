@@ -1,8 +1,8 @@
 'use server';
 
-import { PERMISSIONS } from '@/features/auth/constants/permissions';
-import type { GetAllDepartmentsActionResult } from '@/features/departments/types/action-results';
+import { PERMISSIONS } from '@/server/auth/constants/permissions';
 import { requirePermission } from '@/server/auth/guards/require-permission';
+import type { GetAllDepartmentsActionResult } from '@/server/departments/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 

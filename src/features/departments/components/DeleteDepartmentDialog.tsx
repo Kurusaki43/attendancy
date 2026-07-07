@@ -16,8 +16,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { deleteDepartmentAction } from '@/server/departments/actions/delete-department.action';
-
-import type { DepartmentResult } from '../types';
+import type { DepartmentResult } from '@/server/departments/types';
 
 type DeleteDepartmentDialogProps = {
   department: DepartmentResult;

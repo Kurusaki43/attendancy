@@ -8,15 +8,15 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import RHFInput from '@/components/shared/RHF/RHFInput';
+import RHFInput from '@/components/shared/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
+import { forgotPasswordAction } from '@/server/auth/actions/forgot-password.action';
 import {
   type ForgotPasswordInput,
   forgotPasswordSchema,
-} from '@/features/auth/schemas/forgot-password.schema';
-import { forgotPasswordAction } from '@/server/auth/actions/forgot-password.action';
+} from '@/server/auth/schemas/forgot-password.schema';
 
 const ForgotPasswordPage = () => {
   const router = useRouter();

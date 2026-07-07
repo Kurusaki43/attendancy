@@ -1,7 +1,7 @@
-import { type PermissionDefinition } from '@/features/auth/constants/permissions';
-import type { AuthUser } from '@/features/auth/types/auth-user';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ForbiddenError } from '@/lib/errors/forbidden.error';
+import { type PermissionDefinition } from '@/server/auth/constants/permissions';
+import type { AuthUser } from '@/server/auth/types/auth-user';
 
 import { getCurrentUser } from '../lib/get-current-user';
 

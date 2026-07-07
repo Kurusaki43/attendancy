@@ -1,6 +1,6 @@
-import { ROLE_PERMISSIONS } from '@/features/auth/constants/role_permissions';
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
+import { ROLE_PERMISSIONS } from '@/server/auth/constants/role_permissions';
 
 export async function seedRolePermissions() {
   logger.info('🌱 Assigning permissions to roles...');

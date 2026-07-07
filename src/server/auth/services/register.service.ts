@@ -1,9 +1,9 @@
-import { ROLE_NAMES } from '@/features/auth/constants/roles';
-import type { RegisterInput } from '@/features/auth/schemas/register.schema';
-import type { ServiceRegisterResult } from '@/features/auth/types/service-results';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { prisma } from '@/lib/prisma';
+import { ROLE_NAMES } from '@/server/auth/constants/roles';
+import type { RegisterInput } from '@/server/auth/schemas/register.schema';
+import type { ServiceRegisterResult } from '@/server/auth/types/service-results';
 import { emailQueueService } from '@/server/mail/services/email-queue.service';
 
 import { authConfig } from '../lib/auth.config';

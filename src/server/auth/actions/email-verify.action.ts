@@ -2,8 +2,11 @@
 
 import { z } from 'zod';
 
-import { type VerifyEmailInput, verifyEmailSchema } from '@/features/auth/schemas/email-verification.schema';
-import type { VerifyEmailResult } from '@/features/auth/types/action-results';
+import {
+  type VerifyEmailInput,
+  verifyEmailSchema,
+} from '@/server/auth/schemas/email-verification.schema';
+import type { VerifyEmailResult } from '@/server/auth/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 

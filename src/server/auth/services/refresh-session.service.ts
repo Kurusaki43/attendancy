@@ -1,7 +1,7 @@
-import type { ServiceRefreshSessionResult } from '@/features/auth/types/service-results';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+import type { ServiceRefreshSessionResult } from '@/server/auth/types/service-results';
 
 import { authConfig } from '../lib/auth.config';
 import { sessionRepository } from '../repositories/session.repository';

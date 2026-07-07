@@ -1,8 +1,8 @@
-import type { ServiceEmailVerificationResult } from '@/features/auth/types/service-results';
 import { OtpType } from '@/generated/prisma/enums';
-import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { prisma } from '@/lib/prisma';
+import type { ServiceEmailVerificationResult } from '@/server/auth/types/service-results';
 
 import { verifyOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';

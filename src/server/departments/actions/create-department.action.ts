@@ -2,13 +2,13 @@
 
 import { z } from 'zod';
 
-import { PERMISSIONS } from '@/features/auth/constants/permissions';
+import { PERMISSIONS } from '@/server/auth/constants/permissions';
+import { requirePermission } from '@/server/auth/guards/require-permission';
 import {
   type CreateDepartmentInput,
   createDepartmentSchema,
-} from '@/features/departments/schemas/create-department.schema';
-import type { CreateDepartmentActionResult } from '@/features/departments/types/action-results';
-import { requirePermission } from '@/server/auth/guards/require-permission';
+} from '@/server/departments/schemas/create-department.schema';
+import type { CreateDepartmentActionResult } from '@/server/departments/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
 

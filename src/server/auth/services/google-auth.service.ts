@@ -1,13 +1,13 @@
 import { OAuth2RequestError } from 'arctic';
 
-import { ROLE_NAMES } from '@/features/auth/constants/roles';
-import type { ServiceGoogleAuthResult } from '@/features/auth/types/service-results';
-import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import { prisma } from '@/lib/prisma';
+import { ROLE_NAMES } from '@/server/auth/constants/roles';
+import type { ServiceGoogleAuthResult } from '@/server/auth/types/service-results';
 
 import { getGoogleProfile } from '../lib/get-google-profile';
 import { google } from '../lib/google';

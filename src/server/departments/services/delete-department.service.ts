@@ -1,6 +1,6 @@
-import type { DeleteDepartmentServiceResult } from '@/features/departments/types';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
+import type { DeleteDepartmentServiceResult } from '@/server/departments/types';
 
 import { departmentRepository } from '../repositories/department.repository';
 

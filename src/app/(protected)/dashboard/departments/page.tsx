@@ -1,8 +1,8 @@
 import DataTablePagination from '@/components/shared/data-table/DataTablePagination';
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
-import { getAllDepartmentsAction } from '@/features/departments';
 import { AddDepartmentDialog } from '@/features/departments/components/AddDepartmentDialog';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
+import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 
 type DepartmentsPageProps = {
   searchParams: Promise<Record<string, string>>;

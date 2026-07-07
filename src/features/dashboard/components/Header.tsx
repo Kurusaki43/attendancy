@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
-import type { AuthUser } from '@/features/auth/types';
+import type { AuthUser } from '@/server/auth/types';
 
 import { UserMenu } from './UserMenu';
 

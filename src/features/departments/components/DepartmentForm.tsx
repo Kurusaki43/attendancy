@@ -19,16 +19,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { createDepartmentAction } from '@/server/departments/actions/create-department.action';
 import { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
-
 import {
   type CreateDepartmentInput,
   createDepartmentSchema,
-} from '../schemas/create-department.schema';
+} from '@/server/departments/schemas/create-department.schema';
 import {
   type UpdateDepartmentInput,
   updateDepartmentSchema,
-} from '../schemas/update-department.schema';
-import type { DepartmentResult } from '../types/action-results';
+} from '@/server/departments/schemas/update-department.schema';
+import type { DepartmentResult } from '@/server/departments/types/action-results';
 
 type CreateDepartmentFormProps = {
   mode: 'create';

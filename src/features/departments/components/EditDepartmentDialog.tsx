@@ -13,8 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import type { DepartmentResult } from '@/server/departments/types/action-results';
 
-import type { DepartmentResult } from '../types/action-results';
 import { DepartmentForm } from './DepartmentForm';
 
 type EditDepartmentDialogProps = {

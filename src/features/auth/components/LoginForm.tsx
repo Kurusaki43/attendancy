@@ -8,14 +8,14 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import RHFInput from '@/components/shared/RHF/RHFInput';
+import RHFInput from '@/components/shared/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton';
-import { type LoginInput, loginSchema } from '@/features/auth/schemas/login.schema';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { loginAction } from '@/server/auth/actions/login.action';
+import { type LoginInput, loginSchema } from '@/server/auth/schemas/login.schema';
 
 const LoginForm = ({ email }: { email?: string }) => {
   const router = useRouter();

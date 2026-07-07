@@ -1,4 +1,4 @@
-import type { AuthUser } from '@/features/auth/types';
+import type { AuthUser } from '@/server/auth/types';
 
 import type { NavItem } from '../types/navigation.types';
 
