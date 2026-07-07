@@ -59,7 +59,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **Identical try/catch error-mapping duplicated 11 times.** Every action in
       `src/features/auth/actions/` (6 files) and `src/features/departments/actions/` (5 files)
       repeats the same `if (error instanceof AppError) { ... } return { success: false, message:
-  'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
+'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
       `src/shared/` so the mapping logic — including future additions like Zod-error formatting —
       lives in one place.
   - [x] Added `runAction()` in [`shared/utils/run-action.ts`](src/shared/utils/run-action.ts):
@@ -85,11 +85,13 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
   - [x] `GetAllDepartmentsServiceResult` type — removed from `service-results.ts`; service returns an inline interface instead.
   - [x] `DepartmentDialog.tsx` — deleted; was exported from `index.ts` but never rendered anywhere, superseded by `AddDepartmentDialog` + `EditDepartmentDialog`.
 
-- [ ] **Filename/naming inconsistencies:** - [ ] `DeleteDepartementDialog.tsx` (typo in filename) exports `DeleteDepartmentDialog`
-      (correct spelling) as default — rename file to match, decide on named vs default export. - [ ] `DepartmentsPageProps.searchParams` in
-      [`departments/page.tsx`](<src/app/(protected)/dashboard/departments/page.tsx>) has a
-      `seach?: string` typo'd/dead field, and the type doesn't match Next 15's actual
-      `Promise<...>` searchParams shape — the annotation isn't protecting anything currently.
+- [x] **Filename/naming inconsistencies:**
+  - [x] `DeleteDepartementDialog.tsx` → renamed to `DeleteDepartmentDialog.tsx`; dropped the
+        redundant `export default` so it's a named export like `AddDepartmentDialog` /
+        `EditDepartmentDialog`, and updated the one import site in `DepartmentsTable.tsx`.
+  - [x] `DepartmentsPageProps.searchParams` in `departments/page.tsx` — replaced the dead/typo'd
+        inline shape with `Promise<Record<string, string>>`, matching both Next 15's actual async
+        searchParams and what `getAllDepartmentsAction` expects.
 
 ---
 

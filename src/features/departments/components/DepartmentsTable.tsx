@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import type { DepartmentResult } from '@/features/departments/types/action-results';
 
 import { updateDepartmentAction } from '../actions/update-department.action';
-import DeleteDepartementDialog from './DeleteDepartementDialog';
+import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
 import { EditDepartmentDialog } from './EditDepartmentDialog';
 
 function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActive: boolean }) {
@@ -93,7 +93,7 @@ const columns: ColumnDef<DepartmentResult>[] = [
     cell: (row) => (
       <div className="flex gap-2">
         <EditDepartmentDialog department={row} />
-        <DeleteDepartementDialog department={row} />
+        <DeleteDepartmentDialog department={row} />
       </div>
     ),
     cellClassName: 'text-right',

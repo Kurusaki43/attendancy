@@ -5,12 +5,7 @@ import { AddDepartmentDialog } from '@/features/departments/components/AddDepart
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 
 type DepartmentsPageProps = {
-  searchParams: {
-    seach?: string;
-    sort?: string;
-    page?: string;
-    status?: string;
-  };
+  searchParams: Promise<Record<string, string>>;
 };
 
 export default async function DepartmentsPage({ searchParams }: DepartmentsPageProps) {
