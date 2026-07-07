@@ -1,12 +1,11 @@
 'use server';
 
-import { unstable_rethrow } from 'next/navigation';
 import { z } from 'zod';
 
 import { PERMISSIONS } from '@/features/auth/constants/permissions';
 import { requirePermission } from '@/features/auth/guards/require-permission';
-import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
 
 import {
   type UpdateDepartmentInput,
@@ -29,30 +28,10 @@ export async function updateDepartmentAction(
     };
   }
 
-  try {
+  const result = await runAction(async () => {
     await requirePermission(PERMISSIONS.DEPARTMENT_UPDATE);
+    return updateDepartment(departmentId, validated.data);
+  });
 
-    const department = await updateDepartment(departmentId, validated.data);
-
-    return {
-      success: true,
-      message: 'Department updated successfully.',
-      data: department,
-    };
-  } catch (error) {
-    unstable_rethrow(error);
-
-    if (error instanceof AppError) {
-      return {
-        success: false,
-        code: error.code,
-        message: error.message,
-      };
-    }
-
-    return {
-      success: false,
-      message: 'Something went wrong.',
-    };
-  }
+  return result.success ? { ...result, message: 'Department updated successfully.' } : result;
 }

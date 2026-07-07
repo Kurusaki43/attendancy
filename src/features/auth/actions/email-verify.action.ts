@@ -2,8 +2,8 @@
 
 import { z } from 'zod';
 
-import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
 
 import { clearPendingEmailVerificationCookie } from '../lib/cookies';
 import { type VerifyEmailInput, verifyEmailSchema } from '../schemas/email-verification.schema';
@@ -22,31 +22,14 @@ export async function verifyEmailAction(
     };
   }
 
-  try {
+  const result = await runAction(async () => {
     const { code, userId } = validated.data;
 
     await emailVerification(code, userId);
     await clearPendingEmailVerificationCookie();
 
-    return {
-      success: true,
-      message: 'Email verified successfully.',
-      data: {
-        emailVerified: true,
-      },
-    };
-  } catch (error) {
-    if (error instanceof AppError) {
-      return {
-        success: false,
-        code: error.code,
-        message: error.message,
-      };
-    }
+    return { emailVerified: true as const };
+  });
 
-    return {
-      success: false,
-      message: 'Something went wrong.',
-    };
-  }
+  return result.success ? { ...result, message: 'Email verified successfully.' } : result;
 }

@@ -3,10 +3,10 @@
 import { headers } from 'next/dist/server/request/headers';
 import { z } from 'zod';
 
-import { AppError } from '@/lib/errors/app.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
 
 import {
   setAccessTokenCookie,
@@ -29,47 +29,41 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
     };
   }
 
-  try {
-    const ipAddress = headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-    const userAgent = headerStore.get('user-agent') ?? 'unknown';
+  const result = await runAction(
+    async () => {
+      const ipAddress = headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+      const userAgent = headerStore.get('user-agent') ?? 'unknown';
 
-    const { accessToken, refreshToken, user } = await login(validated.data, ipAddress, userAgent);
+      const { accessToken, refreshToken, user } = await login(
+        validated.data,
+        ipAddress,
+        userAgent,
+      );
 
-    await Promise.all([setAccessTokenCookie(accessToken), setRefreshTokenCookie(refreshToken)]);
+      await Promise.all([setAccessTokenCookie(accessToken), setRefreshTokenCookie(refreshToken)]);
 
-    return {
-      success: true,
-      message: `Welcome back, ${user.firstName}!`,
-      data: {
-        user,
+      return { user };
+    },
+    {
+      onError: async (error) => {
+        if (error instanceof UnauthorizedError && error.code === ERROR_CODES.EMAIL_NOT_VERIFIED) {
+          const user = await userRepository.findByEmail(validated.data.email);
+
+          if (user) {
+            await setPendingEmailVerificationCookie(user.id);
+          }
+
+          return {
+            success: false,
+            code: ERROR_CODES.EMAIL_NOT_VERIFIED,
+            message: 'Please verify your email first.',
+          };
+        }
+
+        return undefined;
       },
-    };
-  } catch (error) {
-    if (error instanceof UnauthorizedError && error.code === ERROR_CODES.UNAUTHORIZED) {
-      const user = await userRepository.findByEmail(validated.data.email);
+    },
+  );
 
-      if (user) {
-        await setPendingEmailVerificationCookie(user.id);
-      }
-
-      return {
-        success: false,
-        code: ERROR_CODES.UNAUTHORIZED,
-        message: 'Please verify your email first.',
-      };
-    }
-
-    if (error instanceof AppError) {
-      return {
-        success: false,
-        code: error.code,
-        message: error.message,
-      };
-    }
-
-    return {
-      success: false,
-      message: 'Something went wrong.',
-    };
-  }
+  return result.success ? { ...result, message: `Welcome back, ${result.data.user.firstName}!` } : result;
 }

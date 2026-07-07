@@ -2,8 +2,8 @@
 
 import { z } from 'zod';
 
-import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
 
 import type { ResetPasswordInput } from '../schemas/reset-password.schema';
 import { resetPasswordSchema } from '../schemas/reset-password.schema';
@@ -19,26 +19,10 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
     };
   }
 
-  try {
+  const result = await runAction(async () => {
     await resetPassword(validated.data);
+    return null;
+  });
 
-    return {
-      success: true,
-      message: 'Password reset successfully.',
-      data: null,
-    };
-  } catch (error) {
-    if (error instanceof AppError) {
-      return {
-        success: false,
-        code: error.code,
-        message: error.message,
-      };
-    }
-
-    return {
-      success: false,
-      message: 'Something went wrong.',
-    };
-  }
+  return result.success ? { ...result, message: 'Password reset successfully.' } : result;
 }

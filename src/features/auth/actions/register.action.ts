@@ -8,8 +8,8 @@ import {
 } from '@/features/auth/schemas/register.schema';
 import { register } from '@/features/auth/services/register.service';
 import { verifyCaptcha } from '@/lib/captcha';
-import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
 
 import { setPendingEmailVerificationCookie } from '../lib/cookies';
 
@@ -32,28 +32,13 @@ export async function registerAction(input: RegisterFormInput): Promise<ActionRe
     };
   }
 
-  try {
+  const result = await runAction(async () => {
     const user = await register(validated.data);
-
     await setPendingEmailVerificationCookie(user.id);
+    return null;
+  });
 
-    return {
-      success: true,
-      message: 'Account created successfully. Please verify your email.',
-      data: null,
-    };
-  } catch (error) {
-    if (error instanceof AppError) {
-      return {
-        success: false,
-        code: error.code,
-        message: error.message,
-      };
-    }
-
-    return {
-      success: false,
-      message: 'Something went wrong.',
-    };
-  }
+  return result.success
+    ? { ...result, message: 'Account created successfully. Please verify your email.' }
+    : result;
 }

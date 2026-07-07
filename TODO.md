@@ -56,12 +56,24 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
       filtering (safe by default) rather than "everything", so every future caller must opt in
       explicitly. `getAllDepartments` now passes `DEPARTMENT_FILTERABLE_FIELDS = ['isActive']`.
 
-- [ ] **Identical try/catch error-mapping duplicated 11 times.** Every action in
+- [x] **Identical try/catch error-mapping duplicated 11 times.** Every action in
       `src/features/auth/actions/` (6 files) and `src/features/departments/actions/` (5 files)
       repeats the same `if (error instanceof AppError) { ... } return { success: false, message:
-'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
+    'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
       `src/shared/` so the mapping logic — including future additions like Zod-error formatting —
-      lives in one place. - [ ] Design wrapper signature (input: fn that may throw `AppError`; output: `ActionResult<T>`) - [ ] Migrate auth actions (6 files) - [ ] Migrate department actions (5 files)
+      lives in one place.
+  - [x] Added `runAction()` in [`shared/utils/run-action.ts`](src/shared/utils/run-action.ts):
+        runs the action body, maps `AppError` → `ActionResult` failure, calls `unstable_rethrow`
+        first so redirects from guards still propagate. Takes an optional `onError` escape hatch
+        for the couple of actions that need custom handling before the default mapping.
+  - [x] Migrated all 6 auth actions and all 5 department actions.
+  - [x] **Bug found during migration (fixed):** `login.action.ts`'s special-case handler for
+        "email not verified" checked `error.code === ERROR_CODES.UNAUTHORIZED`, but
+        `login.service.ts` actually throws `ERROR_CODES.EMAIL_NOT_VERIFIED` for that case — so the
+        branch was dead code. The pending-email-verification cookie never got set on a failed
+        login, which meant a returning unverified user got bounced `/login` → `/verify-email` →
+        `/register` in a loop (the verify-email page redirects to `/register` when that cookie is
+        missing). Fixed the code comparison to match what the service actually throws.
 
 ---
 
