@@ -1,4 +1,4 @@
-import { BadRequestError } from '@/lib/errors/bad-request-error';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 
 export type GoogleUser = {

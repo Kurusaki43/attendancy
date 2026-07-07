@@ -6,7 +6,7 @@ import type { BoundTurnstileObject } from 'react-turnstile';
 import Turnstile from 'react-turnstile';
 
 import { Button } from '@/components/ui/button';
-import { clientEnv } from '@/lib/env/end.client';
+import { clientEnv } from '@/lib/env/env.client';
 
 type Props = {
   onVerify: (token: string) => void;

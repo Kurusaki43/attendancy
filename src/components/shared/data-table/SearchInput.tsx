@@ -4,8 +4,8 @@ import { Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Input } from '@/components/ui/input';
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { useQueryParams } from '@/hooks/use-query-params';
-import { useDebouncedCallback } from '@/hooks/useDebounce';
 
 export default function SearchInput({
   queryKey = 'search',
