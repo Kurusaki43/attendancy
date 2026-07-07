@@ -97,9 +97,11 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## 🟢 Low / nice-to-have
 
-- [ ] `Department.isActive` / `Position.isActive` in `schema.prisma` have no `@default(...)` at
+- [x] `Department.isActive` / `Position.isActive` in `schema.prisma` have no `@default(...)` at
       the DB level — currently safe because Zod always supplies a default before the Prisma call,
       but any direct `prisma.department.create` outside the service (seed scripts, console) will
       fail on a missing required field. Consider `@default(true)` for defense in depth.
+      Added `@default(true)` to both columns and generated migration
+      `20260707212711_add_default_true_to_department_position_is_active`.
 - [ ] Confirm `docker/dev/Dockerfile` is intentionally a placeholder (currently ~empty) — fine for
       dev-infra-only compose today, but flag before assuming a prod image exists.
