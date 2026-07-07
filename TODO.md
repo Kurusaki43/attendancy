@@ -44,7 +44,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
       `ERROR_CODES.*` instead, so a future typo fails to compile instead of silently minting a new
       untracked code.
 
-- [ ] **`ApiFeaturesBuilder.filter()` has no field allowlist.** In
+- [x] **`ApiFeaturesBuilder.filter()` has no field allowlist.** In
       [`api-features.builder.ts`](src/shared/builders/api-features.builder.ts), `filter()` builds
       the Prisma `where` clause directly from arbitrary query-string keys with no allowlist —
       only `search()` restricts itself to `searchableFields`. Low blast radius today (Department
@@ -52,6 +52,9 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
       `Employee` model, a request like `?passwordHash[gt]=` would pass straight through to Prisma.
       Add an explicit `filterableFields` list mirroring `searchableFields` before reusing this
       builder on any sensitive model.
+      Added a third constructor arg `filterableFields: string[] = []` — defaults to **no** ad-hoc
+      filtering (safe by default) rather than "everything", so every future caller must opt in
+      explicitly. `getAllDepartments` now passes `DEPARTMENT_FILTERABLE_FIELDS = ['isActive']`.
 
 - [ ] **Identical try/catch error-mapping duplicated 11 times.** Every action in
       `src/features/auth/actions/` (6 files) and `src/features/departments/actions/` (5 files)

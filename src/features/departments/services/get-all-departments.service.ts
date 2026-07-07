@@ -9,6 +9,7 @@ import type { DepartmentQueryInput } from '../schemas/get-all-departments-query-
 import { departmentQuerySchema } from '../schemas/get-all-departments-query-schema';
 
 const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'description'];
+const DEPARTMENT_FILTERABLE_FIELDS = ['isActive'];
 
 export interface GetAllDepartmentsResult {
   departments: Prisma.DepartmentGetPayload<Record<string, never>>[];
@@ -43,7 +44,7 @@ export async function getAllDepartments(
     Prisma.DepartmentWhereInput,
     Prisma.DepartmentOrderByWithRelationInput,
     Prisma.DepartmentSelect
-  >(asObject, DEPARTMENT_SEARCHABLE_FIELDS)
+  >(asObject, DEPARTMENT_SEARCHABLE_FIELDS, DEPARTMENT_FILTERABLE_FIELDS)
     .filter()
     .search()
     .sort('createdAt')

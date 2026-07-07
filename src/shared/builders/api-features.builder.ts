@@ -24,15 +24,25 @@ export class ApiFeaturesBuilder<
   private queryOptions: PrismaQueryOptions<TWhereInput, TOrderByInput, TSelect> = {};
   private parsedQuery: ParsedQuery;
   private searchableFields: string[];
+  private filterableFields: string[];
   private page: number;
   private limit: number;
 
+  /**
+   * `filterableFields` is an explicit allowlist of columns `.filter()` is allowed to build a
+   * `where` clause from. Defaults to empty (no ad-hoc filtering) rather than "everything" —
+   * without it, any query-string key would pass straight through to Prisma's `where`, which is
+   * fine for a handful of harmless Department columns but becomes a real exposure risk the moment
+   * this builder is reused on a model with sensitive fields (e.g. User).
+   */
   constructor(
     searchParams: URLSearchParams | Record<string, string>,
     searchableFields: string[] = [],
+    filterableFields: string[] = [],
   ) {
     this.parsedQuery = parseSearchParams(searchParams);
     this.searchableFields = searchableFields;
+    this.filterableFields = filterableFields;
     this.page = toPositiveInt(getScalar(this.parsedQuery, 'page'), 1);
     this.limit = toPositiveInt(getScalar(this.parsedQuery, 'limit'), 10);
   }
@@ -42,6 +52,7 @@ export class ApiFeaturesBuilder<
 
     for (const [key, value] of Object.entries(this.parsedQuery)) {
       if (RESERVED_QUERY_FIELDS.has(key)) continue;
+      if (!this.filterableFields.includes(key)) continue;
 
       if (typeof value === 'string') {
         where[key] = castValue(value);
