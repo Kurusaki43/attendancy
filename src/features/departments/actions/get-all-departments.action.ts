@@ -1,5 +1,9 @@
 'use server';
 
+import { unstable_rethrow } from 'next/navigation';
+
+import { PERMISSIONS } from '@/features/auth/constants/permissions';
+import { requirePermission } from '@/features/auth/guards/require-permission';
 import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
 
@@ -10,7 +14,8 @@ export async function getAllDepartmentsAction(
   params: Record<string, string>,
 ): Promise<ActionResult<GetAllDepartmentsActionResult>> {
   try {
-    // await new Promise((res) => setTimeout(res, 3000));
+    await requirePermission(PERMISSIONS.DEPARTMENT_READ);
+
     const departmentsWithPagination = await getAllDepartments(params);
 
     return {
@@ -18,6 +23,8 @@ export async function getAllDepartmentsAction(
       data: departmentsWithPagination,
     };
   } catch (error) {
+    unstable_rethrow(error);
+
     if (error instanceof AppError) {
       return {
         success: false,

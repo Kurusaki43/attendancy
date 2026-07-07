@@ -6,14 +6,27 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## 🔴 Critical (blocks safe multi-user use)
 
-- [ ] **No authorization on any Department action.** None of the 5 files in
+- [x] **No authorization on any Department action.** None of the 5 files in
       `src/features/departments/actions/` call `requireAuth`/`requirePermission`/`requireRole`.
       The only auth check in the request path is `getCurrentUser()` in
       [`dashboard/layout.tsx`](<src/app/(protected)/dashboard/layout.tsx>), which gates page
       _rendering_ only — Next.js Server Actions are independent RPC endpoints and do not inherit
       layout checks. Any authenticated user of any role can currently create/update/delete
       departments; permission definitions already exist in
-      [`permissions.ts`](src/features/auth/constants/permissions.ts) but are unused here. - [ ] `create-department.action.ts` — add `requirePermission(...)` - [ ] `update-department.action.ts` — add `requirePermission(...)` - [ ] `delete-department.action.ts` — add `requirePermission(...)` - [ ] `get-department.action.ts` — add `requirePermission(...)` (or `requireAuth` if read is broader) - [ ] `get-all-departments.action.ts` — add `requirePermission(...)` (or `requireAuth`) - [ ] Decide and document convention: guard lives in **action** layer (has request context), not service.
+      [`permissions.ts`](src/features/auth/constants/permissions.ts) but are unused here.
+  - [x] `create-department.action.ts` — added `requirePermission(PERMISSIONS.DEPARTMENT_CREATE)`
+  - [x] `update-department.action.ts` — added `requirePermission(PERMISSIONS.DEPARTMENT_UPDATE)`
+  - [x] `delete-department.action.ts` — added `requirePermission(PERMISSIONS.DEPARTMENT_DELETE)`
+  - [x] `get-department.action.ts` — added `requirePermission(PERMISSIONS.DEPARTMENT_READ)`
+  - [x] `get-all-departments.action.ts` — added `requirePermission(PERMISSIONS.DEPARTMENT_READ)`
+  - [x] Convention decided: guard call lives at the top of the **action**'s `try` block (has
+        request context via `getCurrentUser`). Also had to guard against a subtle bug: the guard
+        chain (`requirePermission` → `getCurrentUser` → `requireAuth`) can call Next's `redirect()`
+        on a missing/expired session, which throws a special control-flow error — the existing
+        `catch (error) { if (error instanceof AppError) ... }` blocks would have silently swallowed
+        that redirect and returned a generic error instead. Fixed by calling
+        `unstable_rethrow(error)` (from `next/navigation`) as the first line of every catch block
+        touched, so redirects propagate and only real errors get mapped to `ActionResult`.
 
 ---
 
@@ -37,7 +50,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [ ] **Identical try/catch error-mapping duplicated 11 times.** Every action in
       `src/features/auth/actions/` (6 files) and `src/features/departments/actions/` (5 files)
       repeats the same `if (error instanceof AppError) { ... } return { success: false, message:
-  'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
+'Something went wrong.' }` block. Extract into a single `runAction()` (or similar) wrapper in
       `src/shared/` so the mapping logic — including future additions like Zod-error formatting —
       lives in one place. - [ ] Design wrapper signature (input: fn that may throw `AppError`; output: `ActionResult<T>`) - [ ] Migrate auth actions (6 files) - [ ] Migrate department actions (5 files)
 

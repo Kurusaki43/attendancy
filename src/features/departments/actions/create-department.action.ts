@@ -1,7 +1,10 @@
 'use server';
 
+import { unstable_rethrow } from 'next/navigation';
 import { z } from 'zod';
 
+import { PERMISSIONS } from '@/features/auth/constants/permissions';
+import { requirePermission } from '@/features/auth/guards/require-permission';
 import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
 
@@ -26,6 +29,8 @@ export async function createDepartmentAction(
   }
 
   try {
+    await requirePermission(PERMISSIONS.DEPARTMENT_CREATE);
+
     const department = await createDepartment(validated.data);
 
     return {
@@ -34,6 +39,8 @@ export async function createDepartmentAction(
       data: department,
     };
   } catch (error) {
+    unstable_rethrow(error);
+
     if (error instanceof AppError) {
       return {
         success: false,

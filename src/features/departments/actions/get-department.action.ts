@@ -1,5 +1,9 @@
 'use server';
 
+import { unstable_rethrow } from 'next/navigation';
+
+import { PERMISSIONS } from '@/features/auth/constants/permissions';
+import { requirePermission } from '@/features/auth/guards/require-permission';
 import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
 
@@ -10,6 +14,8 @@ export async function getDepartmentAction(
   departmentId: string,
 ): Promise<ActionResult<GetDepartmentActionResult>> {
   try {
+    await requirePermission(PERMISSIONS.DEPARTMENT_READ);
+
     const department = await getDepartment(departmentId);
 
     return {
@@ -17,6 +23,8 @@ export async function getDepartmentAction(
       data: department,
     };
   } catch (error) {
+    unstable_rethrow(error);
+
     if (error instanceof AppError) {
       return {
         success: false,

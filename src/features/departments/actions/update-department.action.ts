@@ -1,7 +1,10 @@
 'use server';
 
+import { unstable_rethrow } from 'next/navigation';
 import { z } from 'zod';
 
+import { PERMISSIONS } from '@/features/auth/constants/permissions';
+import { requirePermission } from '@/features/auth/guards/require-permission';
 import { AppError } from '@/lib/errors/app.error';
 import type { ActionResult } from '@/shared/types/action.types';
 
@@ -27,6 +30,8 @@ export async function updateDepartmentAction(
   }
 
   try {
+    await requirePermission(PERMISSIONS.DEPARTMENT_UPDATE);
+
     const department = await updateDepartment(departmentId, validated.data);
 
     return {
@@ -35,6 +40,8 @@ export async function updateDepartmentAction(
       data: department,
     };
   } catch (error) {
+    unstable_rethrow(error);
+
     if (error instanceof AppError) {
       return {
         success: false,
