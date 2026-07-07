@@ -1,10 +1,10 @@
 import { ROLE_NAMES } from '@/features/auth/constants/roles';
 import type { RegisterInput } from '@/features/auth/schemas/register.schema';
 import type { ServiceRegisterResult } from '@/features/auth/types/service-results';
-import { emailQueueService } from '@/features/mail/services/email-queue.service';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { prisma } from '@/lib/prisma';
+import { emailQueueService } from '@/server/mail/services/email-queue.service';
 
 import { authConfig } from '../lib/auth.config';
 import { generateOtp, hashOtp } from '../lib/otp';

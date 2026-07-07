@@ -1,9 +1,9 @@
 import { addMinutes } from 'date-fns';
 
-import { emailQueueService } from '@/features/mail/services/email-queue.service';
 import { OtpType } from '@/generated/prisma/enums';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
+import { emailQueueService } from '@/server/mail/services/email-queue.service';
 
 import { generateOtp, hashOtp } from '../lib/otp';
 import { otpRepository } from '../repositories/otp.repository';
