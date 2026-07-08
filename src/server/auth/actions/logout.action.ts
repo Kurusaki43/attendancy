@@ -5,9 +5,8 @@ import { redirect } from 'next/navigation';
 
 import { logger } from '@/lib/logger';
 import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
-
-import { clearAuthCookies } from '../lib/cookies';
-import { logout } from '../services/logout.service';
+import { clearAuthCookies } from '@/server/auth/lib/cookies';
+import { logout } from '@/server/auth/services/logout.service';
 
 export async function logoutAction() {
   const cookieStore = await cookies();

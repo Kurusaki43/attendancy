@@ -1,11 +1,11 @@
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+import { authConfig } from '@/server/auth/lib/auth.config';
+import { sessionRepository } from '@/server/auth/repositories/session.repository';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import type { ServiceRefreshSessionResult } from '@/server/auth/types/service-results';
 
-import { authConfig } from '../lib/auth.config';
-import { sessionRepository } from '../repositories/session.repository';
-import { userRepository } from '../repositories/user.repository';
 import { tokenService } from './token.service';
 
 export async function refreshSession(refreshToken: string): Promise<ServiceRefreshSessionResult> {

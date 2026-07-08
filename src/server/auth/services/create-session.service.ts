@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 
+import { authConfig } from '@/server/auth/lib/auth.config';
+import { sessionRepository } from '@/server/auth/repositories/session.repository';
 import type { ServiceCreateSessionResult } from '@/server/auth/types/service-results';
 
-import { authConfig } from '../lib/auth.config';
-import { sessionRepository } from '../repositories/session.repository';
 import { tokenService } from './token.service';
 
 export async function createSession(

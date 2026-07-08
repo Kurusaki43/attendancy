@@ -1,11 +1,10 @@
 import { createWorker } from '@/infrastructure/workers/base.worker';
-
 import {
   MailService,
   type SendResetPassword,
   type SendVerificationEmail,
   type SendWelcome,
-} from '../services/mail.service';
+} from '@/server/mail/services/mail.service';
 
 type EmailJobData = SendVerificationEmail | SendWelcome | SendResetPassword;
 

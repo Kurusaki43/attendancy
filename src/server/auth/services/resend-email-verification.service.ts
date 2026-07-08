@@ -3,11 +3,10 @@ import { addMinutes } from 'date-fns';
 import { OtpType } from '@/generated/prisma/enums';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
+import { generateOtp, hashOtp } from '@/server/auth/lib/otp';
+import { otpRepository } from '@/server/auth/repositories/otp.repository';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import { emailQueueService } from '@/server/mail/services/email-queue.service';
-
-import { generateOtp, hashOtp } from '../lib/otp';
-import { otpRepository } from '../repositories/otp.repository';
-import { userRepository } from '../repositories/user.repository';
 
 export async function resendEmailVerification(email: string) {
   const user = await userRepository.findByEmail(email);

@@ -1,9 +1,8 @@
 import { env } from '@/lib/env/env';
-
-import { transporter } from '../lib/transporter';
-import { emailVerificationTemplate } from '../templates/emailVerification';
-import { passwordResetTemplate } from '../templates/resetPassword';
-import { welcomeTemplate } from '../templates/welcome';
+import { transporter } from '@/server/mail/lib/transporter';
+import { emailVerificationTemplate } from '@/server/mail/templates/emailVerification';
+import { passwordResetTemplate } from '@/server/mail/templates/resetPassword';
+import { welcomeTemplate } from '@/server/mail/templates/welcome';
 
 type SendMailParams = {
   to: string;

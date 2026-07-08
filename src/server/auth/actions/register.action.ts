@@ -3,12 +3,11 @@
 import { z } from 'zod';
 
 import { verifyCaptcha } from '@/lib/captcha';
+import { setPendingEmailVerificationCookie } from '@/server/auth/lib/cookies';
 import { type RegisterFormInput, registerFormSchema } from '@/server/auth/schemas/register.schema';
 import { register } from '@/server/auth/services/register.service';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
-
-import { setPendingEmailVerificationCookie } from '../lib/cookies';
 
 export async function registerAction(input: RegisterFormInput): Promise<ActionResult<null>> {
   const validated = registerFormSchema.safeParse(input);

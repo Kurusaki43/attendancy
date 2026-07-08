@@ -2,9 +2,9 @@
 
 import { type ReactNode, useState } from 'react';
 
+import { NAV_GROUPS } from '@/features/dashboard/config/navigation.config';
 import type { AuthUser } from '@/server/auth/types';
 
-import { NAV_GROUPS } from '../config/navigation.config';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 

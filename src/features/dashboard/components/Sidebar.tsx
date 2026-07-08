@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { canSeeNavItem } from '@/features/dashboard/lib/navigation-utils';
+import type { NavGroup, NavItem } from '@/features/dashboard/types/navigation.types';
 import { cn } from '@/lib/utils';
 import type { AuthUser } from '@/server/auth/types';
 
-import { canSeeNavItem } from '../lib/navigation-utils';
-import type { NavGroup, NavItem } from '../types/navigation.types';
 import { UserAvatar } from './UserAvatar';
 
 type SidebarProps = {

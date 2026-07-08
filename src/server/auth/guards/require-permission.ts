@@ -1,9 +1,8 @@
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ForbiddenError } from '@/lib/errors/forbidden.error';
 import { type PermissionDefinition } from '@/server/auth/constants/permissions';
+import { getCurrentUser } from '@/server/auth/lib/get-current-user';
 import type { AuthUser } from '@/server/auth/types/auth-user';
-
-import { getCurrentUser } from '../lib/get-current-user';
 
 export function hasPermission(user: AuthUser, permission: PermissionDefinition) {
   return user.roles.some((role) =>

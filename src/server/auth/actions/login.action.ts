@@ -5,18 +5,17 @@ import { z } from 'zod';
 
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
-import { type LoginInput, loginSchema } from '@/server/auth/schemas/login.schema';
-import type { LoginResult } from '@/server/auth/types/action-results';
-import type { ActionResult } from '@/shared/types/action.types';
-import { runAction } from '@/shared/utils/run-action';
-
 import {
   setAccessTokenCookie,
   setPendingEmailVerificationCookie,
   setRefreshTokenCookie,
-} from '../lib/cookies';
-import { userRepository } from '../repositories/user.repository';
-import { login } from '../services/login.service';
+} from '@/server/auth/lib/cookies';
+import { userRepository } from '@/server/auth/repositories/user.repository';
+import { type LoginInput, loginSchema } from '@/server/auth/schemas/login.schema';
+import { login } from '@/server/auth/services/login.service';
+import type { LoginResult } from '@/server/auth/types/action-results';
+import type { ActionResult } from '@/shared/types/action.types';
+import { runAction } from '@/shared/utils/run-action';
 
 export async function loginAction(input: LoginInput): Promise<ActionResult<LoginResult>> {
   const headerStore = await headers();

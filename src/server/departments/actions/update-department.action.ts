@@ -8,11 +8,10 @@ import {
   type UpdateDepartmentInput,
   updateDepartmentSchema,
 } from '@/server/departments/schemas/update-department.schema';
+import { updateDepartment } from '@/server/departments/services/update-department.service';
 import type { UpdateDepartmentActionResult } from '@/server/departments/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
-
-import { updateDepartment } from '../services/update-department.service';
 
 export async function updateDepartmentAction(
   departmentId: string,

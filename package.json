@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "check": "pnpm db:format && pnpm lint && pnpm typecheck && pnpm format:check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm db:format && pnpm lint && pnpm typecheck && pnpm format:check && pnpm test",
     "db:generate": "dotenv -e .env.development -- prisma generate",
     "db:migrate": "dotenv -e .env.development -- prisma migrate dev",
     "db:push": "dotenv -e .env.development -- prisma db push",
@@ -96,6 +98,7 @@
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5",
-    "typescript-eslint": "^8.62.0"
+    "typescript-eslint": "^8.62.0",
+    "vitest": "^4.1.10"
   }
 }

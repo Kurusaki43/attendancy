@@ -3,11 +3,11 @@ import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ForbiddenError } from '@/lib/errors/forbidden.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+import { verifyPassword } from '@/server/auth/lib/password';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import type { LoginInput } from '@/server/auth/schemas/login.schema';
 import type { ServiceLoginResult } from '@/server/auth/types/service-results';
 
-import { verifyPassword } from '../lib/password';
-import { userRepository } from '../repositories/user.repository';
 import { createSession } from './create-session.service';
 
 export async function login(

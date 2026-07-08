@@ -6,10 +6,9 @@ import {
   type ForgotPasswordInput,
   forgotPasswordSchema,
 } from '@/server/auth/schemas/forgot-password.schema';
+import { forgotPassword } from '@/server/auth/services/forgot-password.service';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
-
-import { forgotPassword } from '../services/forgot-password.service';
 
 export async function forgotPasswordAction(
   input: ForgotPasswordInput,

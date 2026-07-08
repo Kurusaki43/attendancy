@@ -2,14 +2,13 @@ import { OtpType } from '@/generated/prisma/enums';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { prisma } from '@/lib/prisma';
+import { verifyOtp } from '@/server/auth/lib/otp';
+import { hashPassword } from '@/server/auth/lib/password';
+import { otpRepository } from '@/server/auth/repositories/otp.repository';
+import { sessionRepository } from '@/server/auth/repositories/session.repository';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import type { ResetPasswordInput } from '@/server/auth/schemas/reset-password.schema';
 import type { ServiceResetPasswordResult } from '@/server/auth/types';
-
-import { verifyOtp } from '../lib/otp';
-import { hashPassword } from '../lib/password';
-import { otpRepository } from '../repositories/otp.repository';
-import { sessionRepository } from '../repositories/session.repository';
-import { userRepository } from '../repositories/user.repository';
 
 export async function resetPassword(
   payload: ResetPasswordInput,

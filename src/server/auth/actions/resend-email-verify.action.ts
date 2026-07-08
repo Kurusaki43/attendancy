@@ -1,10 +1,9 @@
 'use server';
 
 import { AppError } from '@/lib/errors/app.error';
+import { resendEmailVerification } from '@/server/auth/services/resend-email-verification.service';
 import { type ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
-
-import { resendEmailVerification } from '../services/resend-email-verification.service';
 
 export async function resendVerificationOtpAction(email: string): Promise<ActionResult<null>> {
   const result = await runAction(

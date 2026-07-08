@@ -3,9 +3,8 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
+import { getInitials } from '@/features/dashboard/lib/dashboard-utils';
 import { cn } from '@/lib/utils';
-
-import { getInitials } from '../lib/dashboard-utils';
 
 type UserAvatarProps = {
   firstName: string;

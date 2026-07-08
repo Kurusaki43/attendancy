@@ -5,7 +5,7 @@ import type {
   PrismaQueryOptions,
   PrismaSelectInput,
   PrismaWhereInput,
-} from '../types/api-feature';
+} from '@/shared/types/api-feature';
 import {
   buildPaginationMeta,
   castValue,
@@ -14,7 +14,7 @@ import {
   parseSearchParams,
   RESERVED_QUERY_FIELDS,
   toPositiveInt,
-} from '../utils/api-features';
+} from '@/shared/utils/api-features';
 
 export class ApiFeaturesBuilder<
   TWhereInput extends PrismaWhereInput = PrismaWhereInput,

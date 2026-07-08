@@ -1,4 +1,4 @@
-import type { PaginationMeta, ParsedQuery } from '../types/api-feature';
+import type { PaginationMeta, ParsedQuery } from '@/shared/types/api-feature';
 
 /** Query params that are reserved for query mechanics, not entity filters */
 export const RESERVED_QUERY_FIELDS = new Set(['page', 'sort', 'limit', 'fields', 'search']);

@@ -8,11 +8,10 @@ import {
   type CreateDepartmentInput,
   createDepartmentSchema,
 } from '@/server/departments/schemas/create-department.schema';
+import { createDepartment } from '@/server/departments/services/create-department.service';
 import type { CreateDepartmentActionResult } from '@/server/departments/types/action-results';
 import type { ActionResult } from '@/shared/types/action.types';
 import { runAction } from '@/shared/utils/run-action';
-
-import { createDepartment } from '../services/create-department.service';
 
 export async function createDepartmentAction(
   input: CreateDepartmentInput,

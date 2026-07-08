@@ -2,11 +2,10 @@ import { OtpType } from '@/generated/prisma/enums';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { prisma } from '@/lib/prisma';
+import { verifyOtp } from '@/server/auth/lib/otp';
+import { otpRepository } from '@/server/auth/repositories/otp.repository';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import type { ServiceEmailVerificationResult } from '@/server/auth/types/service-results';
-
-import { verifyOtp } from '../lib/otp';
-import { otpRepository } from '../repositories/otp.repository';
-import { userRepository } from '../repositories/user.repository';
 
 export async function getPendingVerificationUser(userId: string) {
   return userRepository.findByIdSafeFields(userId);

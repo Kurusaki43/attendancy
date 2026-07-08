@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
-import { getAccessTokenCookie } from '../lib/cookies';
-import { tokenService } from '../services/token.service';
+import { getAccessTokenCookie } from '@/server/auth/lib/cookies';
+import { tokenService } from '@/server/auth/services/token.service';
 
 export async function requireAuth(returnTo: string = '/dashboard') {
   const token = await getAccessTokenCookie();

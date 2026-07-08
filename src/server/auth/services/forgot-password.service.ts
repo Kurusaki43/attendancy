@@ -2,12 +2,11 @@ import { randomBytes } from 'crypto';
 
 import { OtpType } from '@/generated/prisma/enums';
 import { env } from '@/lib/env/env';
+import { authConfig } from '@/server/auth/lib/auth.config';
+import { hashOtp } from '@/server/auth/lib/otp';
+import { otpRepository } from '@/server/auth/repositories/otp.repository';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import { emailQueueService } from '@/server/mail/services/email-queue.service';
-
-import { authConfig } from '../lib/auth.config';
-import { hashOtp } from '../lib/otp';
-import { otpRepository } from '../repositories/otp.repository';
-import { userRepository } from '../repositories/user.repository';
 
 export async function forgotPassword(email: string) {
   const user = await userRepository.findByEmail(email);

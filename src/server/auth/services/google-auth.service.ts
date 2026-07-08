@@ -7,11 +7,10 @@ import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import { prisma } from '@/lib/prisma';
 import { ROLE_NAMES } from '@/server/auth/constants/roles';
+import { getGoogleProfile } from '@/server/auth/lib/get-google-profile';
+import { google } from '@/server/auth/lib/google';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import type { ServiceGoogleAuthResult } from '@/server/auth/types/service-results';
-
-import { getGoogleProfile } from '../lib/get-google-profile';
-import { google } from '../lib/google';
-import { userRepository } from '../repositories/user.repository';
 
 export async function authenticateWithGoogle(
   code: string,

@@ -11,7 +11,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import type { NavGroup } from '../types/navigation.types';
+import type { NavGroup } from '@/features/dashboard/types/navigation.types';
 
 export const NAV_GROUPS: NavGroup[] = [
   {
