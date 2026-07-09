@@ -1,5 +1,8 @@
 'use client';
 
+import type { LucideIcon } from 'lucide-react';
+
+import { EmptyState } from '@/components/shared/EmptyState';
 import {
   Table,
   TableBody,
@@ -22,6 +25,9 @@ type DataTableProps<TData> = {
   data: TData[];
   columns: ColumnDef<TData>[];
   emptyMessage?: string;
+  emptyDescription?: string;
+  emptyIcon?: LucideIcon;
+  emptyAction?: React.ReactNode;
   className?: string;
   getRowKey: (row: TData) => string;
 };
@@ -29,7 +35,10 @@ type DataTableProps<TData> = {
 export function DataTable<TData>({
   data,
   columns,
-  emptyMessage = 'No data found.',
+  emptyMessage = 'No data found',
+  emptyDescription,
+  emptyIcon,
+  emptyAction,
   getRowKey,
   className,
 }: DataTableProps<TData>) {
@@ -53,11 +62,13 @@ export function DataTable<TData>({
       <TableBody>
         {data.length === 0 ? (
           <TableRow className="hover:bg-transparent">
-            <TableCell
-              colSpan={columns.length}
-              className="text-muted-foreground h-32 text-center text-sm"
-            >
-              {emptyMessage}
+            <TableCell colSpan={columns.length} className="p-0">
+              <EmptyState
+                icon={emptyIcon}
+                title={emptyMessage}
+                description={emptyDescription}
+                action={emptyAction}
+              />
             </TableCell>
           </TableRow>
         ) : (

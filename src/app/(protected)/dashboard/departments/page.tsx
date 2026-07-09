@@ -1,5 +1,9 @@
+import { Building2 } from 'lucide-react';
+
 import DataTablePagination from '@/components/shared/data-table/DataTablePagination';
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
+import { EmptyState } from '@/components/shared/EmptyState';
+import { ErrorState } from '@/components/shared/ErrorState';
 import { AddDepartmentDialog } from '@/features/departments/components/AddDepartmentDialog';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
@@ -11,6 +15,8 @@ type DepartmentsPageProps = {
 export default async function DepartmentsPage({ searchParams }: DepartmentsPageProps) {
   const params = await searchParams;
   const result = await getAllDepartmentsAction(params);
+  const hasActiveFilters = Boolean(params.search) || Boolean(params.isActive);
+  const isTrulyEmpty = result.success && result.data.departments.length === 0 && !hasActiveFilters;
 
   return (
     <div className="space-y-4">
@@ -22,26 +28,36 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
             Manage your organisation&apos;s departments and their status.
           </p>
         </div>
-        <AddDepartmentDialog />
+        {result.success && !isTrulyEmpty && <AddDepartmentDialog />}
       </div>
-      <DataTableToolbar />
       {/* Content */}
       {result.success ? (
-        <>
-          <DepartmentsTable departments={result.data.departments} />
-          <DataTablePagination
-            limit={result.data.pagination.limit}
-            page={result.data.pagination.page}
-            totalPages={result.data.pagination.totalPages}
-            totalItems={result.data.pagination.totalItems}
+        isTrulyEmpty ? (
+          <EmptyState
+            icon={Building2}
+            title="No departments yet"
+            description="Create your first department to begin."
+            action={<AddDepartmentDialog />}
+            className="rounded-md border"
           />
-        </>
+        ) : (
+          <>
+            <DataTableToolbar />
+            <DepartmentsTable departments={result.data.departments} />
+            <DataTablePagination
+              limit={result.data.pagination.limit}
+              page={result.data.pagination.page}
+              totalPages={result.data.pagination.totalPages}
+              totalItems={result.data.pagination.totalItems}
+            />
+          </>
+        )
       ) : (
-        <div className="bg-destructive/5 border-destructive/20 rounded-md border px-4 py-3">
-          <p className="text-destructive text-sm font-medium">
-            {result.message ?? 'Failed to load departments.'}
-          </p>
-        </div>
+        <ErrorState
+          title="Couldn't load departments"
+          description="Something went wrong while fetching departments."
+          className="rounded-md border"
+        />
       )}
     </div>
   );

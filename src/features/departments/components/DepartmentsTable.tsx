@@ -1,8 +1,10 @@
 'use client';
 
+import { SearchX } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
+import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
@@ -109,7 +111,10 @@ export function DepartmentsTable({ departments }: DepartmentsTableProps) {
     <DataTable
       data={departments}
       columns={columns}
-      emptyMessage="No departments found."
+      emptyMessage="No matching departments"
+      emptyDescription="Try adjusting your search or filters."
+      emptyIcon={SearchX}
+      emptyAction={<ClearFiltersButton />}
       getRowKey={(row) => row.id}
       className="border"
     />
