@@ -32,7 +32,7 @@ export const NAV_GROUPS: NavGroup[] = [
         title: 'Departments',
         href: '/dashboard/departments',
         icon: Building2,
-        roles: ['ADMIN'],
+        roles: ['ADMIN', 'MANAGER'],
         permission: 'department:read',
       },
       {
