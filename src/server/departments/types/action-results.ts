@@ -3,6 +3,7 @@ import type { PaginationMeta } from '@/shared/types/api-feature';
 export type DepartmentResult = {
   id: string;
   name: string;
+  code: string;
   description: string | null;
   isActive: boolean;
   createdAt: Date;

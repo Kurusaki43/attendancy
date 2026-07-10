@@ -13,5 +13,14 @@ export async function createDepartment(
     throw new ConflictError(ERROR_CODES.DEPARTMENT_ALREADY_EXISTS, 'Department already exist!');
   }
 
+  const departmentWithCode = await departmentRepository.findByCode(departmentInput.code);
+
+  if (departmentWithCode) {
+    throw new ConflictError(
+      ERROR_CODES.DEPARTMENT_CODE_ALREADY_EXISTS,
+      'Department code already in use!',
+    );
+  }
+
   return await departmentRepository.create(departmentInput);
 }

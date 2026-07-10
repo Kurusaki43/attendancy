@@ -20,6 +20,9 @@ export const departmentRepository = {
   findByName(name: string) {
     return prisma.department.findUnique({ where: { name } });
   },
+  findByCode(code: string) {
+    return prisma.department.findUnique({ where: { code } });
+  },
   update(departmentID: string, newDate: DepartmentUpdateInput) {
     return prisma.department.update({ where: { id: departmentID }, data: newDate });
   },

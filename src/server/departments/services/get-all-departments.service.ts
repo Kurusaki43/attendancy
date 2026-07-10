@@ -7,7 +7,7 @@ import { departmentQuerySchema } from '@/server/departments/schemas/get-all-depa
 import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
-const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'description'];
+const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'code', 'description'];
 const DEPARTMENT_FILTERABLE_FIELDS = ['isActive'];
 
 export interface GetAllDepartmentsResult {
