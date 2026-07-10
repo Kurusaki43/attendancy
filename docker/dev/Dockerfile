@@ -12,14 +12,23 @@ WORKDIR /app
 RUN corepack enable
 # Skip husky's git-hook install — there's no .git directory in the build context.
 ENV HUSKY=0
+# pnpm's content-addressable store defaults to a *project-relative* .pnpm-store
+# (i.e. /app/.pnpm-store), not ~/.local/share/pnpm/store. docker-compose's dev
+# bind-mount (../..:/app) replaces the image's /app with the host repo at
+# runtime, so a project-relative store never exists in the running container —
+# pnpm's startup dep check then can't verify node_modules against it and tries
+# to purge + reinstall on every start, which fails with no TTY attached.
+# Pointing store-dir outside /app via an env var (not `pnpm config set --global`,
+# which needs an interactive `pnpm setup` first) keeps it stable across that
+# bind-mount.
+ENV PNPM_CONFIG_STORE_DIR=/pnpm-store
 
 # ---------------------------------------------------------------------------
-# deps — install dependencies in their own cached layer
+# deps — install dependencies in their own layer
 # ---------------------------------------------------------------------------
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # ---------------------------------------------------------------------------
 # dev — hot-reloading dev server; source is bind-mounted by docker-compose
@@ -27,6 +36,9 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 FROM base AS dev
 ENV NODE_ENV=development
 COPY --from=deps /app/node_modules ./node_modules
+# Carry the store forward too (see the note on base's store-dir above) so it
+# survives the runtime bind-mount and node_modules stays verifiable.
+COPY --from=deps /pnpm-store /pnpm-store
 COPY . .
 RUN pnpm exec prisma generate
 EXPOSE 3000
