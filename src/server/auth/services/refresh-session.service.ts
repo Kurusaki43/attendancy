@@ -27,9 +27,19 @@ export async function refreshSession(refreshToken: string): Promise<ServiceRefre
     throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Session expired');
   }
 
-  const isValid = await tokenService.compareTokens(refreshToken, session.refreshTokenHash);
+  const isCurrentToken = await tokenService.compareTokens(refreshToken, session.refreshTokenHash);
 
-  if (!isValid) {
+  // A request can race a concurrent one that already rotated this session's token (e.g. parallel
+  // tabs, or a prefetch racing the real navigation). Accept the just-superseded token for a short
+  // grace window instead of treating it as reuse/theft, so the loser doesn't get logged out.
+  const isRecentlyRotatedToken =
+    !isCurrentToken &&
+    session.previousRefreshTokenHash !== null &&
+    session.previousRefreshTokenExpiresAt !== null &&
+    session.previousRefreshTokenExpiresAt > new Date() &&
+    (await tokenService.compareTokens(refreshToken, session.previousRefreshTokenHash));
+
+  if (!isCurrentToken && !isRecentlyRotatedToken) {
     await sessionRepository.revoke(session.id);
 
     throw new UnauthorizedError(ERROR_CODES.UNAUTHORIZED, 'Invalid refresh token');
@@ -56,6 +66,8 @@ export async function refreshSession(refreshToken: string): Promise<ServiceRefre
 
   await sessionRepository.update(session.id, {
     refreshTokenHash,
+    previousRefreshTokenHash: session.refreshTokenHash,
+    previousRefreshTokenExpiresAt: authConfig.refreshToken.graceExpiresAt(),
     expiresAt: authConfig.refreshToken.expiresAt(),
   });
 
