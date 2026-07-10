@@ -47,6 +47,11 @@ model Session {
   expiresAt        DateTime
   revokedAt        DateTime?
 
+  // Kept for a short grace window after rotation so a request racing on the
+  // just-superseded refresh token isn't treated as reuse/theft and logged out.
+  previousRefreshTokenHash      String?
+  previousRefreshTokenExpiresAt DateTime?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -99,4 +104,24 @@ model Otp {
 
   @@index([userId, type, usedAt, expiresAt])
   @@index([expiresAt])
+}
+
+model Department {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Position {
+  id          String  @id @default(cuid())
+  title       String  @unique
+  description String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

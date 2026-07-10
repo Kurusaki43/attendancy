@@ -3,8 +3,8 @@
 import { LogOut } from 'lucide-react';
 import { useTransition } from 'react';
 
-import { logoutAction } from '@/features/auth/actions/logout.action';
 import { cn } from '@/lib/utils';
+import { logoutAction } from '@/server/auth/actions/logout.action';
 
 type LogoutButtonProps = {
   onLogout?: () => void;

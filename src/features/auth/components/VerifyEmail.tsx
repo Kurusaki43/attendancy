@@ -7,17 +7,17 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import RHFInput from '@/components/shared/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import RHFInput from '@/components/ui/RHF/RHFInput';
-import { verifyEmailAction } from '@/features/auth/actions/email-verify.action';
+import { verifyEmailAction } from '@/server/auth/actions/email-verify.action';
+import { resendVerificationOtpAction } from '@/server/auth/actions/resend-email-verify.action';
 import {
   type VerifyEmailInput,
   verifyEmailSchema,
-} from '@/features/auth/schemas/email-verification.schema';
+} from '@/server/auth/schemas/email-verification.schema';
 
-import { resendVerificationOtpAction } from '../actions/resend-email-verify.action';
 import { ResendButton } from './ResendButton';
 
 type VerifyEmailProps = {

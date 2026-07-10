@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-import type { RoleName } from '@/features/auth/constants/roles';
+import type { RoleName } from '@/server/auth/constants/roles';
 
 export type NavItem = {
   title: string;

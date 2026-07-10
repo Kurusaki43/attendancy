@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { AUTH_COOKIES } from '@/features/auth/constants/auth.constant';
+import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
 
 export async function GET(request: Request) {
   const response = NextResponse.redirect(new URL('/register', request.url));

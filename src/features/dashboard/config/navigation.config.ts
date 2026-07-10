@@ -11,7 +11,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import type { NavGroup } from '../types/navigation.types';
+import type { NavGroup } from '@/features/dashboard/types/navigation.types';
 
 export const NAV_GROUPS: NavGroup[] = [
   {
@@ -32,7 +32,7 @@ export const NAV_GROUPS: NavGroup[] = [
         title: 'Departments',
         href: '/dashboard/departments',
         icon: Building2,
-        roles: ['ADMIN'],
+        roles: ['ADMIN', 'MANAGER'],
         permission: 'department:read',
       },
       {

@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
-import type { AuthUser } from '@/features/auth/types';
+import type { AuthUser } from '@/server/auth/types';
 
 import { UserMenu } from './UserMenu';
 
@@ -17,7 +17,7 @@ type HeaderProps = {
 
 export function Header({ user, isSidebarOpen, onToggleSidebar, onLogout }: HeaderProps) {
   return (
-    <header className="border-border bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-10 border-b backdrop-blur">
+    <header className="border-border bg-sidebar sticky top-0 z-10 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Left: Mobile menu button + title */}
         <div className="flex items-center gap-4">

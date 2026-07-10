@@ -1,6 +1,6 @@
-import { ROLES } from '@/features/auth/constants/roles';
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
+import { ROLES } from '@/server/auth/constants/roles';
 
 export async function seedRoles() {
   logger.info('🌱 Seeding roles...');

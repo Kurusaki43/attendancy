@@ -1,6 +1,5 @@
-import type { AuthUser } from '@/features/auth/types';
-
-import type { NavItem } from '../types/navigation.types';
+import type { NavItem } from '@/features/dashboard/types/navigation.types';
+import type { AuthUser } from '@/server/auth/types';
 
 export function canSeeNavItem(item: NavItem, user: AuthUser): boolean {
   const userRoleNames = user.roles.map((r) => r.name);
