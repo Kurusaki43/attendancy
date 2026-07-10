@@ -48,3 +48,15 @@ export type ServiceGoogleAuthResult = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type ServiceSessionResult = {
+  id: string;
+  ipAddress: string | null;
+  userAgent: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  expiresAt: Date;
+  isCurrent: boolean;
+};
+
+export type ServiceListSessionsResult = ServiceSessionResult[];

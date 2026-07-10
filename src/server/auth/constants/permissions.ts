@@ -53,6 +53,11 @@ export const PERMISSIONS = {
   PROFILE_READ_SELF: permission('profile', 'read:self', 'View personal profile'),
 
   PROFILE_UPDATE_SELF: permission('profile', 'update:self', 'Update personal profile'),
+
+  // Sessions
+  SESSION_READ_SELF: permission('session', 'read:self', 'View personal login sessions'),
+
+  SESSION_REVOKE_SELF: permission('session', 'revoke:self', 'Revoke personal login sessions'),
 } as const;
 
 export type PermissionDefinition = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

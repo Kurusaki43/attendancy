@@ -47,4 +47,30 @@ export const sessionRepository = {
       },
     });
   },
+
+  findManyByUserId(userId: string) {
+    return prisma.session.findMany({
+      where: {
+        userId,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+  },
+
+  revokeAllExceptSession(userId: string, exceptSessionId: string) {
+    return prisma.session.updateMany({
+      where: {
+        userId,
+        revokedAt: null,
+        id: { not: exceptSessionId },
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+  },
 };

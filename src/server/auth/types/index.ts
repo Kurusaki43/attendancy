@@ -4,7 +4,13 @@
  */
 
 // Action layer types (client-facing)
-export type { LoginResult, RegisterResult, VerifyEmailResult } from './action-results';
+export type {
+  ListSessionsActionResult,
+  LoginResult,
+  RegisterResult,
+  SessionResult,
+  VerifyEmailResult,
+} from './action-results';
 
 // Domain types
 export type { AuthUser } from './auth-user';
@@ -14,8 +20,10 @@ export type {
   ServiceCreateSessionResult,
   ServiceEmailVerificationResult,
   ServiceGoogleAuthResult,
+  ServiceListSessionsResult,
   ServiceLoginResult,
   ServiceRefreshSessionResult,
   ServiceRegisterResult,
   ServiceResetPasswordResult,
+  ServiceSessionResult,
 } from './service-results';

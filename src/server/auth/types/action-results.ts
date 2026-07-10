@@ -1,3 +1,5 @@
+import type { DeviceType } from '@/server/auth/lib/parse-user-agent';
+
 export type RegisterResult = {
   email: string;
   userId: string;
@@ -16,3 +18,17 @@ export type LoginResult = {
     avatar: string | null;
   };
 };
+
+export type SessionResult = {
+  id: string;
+  browser: string;
+  os: string;
+  deviceType: DeviceType;
+  ipAddress: string | null;
+  isCurrent: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  expiresAt: Date;
+};
+
+export type ListSessionsActionResult = SessionResult[];
