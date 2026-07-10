@@ -1,5 +1,6 @@
 import { Building2 } from 'lucide-react';
 
+import { getListErrorStateProps } from '@/components/shared/data-table/data-table-utils';
 import DataTablePagination from '@/components/shared/data-table/DataTablePagination';
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
@@ -54,8 +55,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
         )
       ) : (
         <ErrorState
-          title="Couldn't load departments"
-          description="Something went wrong while fetching departments."
+          {...getListErrorStateProps(result.code, { resourceLabel: 'departments' })}
           className="rounded-md border"
         />
       )}

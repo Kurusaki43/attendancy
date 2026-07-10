@@ -11,6 +11,7 @@ type ErrorStateProps = {
   title?: string;
   description?: string;
   onRetry?: () => void;
+  action?: React.ReactNode;
   className?: string;
 };
 
@@ -19,9 +20,20 @@ export function ErrorState({
   title = "Couldn't load data",
   description = 'Something went wrong while fetching this data.',
   onRetry,
+  action,
   className,
 }: ErrorStateProps) {
   const router = useRouter();
+
+  const resolvedAction =
+    action !== undefined ? (
+      action
+    ) : (
+      <Button variant="outline" size="sm" onClick={onRetry ?? (() => router.refresh())}>
+        <RefreshCw data-icon="inline-start" />
+        Try Again
+      </Button>
+    );
 
   return (
     <div
@@ -40,15 +52,7 @@ export function ErrorState({
         <p className="text-muted-foreground max-w-sm text-sm text-balance">{description}</p>
       )}
 
-      <Button
-        variant="outline"
-        size="sm"
-        className="mt-3"
-        onClick={onRetry ?? (() => router.refresh())}
-      >
-        <RefreshCw data-icon="inline-start" />
-        Try Again
-      </Button>
+      {resolvedAction && <div className="mt-3">{resolvedAction}</div>}
     </div>
   );
 }
