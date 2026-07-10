@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 
+import { clearPendingPasswordResetCookie } from '@/server/auth/lib/cookies';
 import type { ResetPasswordInput } from '@/server/auth/schemas/reset-password.schema';
 import { resetPasswordSchema } from '@/server/auth/schemas/reset-password.schema';
 import { resetPassword } from '@/server/auth/services/reset-password.service';
@@ -20,6 +21,7 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
 
   const result = await runAction(async () => {
     await resetPassword(validated.data);
+    await clearPendingPasswordResetCookie();
     return null;
   });
 

@@ -44,6 +44,13 @@ export async function setPendingEmailVerificationCookie(userId: string) {
     getCookieOptions(authConfig.otp.maxAge),
   );
 }
+
+export async function setPendingPasswordResetCookie() {
+  const cookieStore = await cookies();
+
+  cookieStore.set(AUTH_COOKIES.PENDING_PASSWORD_RESET, '1', getCookieOptions(authConfig.otp.maxAge));
+}
+
 export async function getAccessTokenCookie() {
   const cookieStore = await cookies();
   return cookieStore.get(AUTH_COOKIES.ACCESS_TOKEN)?.value ?? null;
@@ -58,9 +65,19 @@ export async function getPendingEmailVerificationCookie() {
   return cookieStore.get(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION)?.value ?? null;
 }
 
+export async function getPendingPasswordResetCookie() {
+  const cookieStore = await cookies();
+  return cookieStore.get(AUTH_COOKIES.PENDING_PASSWORD_RESET)?.value ?? null;
+}
+
 export async function clearPendingEmailVerificationCookie() {
   const cookieStore = await cookies();
   cookieStore.delete(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION);
+}
+
+export async function clearPendingPasswordResetCookie() {
+  const cookieStore = await cookies();
+  cookieStore.delete(AUTH_COOKIES.PENDING_PASSWORD_RESET);
 }
 
 export async function clearAuthCookies() {
@@ -69,4 +86,5 @@ export async function clearAuthCookies() {
   cookieStore.delete(AUTH_COOKIES.ACCESS_TOKEN);
   cookieStore.delete(AUTH_COOKIES.REFRESH_TOKEN);
   cookieStore.delete(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION);
+  cookieStore.delete(AUTH_COOKIES.PENDING_PASSWORD_RESET);
 }

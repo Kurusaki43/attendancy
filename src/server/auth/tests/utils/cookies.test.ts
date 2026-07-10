@@ -15,12 +15,15 @@ const { authConfig } = await import('@/server/auth/lib/auth.config');
 const {
   clearAuthCookies,
   clearPendingEmailVerificationCookie,
+  clearPendingPasswordResetCookie,
   getAccessTokenCookie,
   getCookieOptions,
   getPendingEmailVerificationCookie,
+  getPendingPasswordResetCookie,
   getRefreshTokenCookie,
   setAccessTokenCookie,
   setPendingEmailVerificationCookie,
+  setPendingPasswordResetCookie,
   setRefreshTokenCookie,
 } = await import('../../lib/cookies');
 
@@ -78,6 +81,18 @@ describe('setPendingEmailVerificationCookie', () => {
   });
 });
 
+describe('setPendingPasswordResetCookie', () => {
+  it('sets the pending password reset cookie with the OTP max age', async () => {
+    await setPendingPasswordResetCookie();
+
+    expect(mockCookieStore.set).toHaveBeenCalledWith(
+      AUTH_COOKIES.PENDING_PASSWORD_RESET,
+      '1',
+      expect.objectContaining({ maxAge: authConfig.otp.maxAge }),
+    );
+  });
+});
+
 describe('getters', () => {
   it('returns the cookie value when present', async () => {
     mockCookieStore.get.mockReturnValueOnce({ value: 'access-token-value' });
@@ -102,6 +117,18 @@ describe('getters', () => {
 
     await expect(getPendingEmailVerificationCookie()).resolves.toBeNull();
   });
+
+  it('returns null when the pending password reset cookie is absent', async () => {
+    mockCookieStore.get.mockReturnValueOnce(undefined);
+
+    await expect(getPendingPasswordResetCookie()).resolves.toBeNull();
+  });
+
+  it('returns the pending password reset cookie value when present', async () => {
+    mockCookieStore.get.mockReturnValueOnce({ value: '1' });
+
+    await expect(getPendingPasswordResetCookie()).resolves.toBe('1');
+  });
 });
 
 describe('clearPendingEmailVerificationCookie', () => {
@@ -113,13 +140,23 @@ describe('clearPendingEmailVerificationCookie', () => {
   });
 });
 
+describe('clearPendingPasswordResetCookie', () => {
+  it('deletes only the pending password reset cookie', async () => {
+    await clearPendingPasswordResetCookie();
+
+    expect(mockCookieStore.delete).toHaveBeenCalledWith(AUTH_COOKIES.PENDING_PASSWORD_RESET);
+    expect(mockCookieStore.delete).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('clearAuthCookies', () => {
-  it('deletes the access, refresh, and pending verification cookies', async () => {
+  it('deletes the access, refresh, pending verification, and pending password reset cookies', async () => {
     await clearAuthCookies();
 
     expect(mockCookieStore.delete).toHaveBeenCalledWith(AUTH_COOKIES.ACCESS_TOKEN);
     expect(mockCookieStore.delete).toHaveBeenCalledWith(AUTH_COOKIES.REFRESH_TOKEN);
     expect(mockCookieStore.delete).toHaveBeenCalledWith(AUTH_COOKIES.PENDING_EMAIL_VERIFICATION);
-    expect(mockCookieStore.delete).toHaveBeenCalledTimes(3);
+    expect(mockCookieStore.delete).toHaveBeenCalledWith(AUTH_COOKIES.PENDING_PASSWORD_RESET);
+    expect(mockCookieStore.delete).toHaveBeenCalledTimes(4);
   });
 });

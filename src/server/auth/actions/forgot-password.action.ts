@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 
+import { setPendingPasswordResetCookie } from '@/server/auth/lib/cookies';
 import {
   type ForgotPasswordInput,
   forgotPasswordSchema,
@@ -24,6 +25,7 @@ export async function forgotPasswordAction(
 
   const result = await runAction(async () => {
     await forgotPassword(validated.data.email);
+    await setPendingPasswordResetCookie();
     return null;
   });
 
