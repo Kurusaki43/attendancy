@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { SessionCardSkeleton } from '@/features/sessions/components/SessionCardSkeleton';
 
 export default function SettingsLoading() {
   return (
@@ -10,15 +10,9 @@ export default function SettingsLoading() {
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div key={index} className="ring-foreground/10 flex items-center gap-3 p-4 ring-1">
-            <Skeleton className="size-10 shrink-0 rounded-full" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-4 w-40" />
-              <Skeleton className="h-3 w-56" />
-            </div>
-          </div>
+          <SessionCardSkeleton key={index} />
         ))}
       </div>
     </div>
