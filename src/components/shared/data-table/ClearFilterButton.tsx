@@ -25,8 +25,8 @@ export default function ClearFiltersButton() {
   };
 
   return (
-    <Button size="sm" variant="outline" onClick={handleClear}>
-      <X className="mr-2 h-4 w-4" />
+    <Button variant="outline" onClick={handleClear}>
+      <X data-icon="inline-start" />
       Clear
     </Button>
   );

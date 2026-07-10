@@ -1,7 +1,7 @@
 'use client';
 
 import ClearFiltersButton from './ClearFilterButton';
-import FilterSelect from './FilterSelect';
+import FilterTabs from './FilterTabs';
 import SearchInput from './SearchInput';
 import SortInput from './SortInput';
 
@@ -10,12 +10,11 @@ const DataTableToolbar = () => {
     <div className="flex flex-wrap items-center justify-between gap-4">
       <SearchInput placeholder="Search by name" />
       <div className="flex flex-wrap items-center gap-4">
-        <FilterSelect
+        <FilterTabs
           queryKey="isActive"
-          label="isActive"
           options={[
             { label: 'Active', value: 'true' },
-            { label: 'NOT-Active', value: 'false' },
+            { label: 'Inactive', value: 'false' },
           ]}
         />
         <SortInput
