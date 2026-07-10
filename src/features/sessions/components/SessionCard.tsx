@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from 'date-fns';
 import { HelpCircle, Monitor, Smartphone, Tablet } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +36,10 @@ function formatDateTime(date: Date) {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+}
+
+function formatRelative(date: Date) {
+  return formatDistanceToNow(new Date(date), { addSuffix: true });
 }
 
 type SessionCardProps = {
@@ -80,18 +85,18 @@ export function SessionCard({ session }: SessionCardProps) {
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
         <dt className="text-muted-foreground">Created</dt>
-        <dd className="text-foreground text-right tabular-nums">
-          {formatDateTime(session.createdAt)}
+        <dd className="text-foreground text-right" title={formatDateTime(session.createdAt)}>
+          {formatRelative(session.createdAt)}
         </dd>
 
         <dt className="text-muted-foreground">Last active</dt>
-        <dd className="text-foreground text-right tabular-nums">
-          {formatDateTime(session.updatedAt)}
+        <dd className="text-foreground text-right" title={formatDateTime(session.updatedAt)}>
+          {formatRelative(session.updatedAt)}
         </dd>
 
         <dt className="text-muted-foreground">Expires</dt>
-        <dd className="text-foreground text-right tabular-nums">
-          {formatDateTime(session.expiresAt)}
+        <dd className="text-foreground text-right" title={formatDateTime(session.expiresAt)}>
+          {formatRelative(session.expiresAt)}
         </dd>
       </dl>
     </Card>
