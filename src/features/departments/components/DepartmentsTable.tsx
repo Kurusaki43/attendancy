@@ -62,6 +62,11 @@ const columns: ColumnDef<DepartmentResult>[] = [
     cell: (row) => <span className="text-foreground font-medium">{row.name}</span>,
   },
   {
+    key: 'code',
+    header: 'Code',
+    cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
+  },
+  {
     key: 'description',
     header: 'Description',
     cell: (row) => (

@@ -53,18 +53,22 @@ export function DepartmentForm({ mode, onSuccess, department }: DepartmentFormPr
     defaultValues: isUpdateMode
       ? {
           name: department.name,
+          code: department.code,
           description: department.description ?? '',
           isActive: department.isActive,
         }
       : {
           name: '',
+          code: '',
           description: '',
           isActive: true,
         },
   });
 
   const isDirty = Boolean(
-    form.formState.dirtyFields.name || form.formState.dirtyFields.description,
+    form.formState.dirtyFields.name ||
+    form.formState.dirtyFields.code ||
+    form.formState.dirtyFields.description,
   );
 
   const onSubmit = async (data: CreateDepartmentInput | UpdateDepartmentInput) => {
@@ -123,6 +127,28 @@ export function DepartmentForm({ mode, onSuccess, department }: DepartmentFormPr
                 <Input
                   id="name"
                   placeholder="Enter department name"
+                  {...field}
+                  value={field.value ?? ''}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="code"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="code" className="font-medium tracking-wide">
+                Department Code
+              </FormLabel>
+              <FormControl>
+                <Input
+                  id="code"
+                  placeholder="e.g. ENG"
                   {...field}
                   value={field.value ?? ''}
                   disabled={isPending}
