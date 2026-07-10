@@ -20,6 +20,7 @@ const DataTableToolbar = () => {
         />
         <SortInput
           queryKey="sort"
+          defaultValue="-createdAt"
           options={[
             { label: 'Newest First', value: '-createdAt' },
             { label: 'Oldest First', value: 'createdAt' },

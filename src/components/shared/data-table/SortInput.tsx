@@ -21,21 +21,22 @@ type SortInputProps = {
   queryKey?: string;
   placeholder?: string;
   options: SortOption[];
+  /** The sort value applied server-side when no `sort` param is present. Defaults to `options[0]`. */
+  defaultValue?: string;
 };
-
-const DEFAULT_SORT = 'default';
 
 export default function SortInput({
   queryKey = 'sort',
   placeholder = 'Default',
   options,
+  defaultValue = options[0]?.value,
 }: SortInputProps) {
   const { getParam, setParam } = useQueryParams();
 
-  const value = getParam(queryKey) ?? DEFAULT_SORT;
+  const value = getParam(queryKey) ?? defaultValue;
 
   const handleChange = (value: string | null) => {
-    setParam(queryKey, value === DEFAULT_SORT ? null : value);
+    setParam(queryKey, value === defaultValue ? null : value);
   };
 
   return (
@@ -48,13 +49,13 @@ export default function SortInput({
       <Select value={value} onValueChange={handleChange}>
         <SelectTrigger className="min-w-44 pl-7">
           <span className="text-muted-foreground mr-1">Sort:</span>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder}>
+            {(value: string) => options.find((option) => option.value === value)?.label}
+          </SelectValue>
         </SelectTrigger>
 
         <SelectContent>
           <SelectGroup>
-            <SelectItem value={DEFAULT_SORT}>Default</SelectItem>
-
             {options.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
