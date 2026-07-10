@@ -60,8 +60,8 @@ export function RevokeOtherSessionsDialog() {
           </AlertDialogTitle>
 
           <AlertDialogDescription className="text-sm">
-            Every other device currently signed into your account will be logged out
-            immediately. This device stays signed in.
+            Every other device currently signed into your account will be logged out immediately.
+            This device stays signed in.
           </AlertDialogDescription>
         </AlertDialogHeader>
 

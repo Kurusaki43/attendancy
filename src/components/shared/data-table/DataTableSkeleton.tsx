@@ -30,7 +30,7 @@ export function DataTableSkeleton({ columns, rows = 8, className }: DataTableSke
 
       <TableBody>
         {Array.from({ length: rows }).map((_, rowIndex) => (
-          <TableRow key={rowIndex} className="hover:bg-transparent even:bg-muted-foreground/5">
+          <TableRow key={rowIndex} className="even:bg-muted-foreground/5 hover:bg-transparent">
             {Array.from({ length: columns }).map((_, colIndex) => (
               <TableCell key={colIndex} className="px-4 py-3">
                 <Skeleton className="h-4 w-full max-w-40" />

@@ -48,7 +48,11 @@ export async function setPendingEmailVerificationCookie(userId: string) {
 export async function setPendingPasswordResetCookie() {
   const cookieStore = await cookies();
 
-  cookieStore.set(AUTH_COOKIES.PENDING_PASSWORD_RESET, '1', getCookieOptions(authConfig.otp.maxAge));
+  cookieStore.set(
+    AUTH_COOKIES.PENDING_PASSWORD_RESET,
+    '1',
+    getCookieOptions(authConfig.otp.maxAge),
+  );
 }
 
 export async function getAccessTokenCookie() {

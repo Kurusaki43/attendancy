@@ -20,7 +20,9 @@ describe('authConfig', () => {
     const expiresAt = authConfig.refreshToken.expiresAt();
     const after = Date.now();
 
-    expect(expiresAt.getTime()).toBeGreaterThanOrEqual(before + authConfig.refreshToken.maxAge * 1000);
+    expect(expiresAt.getTime()).toBeGreaterThanOrEqual(
+      before + authConfig.refreshToken.maxAge * 1000,
+    );
     expect(expiresAt.getTime()).toBeLessThanOrEqual(after + authConfig.refreshToken.maxAge * 1000);
   });
 

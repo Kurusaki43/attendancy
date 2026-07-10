@@ -42,11 +42,7 @@ type SessionCardProps = {
 };
 
 export function SessionCard({ session }: SessionCardProps) {
-  const {
-    icon: DeviceIcon,
-    iconClassName,
-    gradientClassName,
-  } = DEVICE_CONFIG[session.deviceType];
+  const { icon: DeviceIcon, iconClassName, gradientClassName } = DEVICE_CONFIG[session.deviceType];
 
   return (
     <Card

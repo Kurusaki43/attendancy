@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { resetPasswordFormSchema, resetPasswordSchema } from '@/server/auth/schemas/reset-password.schema';
+import {
+  resetPasswordFormSchema,
+  resetPasswordSchema,
+} from '@/server/auth/schemas/reset-password.schema';
 
 describe('resetPasswordSchema', () => {
   it('accepts valid input', () => {
