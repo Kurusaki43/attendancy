@@ -27,6 +27,13 @@ export function ChangePasswordForm() {
     },
   });
 
+  const [currentPassword, newPassword, confirmPassword] = form.watch([
+    'currentPassword',
+    'newPassword',
+    'confirmPassword',
+  ]);
+  const isFormIncomplete = !currentPassword || !newPassword || !confirmPassword;
+
   const onSubmit = async (data: ChangePasswordFormInput) => {
     setIsPending(true);
 
@@ -98,6 +105,7 @@ export function ChangePasswordForm() {
         <div className="flex justify-end pt-2">
           <SubmitButton
             pending={isPending}
+            disabled={isFormIncomplete}
             loadingText="Changing password..."
             icon={KeyRound}
             className="h-10 font-semibold"
