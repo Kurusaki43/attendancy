@@ -3,6 +3,7 @@
 import { Settings, User } from 'lucide-react';
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +22,14 @@ type UserMenuProps = {
     lastName: string;
     email: string;
     avatar?: string | null;
+    roles: { name: string }[];
   };
   onLogout?: () => void;
 };
 
 export function UserMenu({ user, onLogout }: UserMenuProps) {
+  const primaryRole = user.roles[0]?.name ?? 'User';
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex h-10 items-center gap-2.5 rounded-md px-2 transition-colors focus-visible:ring-2 focus-visible:outline-none">
@@ -34,12 +38,18 @@ export function UserMenu({ user, onLogout }: UserMenuProps) {
           lastName={user.lastName}
           avatar={user.avatar}
           size="sm"
+          showStatus
         />
-        <div className="hidden flex-col items-start md:flex">
+        <div className="hidden flex-col items-start gap-1 md:flex">
           <span className="text-sm leading-tight font-medium">
             {user.firstName} {user.lastName}
           </span>
-          <span className="text-muted-foreground text-xs leading-tight">{user.email}</span>
+          <Badge
+            variant="default"
+            className="flex h-4 items-center rounded-lg px-1.5 py-0 text-[10px] leading-none font-semibold tracking-wider lowercase"
+          >
+            {primaryRole}
+          </Badge>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 p-2">
