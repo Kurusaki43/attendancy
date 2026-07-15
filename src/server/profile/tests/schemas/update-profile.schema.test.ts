@@ -41,11 +41,31 @@ describe('updateProfileSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it('rejects an avatar that is not a valid URL', () => {
+  it('accepts an uploaded avatar as a base64 data URI', () => {
+    const result = updateProfileSchema.safeParse({
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      avatar: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an avatar that is neither a URL nor an image data URI', () => {
     const result = updateProfileSchema.safeParse({
       firstName: 'Ada',
       lastName: 'Lovelace',
       avatar: 'not-a-url',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an avatar payload larger than the allowed size', () => {
+    const result = updateProfileSchema.safeParse({
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      avatar: `data:image/jpeg;base64,${'a'.repeat(3_000_001)}`,
     });
 
     expect(result.success).toBe(false);

@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { AvatarUploader } from '@/features/profile/components/AvatarUploader';
 import { updateProfileAction } from '@/server/profile/actions/update-profile.action';
 import {
   type UpdateProfileInput,
@@ -81,6 +82,26 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="avatar"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-medium tracking-wide">Profile Photo</FormLabel>
+              <FormControl>
+                <AvatarUploader
+                  firstName={profile.firstName}
+                  lastName={profile.lastName}
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
@@ -124,28 +145,6 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             )}
           />
         </div>
-
-        <FormField
-          control={form.control}
-          name="avatar"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="avatar" className="font-medium tracking-wide">
-                Avatar URL (Optional)
-              </FormLabel>
-              <FormControl>
-                <Input
-                  id="avatar"
-                  placeholder="https://example.com/avatar.png"
-                  {...field}
-                  value={field.value ?? ''}
-                  disabled={isPending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <div className="flex justify-end pt-2">
           <Button
