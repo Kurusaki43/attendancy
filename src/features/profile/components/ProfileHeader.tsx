@@ -16,21 +16,20 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
 
   return (
     <Card className="gap-0 overflow-hidden p-0">
-      <div className="from-primary/20 via-primary/5 h-20 bg-gradient-to-br to-transparent sm:h-24" />
-
-      <CardContent className="relative px-6 pt-0 pb-6">
-        <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end">
+      <CardContent className="relative px-6 pt-6 pb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <UserAvatar
               firstName={profile.firstName}
               lastName={profile.lastName}
               avatar={profile.avatar}
               size="xl"
-              className="ring-background shadow-lg ring-4"
+              className="ring-background shadow-xl ring-4 transition-transform duration-300 ease-out hover:scale-[1.03]"
+              showStatus
             />
 
             <div className="pb-1">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="font-heading text-2xl font-semibold tracking-tight">
                 {profile.firstName} {profile.lastName}
               </h1>
               <p className="text-muted-foreground mt-0.5 text-sm">{profile.email}</p>
@@ -39,18 +38,22 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
 
           <div className="flex flex-wrap gap-1.5 sm:pb-1.5">
             {profile.roles.map((role) => (
-              <Badge key={role} variant="secondary">
+              <Badge
+                key={role}
+                variant="default"
+                className="flex h-6 items-center rounded-lg px-2.5 py-0 text-xs leading-none font-semibold tracking-wider lowercase"
+              >
                 {role}
               </Badge>
             ))}
           </div>
         </div>
 
-        <Separator className="my-5" />
+        <Separator className="my-5 opacity-60" />
 
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="flex items-center gap-3">
-            <div className="bg-muted/60 flex size-9 shrink-0 items-center justify-center rounded-full">
+        <dl className="grid grid-cols-1 gap-1 sm:grid-cols-3">
+          <div className="hover:bg-muted/40 flex items-center gap-3 rounded-none p-2 transition-colors duration-200">
+            <div className="bg-muted/60 flex size-9 shrink-0 items-center justify-center rounded-full transition-transform duration-200">
               {profile.provider === 'GOOGLE' ? (
                 <Globe className="text-muted-foreground size-4" strokeWidth={1.75} />
               ) : (
@@ -63,12 +66,12 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="hover:bg-muted/40 flex items-center gap-3 rounded-none p-2 transition-colors duration-200">
             <div
               className={
                 isEmailVerified
-                  ? 'flex size-9 shrink-0 items-center justify-center rounded-full bg-emerald-500/10'
-                  : 'bg-destructive/10 flex size-9 shrink-0 items-center justify-center rounded-full'
+                  ? 'flex size-9 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 transition-transform duration-200'
+                  : 'bg-destructive/10 flex size-9 shrink-0 items-center justify-center rounded-full transition-transform duration-200'
               }
             >
               {isEmailVerified ? (
@@ -87,8 +90,8 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="bg-muted/60 flex size-9 shrink-0 items-center justify-center rounded-full">
+          <div className="hover:bg-muted/40 flex items-center gap-3 rounded-none p-2 transition-colors duration-200">
+            <div className="bg-muted/60 flex size-9 shrink-0 items-center justify-center rounded-full transition-transform duration-200">
               <CalendarDays className="text-muted-foreground size-4" strokeWidth={1.75} />
             </div>
             <div>
