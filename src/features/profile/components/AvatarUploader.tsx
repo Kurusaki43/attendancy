@@ -89,33 +89,45 @@ export function AvatarUploader({
   };
 
   return (
-    <div className="flex items-center gap-4">
-      <UserAvatar firstName={firstName} lastName={lastName} avatar={value} size="lg" />
+    <div className="bg-muted/30 flex items-center gap-4 border p-4">
+      <UserAvatar
+        firstName={firstName}
+        lastName={lastName}
+        avatar={value}
+        size="xl"
+        className="ring-background shadow-sm ring-2"
+      />
 
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={disabled}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <ImageUp data-icon="inline-start" />
-          Upload photo
-        </Button>
-
-        {value && (
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-2">
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             disabled={disabled}
-            onClick={() => onChange('')}
+            onClick={() => fileInputRef.current?.click()}
           >
-            <Trash2 data-icon="inline-start" />
-            Remove
+            <ImageUp data-icon="inline-start" />
+            Upload photo
           </Button>
-        )}
+
+          {value && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={disabled}
+              onClick={() => onChange('')}
+            >
+              <Trash2 data-icon="inline-start" />
+              Remove
+            </Button>
+          )}
+        </div>
+
+        <p className="text-muted-foreground text-xs">
+          PNG, JPEG, WEBP or GIF. Max 1MB — cropped to 500x500.
+        </p>
       </div>
 
       <input

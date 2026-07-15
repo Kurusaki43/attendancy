@@ -10,7 +10,7 @@ type UserAvatarProps = {
   firstName: string;
   lastName: string;
   avatar?: string | null;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 };
 
@@ -18,12 +18,14 @@ const sizeClasses = {
   sm: 'size-8 text-xs',
   md: 'size-10 text-sm',
   lg: 'size-12 text-base',
+  xl: 'size-20 text-2xl',
 };
 
 const imageSizes = {
   sm: '32px',
   md: '40px',
   lg: '48px',
+  xl: '80px',
 };
 
 export function UserAvatar({
