@@ -18,13 +18,15 @@ export const updateProfileSchema = z.object({
     .min(2, 'Last name must be at least 2 characters.')
     .max(50, 'Last name must not exceed 50 characters.'),
 
+  // Only ever an uploaded image (data URI) or '' to clear it — there is no free-text URL input.
+  // An unchanged existing avatar (e.g. a Google account's remote URL) is simply omitted from the
+  // submitted payload by the form, so it never needs to pass this validation.
   avatar: z
     .string()
     .max(AVATAR_MAX_LENGTH, 'Avatar image is too large.')
-    .refine(
-      (value) => value === '' || value.startsWith('data:image/') || /^https?:\/\//.test(value),
-      { message: 'Avatar must be an uploaded image.' },
-    )
+    .refine((value) => value === '' || value.startsWith('data:image/'), {
+      message: 'Avatar must be an uploaded image.',
+    })
     .optional(),
 });
 

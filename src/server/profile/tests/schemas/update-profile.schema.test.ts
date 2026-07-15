@@ -7,7 +7,7 @@ describe('updateProfileSchema', () => {
     const result = updateProfileSchema.safeParse({
       firstName: 'Ada',
       lastName: 'Lovelace',
-      avatar: 'https://example.com/avatar.png',
+      avatar: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP',
     });
 
     expect(result.success).toBe(true);
@@ -51,7 +51,17 @@ describe('updateProfileSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('rejects an avatar that is neither a URL nor an image data URI', () => {
+  it('rejects a plain URL — avatars can only be uploaded, not linked', () => {
+    const result = updateProfileSchema.safeParse({
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      avatar: 'https://example.com/avatar.png',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an avatar that is not an image data URI', () => {
     const result = updateProfileSchema.safeParse({
       firstName: 'Ada',
       lastName: 'Lovelace',

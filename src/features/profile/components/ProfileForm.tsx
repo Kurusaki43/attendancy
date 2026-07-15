@@ -51,8 +51,17 @@ export function ProfileForm({ profile }: ProfileFormProps) {
   const onSubmit = async (data: UpdateProfileInput) => {
     setIsPending(true);
 
+    // Only send the avatar when the user actually changed it (uploaded a new photo or removed
+    // it) — an untouched avatar may be a remote URL (e.g. a Google account's), which the schema
+    // no longer accepts as input, so it must never be resubmitted unchanged.
+    const payload: UpdateProfileInput = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      ...(form.formState.dirtyFields.avatar ? { avatar: data.avatar } : {}),
+    };
+
     try {
-      const result = await updateProfileAction(data);
+      const result = await updateProfileAction(payload);
 
       if (result.success) {
         toast.success(result.message ?? 'Profile updated successfully!');

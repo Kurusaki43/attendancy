@@ -20,13 +20,13 @@ describe('updateProfile', () => {
       firstName: 'Ada',
       lastName: 'Lovelace',
       email: 'ada@example.com',
-      avatar: 'https://example.com/avatar.png',
+      avatar: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP',
     } as never);
 
     const result = await updateProfile('user-1', {
       firstName: 'Ada',
       lastName: 'Lovelace',
-      avatar: 'https://example.com/avatar.png',
+      avatar: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP',
     });
 
     expect(userRepository.update).toHaveBeenCalledWith({
@@ -34,7 +34,7 @@ describe('updateProfile', () => {
       newData: {
         firstName: 'Ada',
         lastName: 'Lovelace',
-        avatar: 'https://example.com/avatar.png',
+        avatar: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP',
       },
     });
     expect(result).toEqual({
@@ -42,7 +42,7 @@ describe('updateProfile', () => {
       firstName: 'Ada',
       lastName: 'Lovelace',
       email: 'ada@example.com',
-      avatar: 'https://example.com/avatar.png',
+      avatar: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP',
     });
   });
 
