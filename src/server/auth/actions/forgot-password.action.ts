@@ -1,8 +1,12 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { z } from 'zod';
 
+import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
+import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
 import { setPendingPasswordResetCookie } from '@/server/auth/lib/cookies';
+import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import {
   type ForgotPasswordInput,
   forgotPasswordSchema,
@@ -14,6 +18,9 @@ import { runAction } from '@/shared/utils/run-action';
 export async function forgotPasswordAction(
   input: ForgotPasswordInput,
 ): Promise<ActionResult<null>> {
+  const headerStore = await headers();
+  const ipAddress = getClientIp(headerStore);
+
   const validated = forgotPasswordSchema.safeParse(input);
 
   if (!validated.success) {
@@ -24,6 +31,15 @@ export async function forgotPasswordAction(
   }
 
   const result = await runAction(async () => {
+    await requireRateLimit({
+      key: `forgot-password:ip:${ipAddress}`,
+      ...RATE_LIMITS.FORGOT_PASSWORD_IP,
+    });
+    await requireRateLimit({
+      key: `forgot-password:email:${validated.data.email}`,
+      ...RATE_LIMITS.FORGOT_PASSWORD_EMAIL,
+    });
+
     await forgotPassword(validated.data.email);
     await setPendingPasswordResetCookie();
     return null;

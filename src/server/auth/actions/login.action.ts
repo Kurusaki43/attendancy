@@ -5,11 +5,14 @@ import { z } from 'zod';
 
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
+import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
+import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
 import {
   setAccessTokenCookie,
   setPendingEmailVerificationCookie,
   setRefreshTokenCookie,
 } from '@/server/auth/lib/cookies';
+import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import { userRepository } from '@/server/auth/repositories/user.repository';
 import { type LoginInput, loginSchema } from '@/server/auth/schemas/login.schema';
 import { login } from '@/server/auth/services/login.service';
@@ -19,6 +22,8 @@ import { runAction } from '@/shared/utils/run-action';
 
 export async function loginAction(input: LoginInput): Promise<ActionResult<LoginResult>> {
   const headerStore = await headers();
+  const ipAddress = getClientIp(headerStore);
+
   const validated = loginSchema.safeParse(input);
   if (!validated.success) {
     return {
@@ -30,7 +35,15 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
 
   const result = await runAction(
     async () => {
-      const ipAddress = headerStore.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+      await requireRateLimit({
+        key: `login:ip:${ipAddress}`,
+        ...RATE_LIMITS.LOGIN_IP,
+      });
+      await requireRateLimit({
+        key: `login:email:${validated.data.email}`,
+        ...RATE_LIMITS.LOGIN_EMAIL,
+      });
+
       const userAgent = headerStore.get('user-agent') ?? 'unknown';
 
       const { accessToken, refreshToken, user } = await login(validated.data, ipAddress, userAgent);
