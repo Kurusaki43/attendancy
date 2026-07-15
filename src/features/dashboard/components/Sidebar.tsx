@@ -8,8 +8,6 @@ import type { NavGroup, NavItem } from '@/features/dashboard/types/navigation.ty
 import { cn } from '@/lib/utils';
 import type { AuthUser } from '@/server/auth/types';
 
-import { UserAvatar } from './UserAvatar';
-
 type SidebarProps = {
   user: AuthUser;
   navGroups: NavGroup[];
@@ -73,8 +71,6 @@ function NavGroupSection({ group, user }: { group: NavGroup; user: AuthUser }) {
 }
 
 export function Sidebar({ user, navGroups, isOpen, onClose }: SidebarProps) {
-  const primaryRole = user.roles[0]?.name ?? 'User';
-
   return (
     <>
       {/* Mobile overlay */}
@@ -113,25 +109,6 @@ export function Sidebar({ user, navGroups, isOpen, onClose }: SidebarProps) {
             ))}
           </div>
         </nav>
-
-        {/* User info footer */}
-        <div className="border-sidebar-border shrink-0 border-t p-3">
-          <div className="bg-sidebar-accent flex items-center gap-3 rounded-lg px-3 py-2.5 shadow-sm">
-            <UserAvatar
-              firstName={user.firstName}
-              lastName={user.lastName}
-              avatar={user.avatar}
-              size="sm"
-              className="shrink-0 shadow-sm"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="text-sidebar-accent-foreground truncate text-sm font-medium">
-                {user.firstName} {user.lastName}
-              </p>
-              <p className="text-sidebar-foreground/60 truncate text-xs">{primaryRole}</p>
-            </div>
-          </div>
-        </div>
       </aside>
     </>
   );
