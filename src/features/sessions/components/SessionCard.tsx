@@ -77,7 +77,9 @@ export function SessionCard({ session }: SessionCardProps) {
         </div>
 
         {session.isCurrent ? (
-          <Badge variant="success">Current</Badge>
+          <Badge variant="outline" className="bg-green-600 text-white">
+            Current
+          </Badge>
         ) : (
           <RevokeSessionDialog session={session} />
         )}
