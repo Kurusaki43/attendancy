@@ -125,7 +125,7 @@ export function AvatarUploader({
           )}
         </div>
 
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-[11px]">
           PNG, JPEG, WEBP or GIF. Max 1MB — cropped to 500x500.
         </p>
       </div>
