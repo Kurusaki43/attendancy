@@ -61,7 +61,7 @@ export function ChangePasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-md space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <RHFInput
           control={form.control}
           name="currentPassword"
