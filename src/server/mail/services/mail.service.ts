@@ -25,7 +25,7 @@ export class MailService {
   }
   static sendVerificationEmail(emailData: SendVerificationEmail) {
     const { html, subject } = emailVerificationTemplate(emailData.firstName, emailData.code);
-    this.sendMail({
+    return this.sendMail({
       ...emailData,
       subject,
       html,
@@ -33,7 +33,7 @@ export class MailService {
   }
   static sendWelcomeEmail(emailData: SendWelcome) {
     const { html, subject } = welcomeTemplate(emailData.firstName);
-    this.sendMail({
+    return this.sendMail({
       ...emailData,
       subject,
       html,
@@ -41,7 +41,7 @@ export class MailService {
   }
   static sendResetPasswordEmail(emailData: SendResetPassword) {
     const { html, subject } = passwordResetTemplate(emailData.firstName, emailData.resetUrl);
-    this.sendMail({
+    return this.sendMail({
       ...emailData,
       subject,
       html,
