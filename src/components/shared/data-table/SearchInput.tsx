@@ -34,6 +34,7 @@ export default function SearchInput({
       <Input
         value={query}
         placeholder={placeholder}
+        className="placeholder:text-xs"
         onChange={(e) => {
           const value = e.target.value;
           setQuery(value);
