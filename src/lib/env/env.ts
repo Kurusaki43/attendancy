@@ -17,6 +17,11 @@ const envSchema = z.object({
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.email().default('noreply@attendance-app.local'),
 
+  // Set only in production — outbound SMTP is blocked on Railway's trial plan, so mail.service.ts
+  // sends via Resend's HTTP API (port 443, never blocked) instead of nodemailer/SMTP whenever this
+  // is present. Unset in dev, where SMTP_HOST/PORT still point at Mailpit.
+  RESEND_API_KEY: z.string().optional(),
+
   JWT_ACCESS_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
   JWT_ACCESS_EXPIRES_IN: z.custom<StringValue>(),

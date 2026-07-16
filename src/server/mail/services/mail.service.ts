@@ -1,4 +1,5 @@
 import { env } from '@/lib/env/env';
+import { sendViaResendApi } from '@/server/mail/lib/resend-client';
 import { transporter } from '@/server/mail/lib/transporter';
 import { emailVerificationTemplate } from '@/server/mail/templates/emailVerification';
 import { passwordResetTemplate } from '@/server/mail/templates/resetPassword';
@@ -16,6 +17,11 @@ export type SendVerificationEmail = { to: string; code: string; firstName: strin
 
 export class MailService {
   private static async sendMail({ to, subject, html }: SendMailParams) {
+    if (env.RESEND_API_KEY) {
+      await sendViaResendApi({ from: env.SMTP_FROM, to, subject, html });
+      return;
+    }
+
     await transporter.sendMail({
       from: env.SMTP_FROM,
       to,
