@@ -95,7 +95,7 @@ export function AvatarUploader({
         lastName={lastName}
         avatar={value}
         size="xl"
-        className="ring-background shadow-sm ring-2"
+        className="ring-background rounded-lg shadow-sm ring-2"
       />
 
       <div className="flex flex-col gap-2">
