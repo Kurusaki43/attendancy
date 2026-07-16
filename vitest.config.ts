@@ -25,7 +25,7 @@ export default defineConfig({
       GOOGLE_CLIENT_ID: 'test-google-client-id',
       GOOGLE_CLIENT_SECRET: 'test-google-client-secret',
       GOOGLE_REDIRECT_URI: 'http://localhost:3000/api/auth/google/callback',
-      TURNSTILE_SITE_KEY: 'test-turnstile-site-key',
+      TURNSTILE_SECRET_KEY: 'test-turnstile-secret-key',
     },
   },
 });

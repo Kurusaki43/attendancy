@@ -26,7 +26,7 @@ const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   GOOGLE_REDIRECT_URI: z.url(),
 
-  TURNSTILE_SITE_KEY: z.string(),
+  TURNSTILE_SECRET_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

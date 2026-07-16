@@ -12,7 +12,7 @@ export async function verifyCaptcha(token: string) {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      secret: env.TURNSTILE_SITE_KEY,
+      secret: env.TURNSTILE_SECRET_KEY,
       response: token,
     }),
     cache: 'no-store',
