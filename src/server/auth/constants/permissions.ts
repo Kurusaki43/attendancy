@@ -18,6 +18,15 @@ export const PERMISSIONS = {
 
   DEPARTMENT_DELETE: permission('department', 'delete', 'Delete departments'),
 
+  // Positions
+  POSITION_READ: permission('position', 'read', 'View positions'),
+
+  POSITION_CREATE: permission('position', 'create', 'Create positions'),
+
+  POSITION_UPDATE: permission('position', 'update', 'Update positions'),
+
+  POSITION_DELETE: permission('position', 'delete', 'Delete positions'),
+
   // Employees
   EMPLOYEE_READ: permission('employee', 'read', 'View employees'),
 
