@@ -1,10 +1,10 @@
-import { addMinutes } from 'date-fns';
-
 import { OtpType } from '@/generated/prisma/enums';
 import { generateOtp, hashOtp } from '@/server/auth/lib/otp';
 import { otpRepository } from '@/server/auth/repositories/otp.repository';
 import { userRepository } from '@/server/auth/repositories/user.repository';
 import { emailQueueService } from '@/server/mail/services/email-queue.service';
+
+import { authConfig } from '../lib/auth.config';
 
 export async function resendEmailVerification(email: string) {
   const user = await userRepository.findByEmail(email);
@@ -29,7 +29,7 @@ export async function resendEmailVerification(email: string) {
     },
     type: OtpType.EMAIL_VERIFICATION,
     codeHash,
-    expiresAt: addMinutes(new Date(), 15),
+    expiresAt: authConfig.otp.expiresAt(),
   });
 
   await emailQueueService.sendVerificationEmail({

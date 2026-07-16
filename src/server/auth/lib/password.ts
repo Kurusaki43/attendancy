@@ -1,6 +1,6 @@
 import { hash, verify } from '@node-rs/argon2';
 
-const HASH_OPTIONS = {
+export const HASH_OPTIONS = {
   algorithm: 2,
   memoryCost: 19456,
   timeCost: 2,
