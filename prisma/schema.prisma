@@ -120,6 +120,7 @@ model Department {
 model Position {
   id          String  @id @default(cuid())
   title       String  @unique
+  code        String  @unique
   description String?
 
   isActive  Boolean  @default(true)
