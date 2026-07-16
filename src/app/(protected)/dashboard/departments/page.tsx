@@ -43,7 +43,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
           />
         ) : (
           <>
-            <DataTableToolbar />
+            <DataTableToolbar searchPlaceholder="Search by name, code, or description" />
             <DepartmentsTable departments={result.data.departments} />
             <DataTablePagination
               limit={result.data.pagination.limit}

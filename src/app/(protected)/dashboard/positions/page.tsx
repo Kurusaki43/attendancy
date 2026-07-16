@@ -43,7 +43,16 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
           />
         ) : (
           <>
-            <DataTableToolbar />
+            <DataTableToolbar
+              searchPlaceholder="Search by title, code, or description"
+              sortOptions={[
+                { label: 'Newest First', value: '-createdAt' },
+                { label: 'Oldest First', value: 'createdAt' },
+                { label: 'Title (A-Z)', value: 'title' },
+                { label: 'Title (Z-A)', value: '-title' },
+                { label: 'Recently Updated', value: '-updatedAt' },
+              ]}
+            />
             <PositionsTable positions={result.data.positions} />
             <DataTablePagination
               limit={result.data.pagination.limit}

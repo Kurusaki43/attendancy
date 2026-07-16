@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 import { useQueryParams } from '@/hooks/use-query-params';
 
-type SortOption = {
+export type SortOption = {
   label: string;
   value: string;
 };
