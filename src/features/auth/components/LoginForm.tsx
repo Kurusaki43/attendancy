@@ -13,11 +13,12 @@ import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { GoogleLoginButton } from '@/features/auth/components/GoogleLoginButton';
+import { isSafeRedirect } from '@/features/auth/lib/is-safe-redirect';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { loginAction } from '@/server/auth/actions/login.action';
 import { type LoginInput, loginSchema } from '@/server/auth/schemas/login.schema';
 
-const LoginForm = ({ email }: { email?: string }) => {
+const LoginForm = ({ email, redirectTo }: { email?: string; redirectTo?: string }) => {
   const router = useRouter();
 
   const [isPending, startTransition] = useTransition();
@@ -70,7 +71,7 @@ const LoginForm = ({ email }: { email?: string }) => {
 
       toast.success(result.message);
 
-      router.replace('/dashboard');
+      router.replace(isSafeRedirect(redirectTo) ? redirectTo : '/dashboard');
     });
   };
 
