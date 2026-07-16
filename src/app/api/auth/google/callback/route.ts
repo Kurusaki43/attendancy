@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { AUTH_COOKIES } from '@/server/auth/constants/auth.constant';
 import { setAccessTokenCookie, setRefreshTokenCookie } from '@/server/auth/lib/cookies';
+import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import { createSession } from '@/server/auth/services/create-session.service';
 import { authenticateWithGoogle } from '@/server/auth/services/google-auth.service';
 
@@ -25,7 +26,7 @@ export async function GET(request: Request) {
   try {
     const user = await authenticateWithGoogle(code, codeVerifier);
 
-    const ipAddress = request.headers.get('x-forwarded-for')?.split(',')[0] ?? 'unknown';
+    const ipAddress = getClientIp(request.headers);
     const userAgent = request.headers.get('user-agent') ?? 'unknown';
 
     const tokens = await createSession(user.id, ipAddress, userAgent);

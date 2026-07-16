@@ -27,6 +27,12 @@ const envSchema = z.object({
   GOOGLE_REDIRECT_URI: z.url(),
 
   TURNSTILE_SECRET_KEY: z.string(),
+
+  // How many reverse-proxy hops in front of this app are trusted to have set (not merely
+  // forwarded) x-forwarded-for — 0 means none, so the header is never trusted and client IP
+  // resolves to 'unknown'. Only raise this once the actual deployment's proxy layer is confirmed
+  // to strip any client-supplied value before appending its own (see getClientIp).
+  TRUSTED_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
 });
 
 export const env = envSchema.parse(process.env);
