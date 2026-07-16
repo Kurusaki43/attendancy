@@ -1,6 +1,7 @@
 import {
   BadgeCheck,
   BarChart3,
+  Briefcase,
   Building2,
   CalendarClock,
   CalendarDays,
@@ -34,6 +35,13 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Building2,
         roles: ['ADMIN', 'MANAGER'],
         permission: 'department:read',
+      },
+      {
+        title: 'Positions',
+        href: '/dashboard/positions',
+        icon: Briefcase,
+        roles: ['ADMIN', 'MANAGER'],
+        permission: 'position:read',
       },
       {
         title: 'Employees',
