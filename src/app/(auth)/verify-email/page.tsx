@@ -21,7 +21,7 @@ const VerifyEmailPage = async () => {
     redirect('/login');
   }
 
-  return <VerifyEmail userId={user.id} email={user.email} />;
+  return <VerifyEmail email={user.email} />;
 };
 
 export default VerifyEmailPage;

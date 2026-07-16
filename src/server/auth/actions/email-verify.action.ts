@@ -3,9 +3,14 @@
 import { headers } from 'next/headers';
 import { z } from 'zod';
 
+import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { NotFoundError } from '@/lib/errors/not-found.error';
 import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
 import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
-import { clearPendingEmailVerificationCookie } from '@/server/auth/lib/cookies';
+import {
+  clearPendingEmailVerificationCookie,
+  getPendingEmailVerificationCookie,
+} from '@/server/auth/lib/cookies';
 import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import {
   type VerifyEmailInput,
@@ -32,7 +37,16 @@ export async function verifyEmailAction(
   }
 
   const result = await runAction(async () => {
-    const { code, userId } = validated.data;
+    // The user being verified is derived from the server-set pending-verification cookie, never
+    // from client input — otherwise any caller could target an arbitrary userId for OTP guessing.
+    const userId = await getPendingEmailVerificationCookie();
+
+    if (!userId) {
+      throw new NotFoundError(
+        ERROR_CODES.NO_PENDING_VERIFICATION,
+        'No pending email verification found. Please register again.',
+      );
+    }
 
     await requireRateLimit({
       key: `email-verify:ip:${ipAddress}`,
@@ -42,6 +56,8 @@ export async function verifyEmailAction(
       key: `email-verify:user:${userId}`,
       ...RATE_LIMITS.OTP_VERIFY_USER,
     });
+
+    const { code } = validated.data;
 
     await emailVerification(code, userId);
     await clearPendingEmailVerificationCookie();

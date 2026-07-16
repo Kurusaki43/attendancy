@@ -21,18 +21,16 @@ import {
 import { ResendButton } from './ResendButton';
 
 type VerifyEmailProps = {
-  userId: string;
   email: string;
 };
 
-const VerifyEmail = ({ userId, email }: VerifyEmailProps) => {
+const VerifyEmail = ({ email }: VerifyEmailProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const form = useForm<VerifyEmailInput>({
     resolver: zodResolver(verifyEmailSchema),
     defaultValues: {
-      userId,
       code: '',
     },
   });
