@@ -5,17 +5,21 @@ import { getAccessTokenCookie } from '@/server/auth/lib/cookies';
 import { sessionRepository } from '@/server/auth/repositories/session.repository';
 import { tokenService } from '@/server/auth/services/token.service';
 
-export const requireAuth = cache(async (returnTo: string = '/dashboard') => {
+// Token refresh happens transparently in proxy.ts middleware before this ever runs, so an
+// invalid/expired access token here means either a real revocation or a route outside the
+// middleware matcher — either way there's nothing left to retry, so this goes straight to
+// /login instead of bouncing through a refresh redirect.
+export const requireAuth = cache(async () => {
   const token = await getAccessTokenCookie();
 
   if (!token) {
-    redirect(`/api/auth/refresh?returnTo=${encodeURIComponent(returnTo)}`);
+    redirect('/login');
   }
 
   const payload = await tokenService.verifyAccessToken(token);
 
   if (!payload) {
-    redirect(`/api/auth/refresh?returnTo=${encodeURIComponent(returnTo)}`);
+    redirect('/login');
   }
 
   // The access token's signature/expiry alone doesn't reflect a session revoked in the
@@ -24,7 +28,7 @@ export const requireAuth = cache(async (returnTo: string = '/dashboard') => {
   const session = await sessionRepository.findById(payload.sessionId);
 
   if (!session || session.revokedAt || session.expiresAt < new Date()) {
-    redirect(`/api/auth/refresh?returnTo=${encodeURIComponent(returnTo)}`);
+    redirect('/login');
   }
 
   return payload;

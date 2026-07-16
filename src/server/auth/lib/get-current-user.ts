@@ -6,8 +6,8 @@ import { cache } from 'react';
 import { requireAuth } from '@/server/auth/guards/require-auth';
 import { userRepository } from '@/server/auth/repositories/user.repository';
 
-export const getCurrentUser = cache(async (returnTo: string = '/dashboard') => {
-  const payload = await requireAuth(returnTo);
+export const getCurrentUser = cache(async () => {
+  const payload = await requireAuth();
 
   const user = await userRepository.findById(payload.userId);
 

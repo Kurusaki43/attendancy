@@ -55,14 +55,14 @@ beforeEach(() => {
 });
 
 describe('requireAuth', () => {
-  it('redirects to refresh when there is no access token cookie', async () => {
+  it('redirects to login when there is no access token cookie', async () => {
     vi.mocked(getAccessTokenCookie).mockResolvedValue(null);
 
     await expect(requireAuth()).rejects.toBeInstanceOf(RedirectSignal);
-    expect(redirectMock).toHaveBeenCalledWith(expect.stringContaining('/api/auth/refresh'));
+    expect(redirectMock).toHaveBeenCalledWith('/login');
   });
 
-  it('redirects to refresh when the access token fails verification', async () => {
+  it('redirects to login when the access token fails verification', async () => {
     vi.mocked(getAccessTokenCookie).mockResolvedValue('bad-token');
     vi.mocked(tokenService.verifyAccessToken).mockResolvedValue(null);
 
@@ -70,7 +70,7 @@ describe('requireAuth', () => {
     expect(sessionRepository.findById).not.toHaveBeenCalled();
   });
 
-  it('redirects to refresh when the session no longer exists', async () => {
+  it('redirects to login when the session no longer exists', async () => {
     vi.mocked(getAccessTokenCookie).mockResolvedValue('token');
     vi.mocked(tokenService.verifyAccessToken).mockResolvedValue({
       userId: 'user-1',
@@ -81,7 +81,7 @@ describe('requireAuth', () => {
     await expect(requireAuth()).rejects.toBeInstanceOf(RedirectSignal);
   });
 
-  it('redirects to refresh when the session has been revoked', async () => {
+  it('redirects to login when the session has been revoked', async () => {
     vi.mocked(getAccessTokenCookie).mockResolvedValue('token');
     vi.mocked(tokenService.verifyAccessToken).mockResolvedValue({
       userId: 'user-1',
@@ -94,7 +94,7 @@ describe('requireAuth', () => {
     await expect(requireAuth()).rejects.toBeInstanceOf(RedirectSignal);
   });
 
-  it('redirects to refresh when the session has expired', async () => {
+  it('redirects to login when the session has expired', async () => {
     vi.mocked(getAccessTokenCookie).mockResolvedValue('token');
     vi.mocked(tokenService.verifyAccessToken).mockResolvedValue({
       userId: 'user-1',
