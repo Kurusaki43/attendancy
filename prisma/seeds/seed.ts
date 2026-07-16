@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { seedRolePermissions } from './role-permissions';
 import { seedDepartments } from './seed-departments';
 import { seedPermissions } from './seed-permissions';
+import { seedPositions } from './seed-positions';
 import { seedRoles } from './seed-roles';
 
 async function main() {
@@ -13,6 +14,7 @@ async function main() {
   await seedPermissions();
   await seedRolePermissions();
   await seedDepartments();
+  await seedPositions();
 
   logger.info('🎉 Database seeded successfully.');
 }
