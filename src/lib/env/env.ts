@@ -7,8 +7,9 @@ const envSchema = z.object({
   APP_URL: z.url().default('http://localhost:3000'),
   DATABASE_URL: z.url(),
 
-  REDIS_HOST: z.string().default('localhost'),
-  REDIS_PORT: z.coerce.number().default(6379),
+  // ioredis parses the scheme itself — rediss:// (as Upstash/most managed providers issue)
+  // enables TLS automatically, redis:// doesn't.
+  REDIS_URL: z.url().default('redis://localhost:6379'),
 
   SMTP_HOST: z.string().min(1).default('localhost'),
   SMTP_PORT: z.coerce.number().default(1025),

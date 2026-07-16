@@ -14,8 +14,7 @@ export default defineConfig({
     env: {
       NODE_ENV: 'test',
       DATABASE_URL: 'postgresql://test:test@localhost:5432/test',
-      REDIS_HOST: 'localhost',
-      REDIS_PORT: '6379',
+      REDIS_URL: 'redis://localhost:6379',
       SMTP_FROM: 'noreply@attendance-app.local',
       JWT_ACCESS_SECRET: 'test-access-secret',
       JWT_REFRESH_SECRET: 'test-refresh-secret',

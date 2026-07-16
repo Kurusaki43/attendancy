@@ -84,7 +84,7 @@ services:
     # (what .env.development uses for running the app on the host) won't work here.
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      REDIS_HOST: redis
+      REDIS_URL: redis://redis:6379
       SMTP_HOST: mailpit
       # Safety net: if node_modules ever legitimately drifts from pnpm-lock.yaml
       # (e.g. a dependency was added on the host without rebuilding the image),
@@ -126,7 +126,7 @@ services:
 
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      REDIS_HOST: redis
+      REDIS_URL: redis://redis:6379
       SMTP_HOST: mailpit
       CI: 'true'
 
