@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 
 import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
-import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
+import { requireIpRateLimit, requireRateLimit } from '@/server/auth/guards/require-rate-limit';
 import { setPendingPasswordResetCookie } from '@/server/auth/lib/cookies';
 import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import {
@@ -31,7 +31,7 @@ export async function forgotPasswordAction(
   }
 
   const result = await runAction(async () => {
-    await requireRateLimit({
+    await requireIpRateLimit(ipAddress, {
       key: `forgot-password:ip:${ipAddress}`,
       ...RATE_LIMITS.FORGOT_PASSWORD_IP,
     });

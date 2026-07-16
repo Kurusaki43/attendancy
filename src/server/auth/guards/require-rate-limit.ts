@@ -28,3 +28,16 @@ export async function requireRateLimit({ key, limit, windowMs }: RequireRateLimi
     );
   }
 }
+
+// getClientIp() falls back to 'unknown' when TRUSTED_PROXY_HOPS isn't configured or the header
+// is missing/short — enforcing a keyed limit on that literal string would lump every such client
+// into one shared bucket, letting one of them exhaust it and lock out the rest. Skip IP-based
+// enforcement in that case; the accompanying per-email/per-user requireRateLimit call still
+// bounds abuse per identity.
+export async function requireIpRateLimit(ipAddress: string, options: RequireRateLimitOptions) {
+  if (ipAddress === 'unknown') {
+    return;
+  }
+
+  await requireRateLimit(options);
+}

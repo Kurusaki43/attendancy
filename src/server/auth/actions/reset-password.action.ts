@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 
 import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
-import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
+import { requireIpRateLimit } from '@/server/auth/guards/require-rate-limit';
 import { clearPendingPasswordResetCookie } from '@/server/auth/lib/cookies';
 import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import type { ResetPasswordInput } from '@/server/auth/schemas/reset-password.schema';
@@ -27,7 +27,7 @@ export async function resetPasswordAction(input: ResetPasswordInput): Promise<Ac
   }
 
   const result = await runAction(async () => {
-    await requireRateLimit({
+    await requireIpRateLimit(ipAddress, {
       key: `reset-password:ip:${ipAddress}`,
       ...RATE_LIMITS.RESET_PASSWORD_IP,
     });

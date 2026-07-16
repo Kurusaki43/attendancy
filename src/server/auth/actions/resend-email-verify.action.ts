@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import { AppError } from '@/lib/errors/app.error';
 import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
-import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
+import { requireIpRateLimit, requireRateLimit } from '@/server/auth/guards/require-rate-limit';
 import { getClientIp } from '@/server/auth/lib/get-client-ip';
 import { resendEmailVerification } from '@/server/auth/services/resend-email-verification.service';
 import { type ActionResult } from '@/shared/types/action.types';
@@ -16,7 +16,7 @@ export async function resendVerificationOtpAction(email: string): Promise<Action
 
   const result = await runAction(
     async () => {
-      await requireRateLimit({
+      await requireIpRateLimit(ipAddress, {
         key: `resend-verification:ip:${ipAddress}`,
         ...RATE_LIMITS.RESEND_VERIFICATION_IP,
       });

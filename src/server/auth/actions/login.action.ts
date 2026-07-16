@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
 import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
-import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
+import { requireIpRateLimit, requireRateLimit } from '@/server/auth/guards/require-rate-limit';
 import {
   setAccessTokenCookie,
   setPendingEmailVerificationCookie,
@@ -35,7 +35,7 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<Login
 
   const result = await runAction(
     async () => {
-      await requireRateLimit({
+      await requireIpRateLimit(ipAddress, {
         key: `login:ip:${ipAddress}`,
         ...RATE_LIMITS.LOGIN_IP,
       });

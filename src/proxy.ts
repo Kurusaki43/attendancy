@@ -57,16 +57,21 @@ export async function proxy(request: NextRequest) {
 
   if (refreshToken) {
     const ipAddress = getClientIp(request.headers);
-    const rateLimit = await checkRateLimit({
-      key: `refresh:ip:${ipAddress}`,
-      ...RATE_LIMITS.REFRESH_IP,
-    });
 
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { message: 'Too many requests. Please try again later.' },
-        { status: 429 },
-      );
+    // A shared 'unknown' bucket would let one client with an undetermined IP exhaust the limit
+    // for every other client stuck with the same fallback, so skip enforcement in that case.
+    if (ipAddress !== 'unknown') {
+      const rateLimit = await checkRateLimit({
+        key: `refresh:ip:${ipAddress}`,
+        ...RATE_LIMITS.REFRESH_IP,
+      });
+
+      if (!rateLimit.allowed) {
+        return NextResponse.json(
+          { message: 'Too many requests. Please try again later.' },
+          { status: 429 },
+        );
+      }
     }
 
     try {

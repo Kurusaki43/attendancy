@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { RATE_LIMITS } from '@/server/auth/constants/rate-limit.constant';
-import { requireRateLimit } from '@/server/auth/guards/require-rate-limit';
+import { requireIpRateLimit, requireRateLimit } from '@/server/auth/guards/require-rate-limit';
 import {
   clearPendingEmailVerificationCookie,
   getPendingEmailVerificationCookie,
@@ -48,7 +48,7 @@ export async function verifyEmailAction(
       );
     }
 
-    await requireRateLimit({
+    await requireIpRateLimit(ipAddress, {
       key: `email-verify:ip:${ipAddress}`,
       ...RATE_LIMITS.OTP_VERIFY_IP,
     });
