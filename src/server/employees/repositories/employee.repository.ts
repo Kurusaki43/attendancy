@@ -8,7 +8,7 @@ import type { PrismaQueryOptions } from '@/shared/types/api-feature';
 
 export const EMPLOYEE_INCLUDE = {
   user: {
-    select: { id: true, firstName: true, lastName: true, email: true, status: true },
+    select: { id: true, firstName: true, lastName: true, email: true, status: true, avatar: true },
   },
   department: true,
   position: true,

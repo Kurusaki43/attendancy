@@ -74,6 +74,9 @@ export function UserAvatar({
         fill
         sizes={imageSizes[size]}
         className="object-cover"
+        // next/image refuses data:/blob: URLs unless unoptimized — uploaded avatars are stored
+        // as base64 data URIs, and there's nothing to optimize about inline data anyway.
+        unoptimized={avatar.startsWith('data:') || avatar.startsWith('blob:')}
         onError={() => setImageError(true)}
       />
     </div>

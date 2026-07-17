@@ -8,6 +8,7 @@ import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
+import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import { updateEmployeeAction } from '@/server/employees/actions/update-employee.action';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 
@@ -67,11 +68,18 @@ function buildColumns(
       key: 'name',
       header: 'Employee',
       cell: (row) => (
-        <div>
-          <span className="text-foreground block font-medium">
-            {row.user.firstName} {row.user.lastName}
-          </span>
-          <span className="text-muted-foreground text-xs">{row.user.email}</span>
+        <div className="flex items-center gap-3">
+          <UserAvatar
+            firstName={row.user.firstName}
+            lastName={row.user.lastName}
+            avatar={row.user.avatar}
+          />
+          <div>
+            <span className="text-foreground block font-medium">
+              {row.user.firstName} {row.user.lastName}
+            </span>
+            <span className="text-muted-foreground text-xs">{row.user.email}</span>
+          </div>
         </div>
       ),
     },

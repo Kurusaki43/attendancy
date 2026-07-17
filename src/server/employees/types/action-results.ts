@@ -6,6 +6,7 @@ export type EmployeeUserResult = {
   lastName: string;
   email: string;
   status: string;
+  avatar: string | null;
 };
 
 export type EmployeeManagerResult = {
