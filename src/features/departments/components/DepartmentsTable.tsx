@@ -120,7 +120,7 @@ const columns: ColumnDef<DepartmentResult>[] = [
           variant="ghost"
           size="icon-sm"
           nativeButton={false}
-          render={<Link href={`/dashboard/departments/${row.id}/edit`} />}
+          render={<Link href={`/dashboard/departments/${row.code}/edit`} />}
         >
           <PencilIcon />
           <span className="sr-only">Edit {row.name}</span>

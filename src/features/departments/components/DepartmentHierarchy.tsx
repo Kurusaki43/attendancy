@@ -33,7 +33,9 @@ export function DepartmentHierarchy({ departments }: DepartmentHierarchyProps) {
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={false}
-        onNodeClick={(_, node) => router.push(`/dashboard/departments/${node.id}/edit`)}
+        onNodeClick={(_, node) =>
+          router.push(`/dashboard/departments/${node.data.department.code}/edit`)
+        }
         colorMode={resolvedTheme === 'dark' ? 'dark' : 'light'}
         fitView
         fitViewOptions={{ padding: 0.2 }}

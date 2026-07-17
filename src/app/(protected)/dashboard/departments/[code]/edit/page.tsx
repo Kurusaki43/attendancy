@@ -5,20 +5,20 @@ import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { DepartmentForm } from '@/features/departments/components/DepartmentForm';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
-import { getDepartmentAction } from '@/server/departments/actions/get-department.action';
+import { getDepartmentByCodeAction } from '@/server/departments/actions/get-department-by-code.action';
 
 // Parent-department select options — active records only, capped at the max page size.
 const PARENT_OPTIONS_QUERY = { limit: '100', isActive: 'true', sort: 'name' };
 
 type EditDepartmentPageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ code: string }>;
 };
 
 export default async function EditDepartmentPage({ params }: EditDepartmentPageProps) {
-  const { id } = await params;
+  const { code } = await params;
 
   const [departmentResult, parentDepartmentsResult] = await Promise.all([
-    getDepartmentAction(id),
+    getDepartmentByCodeAction(code),
     getAllDepartmentsAction(PARENT_OPTIONS_QUERY),
   ]);
 
