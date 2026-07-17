@@ -23,7 +23,7 @@ export const updateDepartmentSchema = z.object({
 
   color: z.string().trim().max(50, 'Color must not exceed 50 characters.').optional(),
 
-  parentId: z.cuid('Invalid parent department.').nullish(),
+  parentId: z.string().trim().nullish(),
 
   isActive: z.boolean().optional(),
 });
