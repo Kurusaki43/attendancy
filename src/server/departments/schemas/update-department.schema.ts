@@ -18,6 +18,13 @@ export const updateDepartmentSchema = z.object({
     .optional(),
 
   description: z.string().trim().max(500, 'Description must not exceed 500 characters.').optional(),
+
+  icon: z.string().trim().max(50, 'Icon must not exceed 50 characters.').optional(),
+
+  color: z.string().trim().max(50, 'Color must not exceed 50 characters.').optional(),
+
+  parentId: z.cuid('Invalid parent department.').nullish(),
+
   isActive: z.boolean().optional(),
 });
 
