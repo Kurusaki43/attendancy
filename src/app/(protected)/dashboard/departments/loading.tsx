@@ -3,7 +3,7 @@ import { DataTableSkeleton } from '@/components/shared/data-table/DataTableSkele
 import { DataTableToolbarSkeleton } from '@/components/shared/data-table/DataTableToolbarSkeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const DEPARTMENTS_COLUMN_COUNT = 5;
+const DEPARTMENTS_COLUMN_COUNT = 6;
 
 export default function DepartmentsLoading() {
   return (

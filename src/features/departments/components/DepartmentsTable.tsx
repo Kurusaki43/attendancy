@@ -1,12 +1,14 @@
 'use client';
 
-import { Building2, SearchX } from 'lucide-react';
+import { Building2, PencilIcon, SearchX } from 'lucide-react';
+import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
@@ -15,7 +17,6 @@ import type { DepartmentResult } from '@/server/departments/types/action-results
 
 import { DEPARTMENT_ICON_MAP } from '../lib/department-visuals';
 import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
-import { EditDepartmentDialog } from './EditDepartmentDialog';
 
 function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActive: boolean }) {
   const [checked, setChecked] = useState(isActive);
@@ -149,7 +150,15 @@ const columns: ColumnDef<DepartmentResult>[] = [
     header: 'Actions',
     cell: (row) => (
       <div className="flex gap-2">
-        <EditDepartmentDialog department={row} />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          nativeButton={false}
+          render={<Link href={`/dashboard/departments/${row.id}/edit`} />}
+        >
+          <PencilIcon />
+          <span className="sr-only">Edit {row.name}</span>
+        </Button>
         <DeleteDepartmentDialog department={row} />
       </div>
     ),
