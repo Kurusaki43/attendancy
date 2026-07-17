@@ -39,7 +39,7 @@ export function AddEmployeeDialog({ departments, positions, managers }: AddEmplo
           <Button
             size="lg"
             className={
-              'bg-primary flex h-10 transform items-center font-bold uppercase duration-300 hover:scale-105'
+              'bg-primary flex h-10 transform items-center font-bold capitalize duration-300 hover:scale-105'
             }
           />
         }

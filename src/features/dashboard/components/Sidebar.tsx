@@ -25,7 +25,7 @@ function NavItemLink({ item }: { item: NavItem }) {
       className={cn(
         'group flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out',
         isActive
-          ? 'bg-primary text-sidebar-primary-foreground shadow-sm'
+          ? 'bg-primary text-sidebar-primary-foreground rounded-lg shadow-sm'
           : 'text-sidebar-foreground/80 hover:bg-primary/10 hover:text-sidebar-accent-foreground',
       )}
     >
