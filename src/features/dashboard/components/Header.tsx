@@ -1,6 +1,7 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
+import { format } from 'date-fns';
+import { CalendarDays, Menu, X } from 'lucide-react';
 
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ type HeaderProps = {
 
 export function Header({ user, isSidebarOpen, onToggleSidebar, onLogout }: HeaderProps) {
   return (
-    <header className="border-border bg-sidebar sticky top-0 z-10 border-b backdrop-blur">
+    <header className="border-border bg-background sticky top-0 z-10 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Left: Mobile menu button + title */}
         <div className="flex items-center gap-4">
@@ -31,8 +32,15 @@ export function Header({ user, isSidebarOpen, onToggleSidebar, onLogout }: Heade
             {isSidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
 
-          <div className="hidden sm:block">
-            <h2 className="text-foreground text-xl font-semibold tracking-tight">Dashboard</h2>
+          <div className="hidden items-center gap-3 sm:flex">
+            <div className="bg-muted flex size-10 items-center justify-center rounded-xl">
+              <CalendarDays className="text-muted-foreground size-5" />
+            </div>
+
+            <div className="">
+              <p className="text-primary text-sm font-bold tracking-wider uppercase">Today</p>
+              <h2 className="text-sm font-normal">{format(new Date(), 'EEEE, MMMM d')}</h2>
+            </div>
           </div>
         </div>
 

@@ -85,13 +85,13 @@ export function Sidebar({ user, navGroups, isOpen, onClose }: SidebarProps) {
       {/* Sidebar panel */}
       <aside
         className={cn(
-          'border-sidebar-border bg-sidebar fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r shadow-lg transition-transform duration-300 ease-in-out',
+          'border-sidebar-border fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r shadow-lg transition-transform duration-300 ease-in-out',
           'h-full lg:static lg:z-auto lg:w-56 lg:translate-x-0 lg:shadow-none',
           isOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
         {/* Logo / Brand */}
-        <div className="border-sidebar-border flex h-16 shrink-0 items-center gap-3 border-b px-4 sm:px-6">
+        <div className="border-sidebar-border flex h-16 shrink-0 items-center gap-3 px-4 sm:px-6">
           <div className="bg-primary flex size-9 items-center justify-center rounded-lg shadow-sm">
             <span className="text-sidebar-primary-foreground text-sm font-bold">A</span>
           </div>
