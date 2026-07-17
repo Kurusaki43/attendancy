@@ -2,6 +2,7 @@ import { env } from '@/lib/env/env';
 import { sendViaResendApi } from '@/server/mail/lib/resend-client';
 import { transporter } from '@/server/mail/lib/transporter';
 import { emailVerificationTemplate } from '@/server/mail/templates/emailVerification';
+import { employeeInviteTemplate } from '@/server/mail/templates/employeeInvite';
 import { passwordResetTemplate } from '@/server/mail/templates/resetPassword';
 import { welcomeTemplate } from '@/server/mail/templates/welcome';
 
@@ -14,6 +15,7 @@ type SendMailParams = {
 export type SendWelcome = { to: string; firstName: string };
 export type SendResetPassword = { to: string; resetUrl: string; firstName: string };
 export type SendVerificationEmail = { to: string; code: string; firstName: string };
+export type SendEmployeeInvite = { to: string; inviteUrl: string; firstName: string };
 
 export class MailService {
   private static async sendMail({ to, subject, html }: SendMailParams) {
@@ -47,6 +49,14 @@ export class MailService {
   }
   static sendResetPasswordEmail(emailData: SendResetPassword) {
     const { html, subject } = passwordResetTemplate(emailData.firstName, emailData.resetUrl);
+    return this.sendMail({
+      ...emailData,
+      subject,
+      html,
+    });
+  }
+  static sendEmployeeInviteEmail(emailData: SendEmployeeInvite) {
+    const { html, subject } = employeeInviteTemplate(emailData.firstName, emailData.inviteUrl);
     return this.sendMail({
       ...emailData,
       subject,

@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "OtpType" ADD VALUE 'EMPLOYEE_INVITE';

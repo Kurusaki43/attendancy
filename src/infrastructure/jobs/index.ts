@@ -1,4 +1,5 @@
 import type {
+  SendEmployeeInvite,
   SendResetPassword,
   SendVerificationEmail,
   SendWelcome,
@@ -9,5 +10,6 @@ export interface JobMap {
     'send-verification-email': SendVerificationEmail;
     'send-welcome': SendWelcome;
     'send-reset-password': SendResetPassword;
+    'send-employee-invite': SendEmployeeInvite;
   };
 }

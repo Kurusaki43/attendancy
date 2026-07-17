@@ -86,6 +86,7 @@ enum OtpType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
   TWO_FACTOR
+  EMPLOYEE_INVITE
 }
 
 model Otp {

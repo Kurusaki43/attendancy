@@ -1,12 +1,13 @@
 import { createWorker } from '@/infrastructure/workers/base.worker';
 import {
   MailService,
+  type SendEmployeeInvite,
   type SendResetPassword,
   type SendVerificationEmail,
   type SendWelcome,
 } from '@/server/mail/services/mail.service';
 
-type EmailJobData = SendVerificationEmail | SendWelcome | SendResetPassword;
+type EmailJobData = SendVerificationEmail | SendWelcome | SendResetPassword | SendEmployeeInvite;
 
 export const emailWorker = createWorker<EmailJobData>('email', async (job) => {
   switch (job.name) {
@@ -17,5 +18,8 @@ export const emailWorker = createWorker<EmailJobData>('email', async (job) => {
 
     case 'send-reset-password':
       return MailService.sendResetPasswordEmail(job.data as SendResetPassword);
+
+    case 'send-employee-invite':
+      return MailService.sendEmployeeInviteEmail(job.data as SendEmployeeInvite);
   }
 });
