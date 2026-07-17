@@ -5,7 +5,7 @@ import DataTablePagination from '@/components/shared/data-table/DataTablePaginat
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
-import { AddDepartmentDialog } from '@/features/departments/components/AddDepartmentDialog';
+import { AddDepartmentButton } from '@/features/departments/components/AddDepartmentButton';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 
@@ -29,7 +29,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
             Manage your organisation&apos;s departments and their status.
           </p>
         </div>
-        {result.success && !isTrulyEmpty && <AddDepartmentDialog />}
+        {result.success && !isTrulyEmpty && <AddDepartmentButton />}
       </div>
       {/* Content */}
       {result.success ? (
@@ -38,7 +38,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
             icon={Building2}
             title="No departments yet"
             description="Create your first department to begin."
-            action={<AddDepartmentDialog />}
+            action={<AddDepartmentButton />}
             className="rounded-md border"
           />
         ) : (
