@@ -49,4 +49,7 @@ export const userRepository = {
       include: userInclude,
     });
   },
+  delete(userId: string) {
+    return prisma.user.delete({ where: { id: userId } });
+  },
 };

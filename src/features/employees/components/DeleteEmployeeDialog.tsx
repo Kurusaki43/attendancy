@@ -63,8 +63,8 @@ export function DeleteEmployeeDialog({ employee }: DeleteEmployeeDialogProps) {
           </AlertDialogTitle>
 
           <AlertDialogDescription className="text-sm">
-            This action cannot be undone. The employee record will be permanently removed from the
-            system. Their user account will not be deleted.
+            This action cannot be undone. The employee record and their user account will be
+            permanently removed from the system, and any active sessions will be revoked.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
