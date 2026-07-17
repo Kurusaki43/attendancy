@@ -34,6 +34,10 @@ export type ServiceResetPasswordResult = {
   success: boolean;
 };
 
+export type ServiceAcceptInviteResult = {
+  success: boolean;
+};
+
 export type ServiceGoogleAuthResult = {
   id: string;
   email: string;

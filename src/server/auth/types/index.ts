@@ -17,6 +17,7 @@ export type { AuthUser } from './auth-user';
 
 // Service layer types (internal)
 export type {
+  ServiceAcceptInviteResult,
   ServiceCreateSessionResult,
   ServiceEmailVerificationResult,
   ServiceGoogleAuthResult,
