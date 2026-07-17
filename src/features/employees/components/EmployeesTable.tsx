@@ -186,7 +186,6 @@ export function EmployeesTable({
       emptyIcon={SearchX}
       emptyAction={<ClearFiltersButton />}
       getRowKey={(row) => row.id}
-      className="border"
     />
   );
 }

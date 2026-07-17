@@ -17,28 +17,30 @@ type DataTableSkeletonProps = {
 
 export function DataTableSkeleton({ columns, rows = 8, className }: DataTableSkeletonProps) {
   return (
-    <Table className={cn(className, 'min-w-200')}>
-      <TableHeader>
-        <TableRow className="bg-primary hover:bg-primary">
-          {Array.from({ length: columns }).map((_, index) => (
-            <TableHead key={index} className="h-11 px-4">
-              <Skeleton className="h-3 w-20 bg-white/20" />
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-
-      <TableBody>
-        {Array.from({ length: rows }).map((_, rowIndex) => (
-          <TableRow key={rowIndex} className="even:bg-muted-foreground/5 hover:bg-transparent">
-            {Array.from({ length: columns }).map((_, colIndex) => (
-              <TableCell key={colIndex} className="px-4 py-3">
-                <Skeleton className="h-4 w-full max-w-40" />
-              </TableCell>
+    <div className="border-border/60 overflow-hidden rounded-lg border">
+      <Table className={cn(className, 'min-w-200')}>
+        <TableHeader>
+          <TableRow className="bg-muted/40 hover:bg-muted/40 border-border/60">
+            {Array.from({ length: columns }).map((_, index) => (
+              <TableHead key={index} className="h-11 px-4">
+                <Skeleton className="h-3 w-20" />
+              </TableHead>
             ))}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+
+        <TableBody>
+          {Array.from({ length: rows }).map((_, rowIndex) => (
+            <TableRow key={rowIndex} className="even:bg-muted-foreground/5 hover:bg-transparent">
+              {Array.from({ length: columns }).map((_, colIndex) => (
+                <TableCell key={colIndex} className="px-4 py-3">
+                  <Skeleton className="h-4 w-full max-w-40" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

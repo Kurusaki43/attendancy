@@ -121,7 +121,6 @@ export function PositionsTable({ positions }: PositionsTableProps) {
       emptyIcon={SearchX}
       emptyAction={<ClearFiltersButton />}
       getRowKey={(row) => row.id}
-      className="border"
     />
   );
 }
