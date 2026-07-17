@@ -8,6 +8,15 @@ export type DepartmentResult = {
   icon: string | null;
   color: string | null;
   parentId: string | null;
+  // Only populated by the list endpoint (get-all-departments includes it); create/update return
+  // the raw Prisma row without relations, so this stays optional.
+  parent?: {
+    id: string;
+    name: string;
+    code: string;
+    icon: string | null;
+    color: string | null;
+  } | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

@@ -12,6 +12,18 @@ export type DepartmentFindManyQuery = PrismaQueryOptions<
   Prisma.DepartmentSelect
 >;
 
+const DEPARTMENT_PARENT_SELECT = {
+  id: true,
+  name: true,
+  code: true,
+  icon: true,
+  color: true,
+} satisfies Prisma.DepartmentSelect;
+
+export type DepartmentWithParent = Prisma.DepartmentGetPayload<{
+  include: { parent: { select: typeof DEPARTMENT_PARENT_SELECT } };
+}>;
+
 export const departmentRepository = {
   create(data: DepartmentUncheckedCreateInput) {
     return prisma.department.create({ data });
@@ -35,7 +47,10 @@ export const departmentRepository = {
   },
 
   findMany(query: DepartmentFindManyQuery) {
-    return prisma.department.findMany(query);
+    return prisma.department.findMany({
+      ...query,
+      include: { parent: { select: DEPARTMENT_PARENT_SELECT } },
+    });
   },
 
   count(where?: Prisma.DepartmentWhereInput) {

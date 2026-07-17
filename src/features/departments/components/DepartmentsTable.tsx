@@ -1,16 +1,19 @@
 'use client';
 
-import { SearchX } from 'lucide-react';
+import { Building2, SearchX } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
+import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 import { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
 import type { DepartmentResult } from '@/server/departments/types/action-results';
 
+import { DEPARTMENT_ICON_MAP } from '../lib/department-visuals';
 import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
 import { EditDepartmentDialog } from './EditDepartmentDialog';
 
@@ -55,16 +58,63 @@ function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActi
   );
 }
 
+function DepartmentCell({ row }: { row: DepartmentResult }) {
+  const Icon = (row.icon && DEPARTMENT_ICON_MAP.get(row.icon)) || Building2;
+
+  return (
+    <div className="flex items-center gap-3">
+      <span
+        className={cn(
+          'flex size-9 shrink-0 items-center justify-center rounded-md text-white',
+          row.color || 'bg-muted text-muted-foreground',
+        )}
+      >
+        {/* Icon is always one of a fixed set of module-level lucide-react components resolved
+        by key from DEPARTMENT_ICON_MAP — never freshly created — so this is safe. */}
+        {/* eslint-disable-next-line react-hooks/static-components */}
+        <Icon className="size-4" />
+      </span>
+      <div className="min-w-0">
+        <p className="text-foreground truncate font-medium">{row.name}</p>
+        <p className="text-muted-foreground font-mono text-xs">{row.code}</p>
+      </div>
+    </div>
+  );
+}
+
+function ParentCell({ parent }: { parent: DepartmentResult['parent'] }) {
+  if (!parent) {
+    return <span className="text-muted-foreground text-xs italic">Top-level</span>;
+  }
+
+  const Icon = (parent.icon && DEPARTMENT_ICON_MAP.get(parent.icon)) || Building2;
+
+  return (
+    <Badge variant="outline" className="gap-1.5 font-normal">
+      <span
+        className={cn(
+          'flex size-3.5 shrink-0 items-center justify-center rounded-sm text-white',
+          parent.color || 'bg-muted-foreground',
+        )}
+      >
+        {/* eslint-disable-next-line react-hooks/static-components */}
+        <Icon className="size-2.5" />
+      </span>
+      {parent.name}
+    </Badge>
+  );
+}
+
 const columns: ColumnDef<DepartmentResult>[] = [
   {
     key: 'name',
     header: 'Department',
-    cell: (row) => <span className="text-foreground font-medium">{row.name}</span>,
+    cell: (row) => <DepartmentCell row={row} />,
   },
   {
-    key: 'code',
-    header: 'Code',
-    cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
+    key: 'parent',
+    header: 'Parent',
+    cell: (row) => <ParentCell parent={row.parent} />,
   },
   {
     key: 'description',
