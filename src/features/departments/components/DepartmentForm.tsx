@@ -5,7 +5,7 @@ import { Building2, ListTree, PlusIcon, SaveIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
@@ -96,14 +96,10 @@ export function DepartmentForm({ mode, parentOptions, department }: DepartmentFo
         },
   });
 
-  const [name, code, icon, color, parentId, isActive] = form.watch([
-    'name',
-    'code',
-    'icon',
-    'color',
-    'parentId',
-    'isActive',
-  ]);
+  const [name, code, icon, color, parentId, isActive] = useWatch({
+    control: form.control,
+    name: ['name', 'code', 'icon', 'color', 'parentId', 'isActive'],
+  });
 
   const SelectedIcon = icon ? DEPARTMENT_ICON_MAP.get(icon) : undefined;
   const parentLabel = parentOptions.find((option) => option.id === parentId)?.label;
@@ -341,6 +337,7 @@ export function DepartmentForm({ mode, parentOptions, department }: DepartmentFo
                     )}
                   >
                     {SelectedIcon ? (
+                      // eslint-disable-next-line react-hooks/static-components
                       <SelectedIcon className="size-4" />
                     ) : (
                       <Building2 className="size-4" />
