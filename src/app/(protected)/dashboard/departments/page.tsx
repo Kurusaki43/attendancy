@@ -9,6 +9,7 @@ import { ErrorState } from '@/components/shared/ErrorState';
 import { Button } from '@/components/ui/button';
 import { AddDepartmentButton } from '@/features/departments/components/AddDepartmentButton';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
+import { DepartmentStats } from '@/features/departments/components/DepartmentStats';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 
 type DepartmentsPageProps = {
@@ -24,7 +25,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
   return (
     <div className="space-y-4">
       {/* Page header */}
-      <div className="flex flex-wrap items-start justify-between gap-6 pb-6">
+      <div className="flex flex-wrap items-start justify-between gap-6 pb-2">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Departments</h1>
           <p className="text-muted-foreground mt-1.5 text-sm">
@@ -46,6 +47,10 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
           </div>
         )}
       </div>
+
+      {/* Stats */}
+      <DepartmentStats />
+
       {/* Content */}
       {result.success ? (
         isTrulyEmpty ? (
