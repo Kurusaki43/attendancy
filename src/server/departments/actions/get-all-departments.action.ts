@@ -12,6 +12,14 @@ export async function getAllDepartmentsAction(
 ): Promise<ActionResult<GetAllDepartmentsActionResult>> {
   return runAction(async () => {
     await requirePermission(PERMISSIONS.DEPARTMENT_READ);
-    return getAllDepartments(params);
+    const { departments, pagination } = await getAllDepartments(params);
+
+    return {
+      departments: departments.map(({ _count, ...department }) => ({
+        ...department,
+        employeeCount: _count.employees,
+      })),
+      pagination,
+    };
   });
 }

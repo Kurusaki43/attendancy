@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, PencilIcon, SearchX } from 'lucide-react';
+import { Building2, PencilIcon, SearchX, Users } from 'lucide-react';
 import Link from 'next/link';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
@@ -82,6 +82,16 @@ const columns: ColumnDef<DepartmentResult>[] = [
     key: 'code',
     header: 'Code',
     cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
+  },
+  {
+    key: 'employeeCount',
+    header: 'Employees',
+    cell: (row) => (
+      <span className="text-muted-foreground flex items-center gap-1.5">
+        <Users className="size-3.5" />
+        {row.employeeCount ?? 0}
+      </span>
+    ),
   },
   {
     key: 'status',

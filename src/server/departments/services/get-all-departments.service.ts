@@ -1,7 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
-import type { DepartmentWithParent } from '@/server/departments/repositories/department.repository';
+import type { DepartmentWithRelations } from '@/server/departments/repositories/department.repository';
 import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import type { DepartmentQueryInput } from '@/server/departments/schemas/get-all-departments-query-schema';
 import { departmentQuerySchema } from '@/server/departments/schemas/get-all-departments-query-schema';
@@ -12,7 +12,7 @@ const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'code', 'description'];
 const DEPARTMENT_FILTERABLE_FIELDS = ['isActive', 'parentId'];
 
 export interface GetAllDepartmentsResult {
-  departments: DepartmentWithParent[];
+  departments: DepartmentWithRelations[];
   pagination: PaginationMeta;
 }
 

@@ -17,6 +17,8 @@ export type DepartmentResult = {
     icon: string | null;
     color: string | null;
   } | null;
+  // Only populated by the list endpoint — same reasoning as `parent`.
+  employeeCount?: number;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
