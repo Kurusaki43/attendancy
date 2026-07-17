@@ -11,6 +11,7 @@ import { AddDepartmentButton } from '@/features/departments/components/AddDepart
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 import { DepartmentStats } from '@/features/departments/components/DepartmentStats';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
+import { getDepartmentStatsAction } from '@/server/departments/actions/get-department-stats.action';
 
 type DepartmentsPageProps = {
   searchParams: Promise<Record<string, string>>;
@@ -18,8 +19,18 @@ type DepartmentsPageProps = {
 
 export default async function DepartmentsPage({ searchParams }: DepartmentsPageProps) {
   const params = await searchParams;
-  const result = await getAllDepartmentsAction(params);
+
+  const [result, statsResult] = await Promise.all([
+    getAllDepartmentsAction(params),
+    getDepartmentStatsAction(),
+  ]);
+
+  const stats = statsResult.success
+    ? statsResult.data
+    : { totalDepartments: 0, totalEmployees: 0, averageDepartmentSize: 0 };
+
   const hasActiveFilters = Boolean(params.search) || Boolean(params.isActive);
+
   const isTrulyEmpty = result.success && result.data.departments.length === 0 && !hasActiveFilters;
 
   return (
@@ -49,7 +60,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
       </div>
 
       {/* Stats */}
-      <DepartmentStats />
+      <DepartmentStats stats={stats} />
 
       {/* Content */}
       {result.success ? (

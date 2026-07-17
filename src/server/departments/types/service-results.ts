@@ -7,3 +7,9 @@ export type UpdateDepartmentServiceResult = Department;
 export type GetDepartmentServiceResult = Department;
 
 export type DeleteDepartmentServiceResult = void;
+
+export type GetDepartmentStatsServiceResult = {
+  totalDepartments: number;
+  totalEmployees: number;
+  averageDepartmentSize: number;
+};
