@@ -1,10 +1,12 @@
-import { Building2 } from 'lucide-react';
+import { Building2, Network } from 'lucide-react';
+import Link from 'next/link';
 
 import { getListErrorStateProps } from '@/components/shared/data-table/data-table-utils';
 import DataTablePagination from '@/components/shared/data-table/DataTablePagination';
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
+import { Button } from '@/components/ui/button';
 import { AddDepartmentButton } from '@/features/departments/components/AddDepartmentButton';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
@@ -29,7 +31,20 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
             Manage your organisation&apos;s departments and their status.
           </p>
         </div>
-        {result.success && !isTrulyEmpty && <AddDepartmentButton />}
+        {result.success && !isTrulyEmpty && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="lg"
+              nativeButton={false}
+              render={<Link href="/dashboard/departments/hierarchy" />}
+            >
+              <Network data-icon="inline-start" />
+              View Hierarchy
+            </Button>
+            <AddDepartmentButton />
+          </div>
+        )}
       </div>
       {/* Content */}
       {result.success ? (
