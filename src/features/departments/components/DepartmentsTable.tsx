@@ -2,60 +2,24 @@
 
 import { Building2, PencilIcon, SearchX } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useTransition } from 'react';
-import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
 import type { DepartmentResult } from '@/server/departments/types/action-results';
 
 import { DEPARTMENT_ICON_MAP } from '../lib/department-visuals';
 import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
 
-function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActive: boolean }) {
-  const [checked, setChecked] = useState(isActive);
-  const [isPending, startTransition] = useTransition();
-
-  const handleToggleStatus = () => {
-    const nextValue = !checked;
-
-    // Optimistic update
-    setChecked(nextValue);
-
-    startTransition(async () => {
-      const result = await updateDepartmentAction(id, {
-        isActive: nextValue,
-      });
-
-      if (!result.success) {
-        setChecked(!nextValue);
-
-        toast.error(`Failed to ${nextValue ? 'activate' : 'deactivate'} ${name} department`);
-
-        return;
-      }
-
-      toast.success(`${name} Department ${nextValue ? 'activated' : 'deactivated'} successfully`);
-    });
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <Switch
-        checked={checked}
-        onCheckedChange={handleToggleStatus}
-        disabled={isPending}
-        className="select-none"
-      />
-
-      {isPending && <Spinner />}
-    </div>
+function StatusBadge({ isActive }: { isActive: boolean }) {
+  return isActive ? (
+    <Badge className="bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400">
+      Active
+    </Badge>
+  ) : (
+    <Badge variant="secondary">Inactive</Badge>
   );
 }
 
@@ -75,10 +39,7 @@ function DepartmentCell({ row }: { row: DepartmentResult }) {
         {/* eslint-disable-next-line react-hooks/static-components */}
         <Icon className="size-4" />
       </span>
-      <div className="min-w-0">
-        <p className="text-foreground truncate font-medium">{row.name}</p>
-        <p className="text-muted-foreground font-mono text-xs">{row.code}</p>
-      </div>
+      <p className="text-foreground truncate font-medium">{row.name}</p>
     </div>
   );
 }
@@ -118,19 +79,14 @@ const columns: ColumnDef<DepartmentResult>[] = [
     cell: (row) => <ParentCell parent={row.parent} />,
   },
   {
-    key: 'description',
-    header: 'Description',
-    cell: (row) => (
-      <p className="text-muted-foreground max-w-sm truncate">
-        {row.description ?? <span className="italic opacity-50">No description</span>}
-      </p>
-    ),
-    cellClassName: 'max-w-sm',
+    key: 'code',
+    header: 'Code',
+    cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
   },
   {
     key: 'status',
     header: 'Status',
-    cell: (row) => <StatusSwitch id={row.id} name={row.name} isActive={row.isActive} />,
+    cell: (row) => <StatusBadge isActive={row.isActive} />,
   },
   {
     key: 'createdAt',
