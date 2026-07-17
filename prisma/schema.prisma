@@ -33,6 +33,7 @@ model User {
   sessions Session[]
   roles    Role[]    @relation("UserRoles")
   otps     Otp[]
+  employee Employee?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,8 +48,6 @@ model Session {
   expiresAt        DateTime
   revokedAt        DateTime?
 
-  // Kept for a short grace window after rotation so a request racing on the
-  // just-superseded refresh token isn't treated as reuse/theft and logged out.
   previousRefreshTokenHash      String?
   previousRefreshTokenExpiresAt DateTime?
 
@@ -115,6 +114,8 @@ model Department {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  employees Employee[]
 }
 
 model Position {
@@ -122,6 +123,30 @@ model Position {
   title       String  @unique
   code        String  @unique
   description String?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employees Employee[]
+}
+
+model Employee {
+  id           String   @id @default(cuid())
+  employeeCode String   @unique
+  phone        String?
+  hireDate     DateTime
+
+  userId       String  @unique
+  managerId    String?
+  departmentId String?
+  positionId   String?
+
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  manager      Employee?   @relation("EmployeeManager", fields: [managerId], references: [id], onDelete: SetNull)
+  subordinates Employee[]  @relation("EmployeeManager")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  position     Position?   @relation(fields: [positionId], references: [id])
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
