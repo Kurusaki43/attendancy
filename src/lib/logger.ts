@@ -14,6 +14,9 @@ export const logger = pino({
   formatters: {
     level: (label) => ({ level: label }),
   },
+  serializers: {
+    error: pino.stdSerializers.err,
+  },
   timestamp: pino.stdTimeFunctions.isoTime,
   ...(isDev && {
     transport: {
