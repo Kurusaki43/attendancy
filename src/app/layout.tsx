@@ -1,13 +1,13 @@
 import './globals.css';
 
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import { Toaster } from 'sonner';
 
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const roboto = Roboto({ subsets: ['latin'], variable: '--font-sans' });
 
 // const geistSans = Geist({
 //   variable: '--font-geist-sans',
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn('h-full', 'antialiased', 'font-sans', inter.variable)}
+      className={cn('h-full', 'antialiased', 'font-sans', roboto.variable)}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
