@@ -8,9 +8,7 @@ import { otpRepository } from '@/server/auth/repositories/otp.repository';
 import type { AcceptInviteInput } from '@/server/auth/schemas/accept-invite.schema';
 import type { ServiceAcceptInviteResult } from '@/server/auth/types';
 
-export async function acceptInvite(
-  payload: AcceptInviteInput,
-): Promise<ServiceAcceptInviteResult> {
+export async function acceptInvite(payload: AcceptInviteInput): Promise<ServiceAcceptInviteResult> {
   const { id, token, password } = payload;
 
   const otp = await otpRepository.findById(id);

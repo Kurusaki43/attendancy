@@ -46,7 +46,8 @@ vi.mock('@/lib/prisma', () => ({
 
 const { employeeRepository } = await import('../../repositories/employee.repository');
 const { userRepository } = await import('@/server/auth/repositories/user.repository');
-const { departmentRepository } = await import('@/server/departments/repositories/department.repository');
+const { departmentRepository } =
+  await import('@/server/departments/repositories/department.repository');
 const { positionRepository } = await import('@/server/positions/repositories/position.repository');
 const { emailQueueService } = await import('@/server/mail/services/email-queue.service');
 const { prisma } = await import('@/lib/prisma');

@@ -23,7 +23,8 @@ vi.mock('@/server/positions/repositories/position.repository', () => ({
 }));
 
 const { employeeRepository } = await import('../../repositories/employee.repository');
-const { departmentRepository } = await import('@/server/departments/repositories/department.repository');
+const { departmentRepository } =
+  await import('@/server/departments/repositories/department.repository');
 const { positionRepository } = await import('@/server/positions/repositories/position.repository');
 const { BadRequestError } = await import('@/lib/errors/bad-request.error');
 const { ConflictError } = await import('@/lib/errors/conflict.error');
