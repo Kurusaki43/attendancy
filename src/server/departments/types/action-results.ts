@@ -5,6 +5,9 @@ export type DepartmentResult = {
   name: string;
   code: string;
   description: string | null;
+  icon: string | null;
+  color: string | null;
+  parentId: string | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

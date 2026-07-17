@@ -8,7 +8,7 @@ import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
 const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'code', 'description'];
-const DEPARTMENT_FILTERABLE_FIELDS = ['isActive'];
+const DEPARTMENT_FILTERABLE_FIELDS = ['isActive', 'parentId'];
 
 export interface GetAllDepartmentsResult {
   departments: Prisma.DepartmentGetPayload<Record<string, never>>[];

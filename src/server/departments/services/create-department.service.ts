@@ -1,11 +1,12 @@
-import type { DepartmentCreateInput } from '@/generated/prisma/models';
+import type { DepartmentUncheckedCreateInput } from '@/generated/prisma/models';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { NotFoundError } from '@/lib/errors/not-found.error';
 import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import type { CreateDepartmentServiceResult } from '@/server/departments/types';
 
 export async function createDepartment(
-  departmentInput: Omit<DepartmentCreateInput, 'id' | 'createdAt' | 'updatedAt'>,
+  departmentInput: Omit<DepartmentUncheckedCreateInput, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<CreateDepartmentServiceResult> {
   const department = await departmentRepository.findByName(departmentInput.name);
 
@@ -20,6 +21,14 @@ export async function createDepartment(
       ERROR_CODES.DEPARTMENT_CODE_ALREADY_EXISTS,
       'Department code already in use!',
     );
+  }
+
+  if (typeof departmentInput.parentId === 'string') {
+    const parent = await departmentRepository.findById(departmentInput.parentId);
+
+    if (!parent) {
+      throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Parent department not found!');
+    }
   }
 
   return await departmentRepository.create(departmentInput);
