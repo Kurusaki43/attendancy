@@ -90,6 +90,24 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
                 { label: 'Earliest Hired', value: 'hireDate' },
                 { label: 'Recently Updated', value: '-updatedAt' },
               ]}
+              filters={[
+                {
+                  queryKey: 'departmentId',
+                  label: 'Department',
+                  options: departments.map((department) => ({
+                    label: department.label,
+                    value: department.id,
+                  })),
+                },
+                {
+                  queryKey: 'positionId',
+                  label: 'Position',
+                  options: positions.map((position) => ({
+                    label: position.label,
+                    value: position.id,
+                  })),
+                },
+              ]}
             />
             <EmployeesTable
               employees={result.data.employees}

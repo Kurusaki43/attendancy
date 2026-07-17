@@ -21,6 +21,8 @@ type FilterSelectProps = {
   queryKey: string;
   label: string;
   placeholder?: string;
+  /** Label of the reset item that clears the filter from the URL. */
+  defaultLabel?: string;
   options: Option[];
 };
 
@@ -29,7 +31,8 @@ const DEFAULT_VALUE = 'all';
 export default function FilterSelect({
   queryKey,
   label,
-  placeholder = 'Default',
+  placeholder = 'All',
+  defaultLabel = 'All',
   options,
 }: FilterSelectProps) {
   const { getParam, setParam } = useQueryParams();
@@ -55,7 +58,7 @@ export default function FilterSelect({
 
         <SelectContent>
           <SelectGroup>
-            <SelectItem value={DEFAULT_VALUE}>Default</SelectItem>
+            <SelectItem value={DEFAULT_VALUE}>{defaultLabel}</SelectItem>
 
             {options.map((option) => (
               <SelectItem key={option.value} value={option.value}>
