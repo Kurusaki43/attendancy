@@ -294,7 +294,13 @@ export function EmployeeForm({
               >
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select department" />
+                    <SelectValue placeholder="Select department">
+                      {(selected: string) =>
+                        selected === NONE
+                          ? 'No department'
+                          : departments.find((department) => department.id === selected)?.label
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -324,7 +330,13 @@ export function EmployeeForm({
               >
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select position" />
+                    <SelectValue placeholder="Select position">
+                      {(selected: string) =>
+                        selected === NONE
+                          ? 'No position'
+                          : positions.find((position) => position.id === selected)?.label
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -354,7 +366,13 @@ export function EmployeeForm({
               >
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select manager" />
+                    <SelectValue placeholder="Select manager">
+                      {(selected: string) =>
+                        selected === NONE
+                          ? 'No manager'
+                          : managerOptions.find((manager) => manager.id === selected)?.label
+                      }
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

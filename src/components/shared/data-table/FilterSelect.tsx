@@ -53,7 +53,13 @@ export default function FilterSelect({
       <Select value={value} onValueChange={handleValueChange}>
         <SelectTrigger className="min-w-36 pl-7">
           <span className="text-muted-foreground mr-1">{label}:</span>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder}>
+            {(selected: string) =>
+              selected === DEFAULT_VALUE
+                ? defaultLabel
+                : options.find((option) => option.value === selected)?.label
+            }
+          </SelectValue>
         </SelectTrigger>
 
         <SelectContent>
