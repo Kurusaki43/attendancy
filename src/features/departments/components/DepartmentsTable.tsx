@@ -123,11 +123,12 @@ const columns: ColumnDef<DepartmentResult>[] = [
     key: 'employeeCount',
     header: 'Employees',
     cell: (row) => (
-      <span className="text-muted-foreground flex items-center gap-1.5">
+      <span className="text-muted-foreground flex items-center justify-center gap-1.5 text-center">
         <Users className="size-3.5" />
         {row.employeeCount ?? 0}
       </span>
     ),
+    headerClassName: 'text-center',
   },
   {
     key: 'status',
@@ -138,7 +139,7 @@ const columns: ColumnDef<DepartmentResult>[] = [
     key: 'createdAt',
     header: 'Created',
     cell: (row) => (
-      <span className="text-muted-foreground tabular-nums">
+      <span className="text-muted-foreground block text-center tabular-nums">
         {new Date(row.createdAt).toLocaleDateString('en-US', {
           day: '2-digit',
           month: 'short',
@@ -146,6 +147,7 @@ const columns: ColumnDef<DepartmentResult>[] = [
         })}
       </span>
     ),
+    headerClassName: 'text-center',
   },
   {
     key: 'actions',

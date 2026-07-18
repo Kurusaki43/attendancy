@@ -172,7 +172,7 @@ function buildColumns(
       key: 'hireDate',
       header: 'Hired',
       cell: (row) => (
-        <span className="text-muted-foreground tabular-nums">
+        <span className="text-muted-foreground block text-center tabular-nums">
           {new Date(row.hireDate).toLocaleDateString('en-US', {
             day: '2-digit',
             month: 'short',
@@ -180,6 +180,7 @@ function buildColumns(
           })}
         </span>
       ),
+      headerClassName: 'text-center',
     },
     {
       key: 'status',

@@ -84,7 +84,7 @@ const columns: ColumnDef<PositionResult>[] = [
     key: 'createdAt',
     header: 'Created',
     cell: (row) => (
-      <span className="text-muted-foreground tabular-nums">
+      <span className="text-muted-foreground block text-center tabular-nums">
         {new Date(row.createdAt).toLocaleDateString('en-US', {
           day: '2-digit',
           month: 'short',
@@ -92,6 +92,7 @@ const columns: ColumnDef<PositionResult>[] = [
         })}
       </span>
     ),
+    headerClassName: 'text-center',
   },
   {
     key: 'actions',
