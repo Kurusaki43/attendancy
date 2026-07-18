@@ -17,6 +17,12 @@ import {
   EMPLOYMENT_STATUS_LABELS,
   type EmploymentStatus,
 } from '@/features/employees/lib/employment-status';
+import {
+  USER_STATUS_BADGE_CLASSES,
+  USER_STATUS_DOT_CLASSES,
+  USER_STATUS_LABELS,
+  type UserStatus,
+} from '@/features/employees/lib/user-status';
 import { cn } from '@/lib/utils';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 
@@ -52,6 +58,15 @@ function StatusBadge({ status }: { status: EmploymentStatus }) {
         className={cn('size-1.5 shrink-0 rounded-full', EMPLOYMENT_STATUS_DOT_CLASSES[status])}
       />
       {EMPLOYMENT_STATUS_LABELS[status]}
+    </Badge>
+  );
+}
+
+function AccountStatusBadge({ status }: { status: UserStatus }) {
+  return (
+    <Badge className={cn('rounded-sm', USER_STATUS_BADGE_CLASSES[status])}>
+      <span className={cn('size-1.5 shrink-0 rounded-full', USER_STATUS_DOT_CLASSES[status])} />
+      {USER_STATUS_LABELS[status]}
     </Badge>
   );
 }
@@ -100,15 +115,10 @@ const columns: ColumnDef<EmployeeResult>[] = [
           <span className="text-foreground block font-medium">
             {row.user.firstName} {row.user.lastName}
           </span>
-          <span className="text-muted-foreground text-xs">{row.user.email}</span>
+          <span className="text-muted-foreground text-xs">{row.employeeCode}</span>
         </div>
       </div>
     ),
-  },
-  {
-    key: 'employeeCode',
-    header: 'Code',
-    cell: (row) => <span className="text-xs font-medium">{row.employeeCode}</span>,
   },
   {
     key: 'department',
@@ -151,8 +161,13 @@ const columns: ColumnDef<EmployeeResult>[] = [
   },
   {
     key: 'status',
-    header: 'Employment status',
+    header: 'Employment',
     cell: (row) => <StatusBadge status={row.employmentStatus} />,
+  },
+  {
+    key: 'accountStatus',
+    header: 'Account',
+    cell: (row) => <AccountStatusBadge status={row.user.status} />,
   },
   {
     key: 'actions',

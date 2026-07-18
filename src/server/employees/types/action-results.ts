@@ -5,7 +5,7 @@ export type EmployeeUserResult = {
   firstName: string;
   lastName: string;
   email: string;
-  status: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'INVITED' | 'SUSPENDED';
   avatar: string | null;
 };
 
