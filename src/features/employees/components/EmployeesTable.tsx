@@ -1,17 +1,16 @@
 'use client';
 
-import { PencilIcon, SearchX, Trash } from 'lucide-react';
-import { useState, useTransition } from 'react';
-import { toast } from 'sonner';
+import { Building2, PencilIcon, SearchX, Trash } from 'lucide-react';
+import { useState } from 'react';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
+import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Spinner } from '@/components/ui/spinner';
-import { Switch } from '@/components/ui/switch';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
-import { updateEmployeeAction } from '@/server/employees/actions/update-employee.action';
+import { DEPARTMENT_ICON_MAP } from '@/features/departments/lib/department-visuals';
+import { cn } from '@/lib/utils';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 
 import { DeleteEmployeeDialog } from './DeleteEmployeeDialog';
@@ -19,44 +18,40 @@ import { EditEmployeeDialog } from './EditEmployeeDialog';
 
 type SelectOption = { id: string; label: string };
 
-function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActive: boolean }) {
-  const [checked, setChecked] = useState(isActive);
-  const [isPending, startTransition] = useTransition();
+function DepartmentCell({ department }: { department: EmployeeResult['department'] }) {
+  if (!department) {
+    return <span className="text-muted-foreground italic opacity-50">None</span>;
+  }
 
-  const handleToggleStatus = () => {
-    const nextValue = !checked;
-
-    // Optimistic update
-    setChecked(nextValue);
-
-    startTransition(async () => {
-      const result = await updateEmployeeAction(id, {
-        isActive: nextValue,
-      });
-
-      if (!result.success) {
-        setChecked(!nextValue);
-
-        toast.error(`Failed to ${nextValue ? 'activate' : 'deactivate'} ${name}`);
-
-        return;
-      }
-
-      toast.success(`${name} ${nextValue ? 'activated' : 'deactivated'} successfully`);
-    });
-  };
+  const Icon = (department.icon && DEPARTMENT_ICON_MAP.get(department.icon)) || Building2;
 
   return (
-    <div className="flex items-center gap-2">
-      <Switch
-        checked={checked}
-        onCheckedChange={handleToggleStatus}
-        disabled={isPending}
-        className="select-none"
-      />
+    <Badge variant="outline" className="gap-1.5 font-normal">
+      <span
+        className={cn(
+          'flex size-3.5 shrink-0 items-center justify-center rounded-sm text-white',
+          department.color || 'bg-muted-foreground',
+        )}
+      >
+        {/* eslint-disable-next-line react-hooks/static-components */}
+        <Icon className="size-2.5" />
+      </span>
+      {department.name}
+    </Badge>
+  );
+}
 
-      {isPending && <Spinner />}
-    </div>
+function StatusBadge({ isActive }: { isActive: boolean }) {
+  return isActive ? (
+    <Badge className="rounded-sm bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400">
+      <span className="size-1.5 shrink-0 rounded-full bg-green-500" />
+      Active
+    </Badge>
+  ) : (
+    <Badge variant="secondary" className="rounded-sm">
+      <span className="bg-muted-foreground size-1.5 shrink-0 rounded-full" />
+      Inactive
+    </Badge>
   );
 }
 
@@ -133,26 +128,18 @@ function buildColumns(
     {
       key: 'employeeCode',
       header: 'Code',
-      cell: (row) => (
-        <span className="text-muted-foreground font-mono text-xs">{row.employeeCode}</span>
-      ),
+      cell: (row) => <span className="text-xs font-medium">{row.employeeCode}</span>,
     },
     {
       key: 'department',
       header: 'Department',
-      cell: (row) => (
-        <span className="text-muted-foreground">
-          {row.department?.name ?? <span className="italic opacity-50">None</span>}
-        </span>
-      ),
+      cell: (row) => <DepartmentCell department={row.department} />,
     },
     {
       key: 'position',
       header: 'Position',
       cell: (row) => (
-        <span className="text-muted-foreground">
-          {row.position?.title ?? <span className="italic opacity-50">None</span>}
-        </span>
+        <span>{row.position?.title ?? <span className="italic opacity-50">None</span>}</span>
       ),
     },
     {
@@ -185,13 +172,7 @@ function buildColumns(
     {
       key: 'status',
       header: 'Status',
-      cell: (row) => (
-        <StatusSwitch
-          id={row.id}
-          name={`${row.user.firstName} ${row.user.lastName}`}
-          isActive={row.isActive}
-        />
-      ),
+      cell: (row) => <StatusBadge isActive={row.isActive} />,
     },
     {
       key: 'actions',

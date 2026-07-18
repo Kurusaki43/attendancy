@@ -31,6 +31,8 @@ export type EmployeeResult = {
     id: string;
     name: string;
     code: string;
+    icon: string | null;
+    color: string | null;
   } | null;
   position: {
     id: string;
