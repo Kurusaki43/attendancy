@@ -24,7 +24,7 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
       {/* Page header */}
       <div className="flex flex-wrap items-start justify-between gap-6 pb-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Positions</h1>
+          <h1 className="text-2xl font-semibold tracking-wide">Positions</h1>
           <p className="text-muted-foreground mt-1.5 text-sm">
             Manage your organisation&apos;s positions and their status.
           </p>

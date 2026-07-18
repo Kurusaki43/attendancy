@@ -86,7 +86,7 @@ export function Sidebar({ user, navGroups, isOpen, onClose }: SidebarProps) {
       <aside
         className={cn(
           'border-sidebar-border fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r shadow-lg transition-transform duration-300 ease-in-out',
-          'h-full lg:static lg:z-auto lg:w-56 lg:translate-x-0 lg:shadow-none',
+          'bg-background h-full lg:static lg:z-auto lg:w-56 lg:translate-x-0 lg:shadow-none',
           isOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >

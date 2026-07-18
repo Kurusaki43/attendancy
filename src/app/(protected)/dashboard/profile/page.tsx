@@ -27,7 +27,7 @@ export default async function ProfilePage() {
     <div className="space-y-4">
       {/* Page header */}
       <div className="pb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
+        <h1 className="text-2xl font-semibold tracking-wide">Profile</h1>
         <p className="text-muted-foreground mt-1.5 text-sm">
           Manage your personal information and account security.
         </p>

@@ -18,7 +18,7 @@ type HeaderProps = {
 
 export function Header({ user, isSidebarOpen, onToggleSidebar, onLogout }: HeaderProps) {
   return (
-    <header className="border-border bg-background sticky top-0 z-10 border-b backdrop-blur">
+    <header className="border-border bg-background sticky top-0 z-15 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         {/* Left: Mobile menu button + title */}
         <div className="flex items-center gap-4">
