@@ -21,16 +21,28 @@ type FilterSelectConfig = {
   options: { label: string; value: string }[];
 };
 
+const DEFAULT_STATUS_FILTER: FilterSelectConfig = {
+  queryKey: 'isActive',
+  label: 'Status',
+  options: [
+    { label: 'Active', value: 'true' },
+    { label: 'Inactive', value: 'false' },
+  ],
+};
+
 type DataTableToolbarProps = {
   searchPlaceholder?: string;
   sortOptions?: SortOption[];
   filters?: FilterSelectConfig[];
+  /** Overrides the built-in Active/Inactive filter — e.g. a model with more than two statuses. */
+  statusFilter?: FilterSelectConfig;
 };
 
 const DataTableToolbar = ({
   searchPlaceholder = 'Search by name',
   sortOptions = DEFAULT_SORT_OPTIONS,
   filters = [],
+  statusFilter = DEFAULT_STATUS_FILTER,
 }: DataTableToolbarProps) => {
   return (
     <Card size="sm" className="border-border rounded-sm border border-dashed shadow-none ring-0">
@@ -38,13 +50,10 @@ const DataTableToolbar = ({
         <SearchInput placeholder={searchPlaceholder} />
         <div className="flex flex-wrap items-center gap-6">
           <FilterSelect
-            queryKey="isActive"
-            label="Status"
+            queryKey={statusFilter.queryKey}
+            label={statusFilter.label}
             defaultLabel="All Statuses"
-            options={[
-              { label: 'Active', value: 'true' },
-              { label: 'Inactive', value: 'false' },
-            ]}
+            options={statusFilter.options}
           />
           {filters.map((filter) => (
             <FilterSelect

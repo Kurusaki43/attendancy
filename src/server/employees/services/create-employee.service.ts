@@ -92,7 +92,7 @@ export async function createEmployee(
         gender: input.gender,
         birthDate: input.birthDate,
         address: input.address,
-        isActive: input.isActive,
+        employmentStatus: input.employmentStatus,
         userId: user.id,
         departmentId: input.departmentId,
         positionId: input.positionId,

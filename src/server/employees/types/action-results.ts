@@ -26,7 +26,7 @@ export type EmployeeResult = {
   gender: 'MALE' | 'FEMALE' | null;
   birthDate: Date | null;
   address: string | null;
-  isActive: boolean;
+  employmentStatus: 'ACTIVE' | 'ON_LEAVE' | 'TERMINATED';
   createdAt: Date;
   updatedAt: Date;
   user: EmployeeUserResult;

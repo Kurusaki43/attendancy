@@ -11,6 +11,12 @@ import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import { DEPARTMENT_ICON_MAP } from '@/features/departments/lib/department-visuals';
+import {
+  EMPLOYMENT_STATUS_BADGE_CLASSES,
+  EMPLOYMENT_STATUS_DOT_CLASSES,
+  EMPLOYMENT_STATUS_LABELS,
+  type EmploymentStatus,
+} from '@/features/employees/lib/employment-status';
 import { cn } from '@/lib/utils';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 
@@ -39,16 +45,13 @@ function DepartmentCell({ department }: { department: EmployeeResult['department
   );
 }
 
-function StatusBadge({ isActive }: { isActive: boolean }) {
-  return isActive ? (
-    <Badge className="rounded-sm bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400">
-      <span className="size-1.5 shrink-0 rounded-full bg-green-500" />
-      Active
-    </Badge>
-  ) : (
-    <Badge variant="secondary" className="rounded-sm">
-      <span className="bg-muted-foreground size-1.5 shrink-0 rounded-full" />
-      Inactive
+function StatusBadge({ status }: { status: EmploymentStatus }) {
+  return (
+    <Badge className={cn('rounded-sm', EMPLOYMENT_STATUS_BADGE_CLASSES[status])}>
+      <span
+        className={cn('size-1.5 shrink-0 rounded-full', EMPLOYMENT_STATUS_DOT_CLASSES[status])}
+      />
+      {EMPLOYMENT_STATUS_LABELS[status]}
     </Badge>
   );
 }
@@ -149,7 +152,7 @@ const columns: ColumnDef<EmployeeResult>[] = [
   {
     key: 'status',
     header: 'Employment status',
-    cell: (row) => <StatusBadge isActive={row.isActive} />,
+    cell: (row) => <StatusBadge status={row.employmentStatus} />,
   },
   {
     key: 'actions',

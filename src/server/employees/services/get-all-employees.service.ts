@@ -9,7 +9,7 @@ import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
 const EMPLOYEE_SEARCHABLE_FIELDS = ['employeeCode', 'phone'];
-const EMPLOYEE_FILTERABLE_FIELDS = ['isActive', 'departmentId', 'positionId'];
+const EMPLOYEE_FILTERABLE_FIELDS = ['employmentStatus', 'departmentId', 'positionId'];
 
 export interface GetAllEmployeesResult {
   employees: EmployeeWithRelations[];

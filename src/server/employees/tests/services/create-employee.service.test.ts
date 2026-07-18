@@ -62,7 +62,7 @@ const input = {
   email: 'ada@example.com',
   employeeCode: 'EMP-001',
   hireDate: new Date('2026-01-01'),
-  isActive: true,
+  employmentStatus: 'ACTIVE',
 } as Parameters<typeof createEmployee>[0];
 
 const fakeTx = {

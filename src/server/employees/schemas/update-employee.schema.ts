@@ -32,7 +32,7 @@ export const updateEmployeeSchema = z.object({
   positionId: z.string().trim().nullable().optional(),
   managerId: z.string().trim().nullable().optional(),
 
-  isActive: z.boolean().optional(),
+  employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).optional(),
 
   // Only ever an uploaded image (data URI) or '' to clear it — there is no free-text URL input.
   // An unchanged existing avatar is simply omitted from the submitted payload by the form.

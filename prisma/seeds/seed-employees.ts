@@ -17,7 +17,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.ADMIN,
     departmentName: 'Human Resources',
     positionTitle: 'HR Manager',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-002',
@@ -29,7 +29,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.MANAGER,
     departmentName: 'Engineering',
     positionTitle: 'Senior Software Engineer',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-003',
@@ -42,7 +42,7 @@ const EMPLOYEES = [
     departmentName: 'Engineering',
     positionTitle: 'Software Engineer',
     managerCode: 'EMP-002',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-004',
@@ -55,7 +55,7 @@ const EMPLOYEES = [
     departmentName: 'Engineering',
     positionTitle: 'Software Engineer',
     managerCode: 'EMP-002',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-005',
@@ -68,7 +68,7 @@ const EMPLOYEES = [
     departmentName: 'Engineering',
     positionTitle: 'DevOps Engineer',
     managerCode: 'EMP-002',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-006',
@@ -81,7 +81,7 @@ const EMPLOYEES = [
     departmentName: 'Quality Assurance',
     positionTitle: 'QA Engineer',
     managerCode: 'EMP-002',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-007',
@@ -94,7 +94,7 @@ const EMPLOYEES = [
     departmentName: 'Data & Analytics',
     positionTitle: 'Data Analyst',
     managerCode: 'EMP-002',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-008',
@@ -107,7 +107,7 @@ const EMPLOYEES = [
     departmentName: 'Research & Development',
     positionTitle: 'Data Scientist',
     managerCode: 'EMP-002',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-009',
@@ -119,7 +119,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Information Technology',
     positionTitle: 'DevOps Engineer',
-    isActive: true,
+    employmentStatus: 'ON_LEAVE',
   },
   {
     employeeCode: 'EMP-010',
@@ -132,7 +132,7 @@ const EMPLOYEES = [
     departmentName: 'Human Resources',
     positionTitle: 'Recruiter',
     managerCode: 'EMP-001',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-011',
@@ -144,7 +144,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Finance',
     positionTitle: 'Accountant',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-012',
@@ -157,7 +157,7 @@ const EMPLOYEES = [
     departmentName: 'Finance',
     positionTitle: 'Financial Analyst',
     managerCode: 'EMP-011',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-013',
@@ -169,7 +169,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Sales',
     positionTitle: 'Sales Representative',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-014',
@@ -182,7 +182,7 @@ const EMPLOYEES = [
     departmentName: 'Sales',
     positionTitle: 'Account Executive',
     managerCode: 'EMP-013',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-015',
@@ -194,7 +194,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Marketing',
     positionTitle: 'Marketing Specialist',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-016',
@@ -207,7 +207,7 @@ const EMPLOYEES = [
     departmentName: 'Communications',
     positionTitle: 'Content Writer',
     managerCode: 'EMP-015',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-017',
@@ -219,7 +219,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Customer Support',
     positionTitle: 'Customer Support Representative',
-    isActive: true,
+    employmentStatus: 'ACTIVE',
   },
   {
     employeeCode: 'EMP-018',
@@ -231,7 +231,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Administration',
     positionTitle: 'Office Administrator',
-    isActive: false,
+    employmentStatus: 'TERMINATED',
   },
 ] as const;
 
@@ -285,7 +285,7 @@ export async function seedEmployees() {
       update: {
         phone: employee.phone,
         hireDate: employee.hireDate,
-        isActive: employee.isActive,
+        employmentStatus: employee.employmentStatus,
         userId: user.id,
         departmentId: department.id,
         positionId: position.id,
@@ -294,7 +294,7 @@ export async function seedEmployees() {
         employeeCode: employee.employeeCode,
         phone: employee.phone,
         hireDate: employee.hireDate,
-        isActive: employee.isActive,
+        employmentStatus: employee.employmentStatus,
         userId: user.id,
         departmentId: department.id,
         positionId: position.id,

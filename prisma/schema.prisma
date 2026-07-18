@@ -24,6 +24,12 @@ enum Gender {
   FEMALE
 }
 
+enum EmploymentStatus {
+  ACTIVE
+  ON_LEAVE
+  TERMINATED
+}
+
 model User {
   id              String     @id @default(cuid())
   firstName       String
@@ -167,7 +173,7 @@ model Employee {
   department   Department? @relation(fields: [departmentId], references: [id])
   position     Position?   @relation(fields: [positionId], references: [id])
 
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  employmentStatus EmploymentStatus @default(ACTIVE)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 }

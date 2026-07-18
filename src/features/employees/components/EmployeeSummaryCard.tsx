@@ -4,6 +4,13 @@ import { Briefcase, Building2, Calendar, Mail, ShieldCheck, User, Users } from '
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
+import {
+  EMPLOYMENT_STATUS_BADGE_CLASSES,
+  EMPLOYMENT_STATUS_DOT_CLASSES,
+  EMPLOYMENT_STATUS_LABELS,
+  type EmploymentStatus,
+} from '@/features/employees/lib/employment-status';
+import { cn } from '@/lib/utils';
 
 type EmployeeSummaryCardProps = {
   firstName: string;
@@ -14,7 +21,7 @@ type EmployeeSummaryCardProps = {
   positionLabel: string | undefined;
   managerLabel: string | undefined;
   hireDateLabel: string | undefined;
-  isActive: boolean | undefined;
+  employmentStatus: EmploymentStatus | undefined;
 };
 
 function SummaryRow({
@@ -46,9 +53,10 @@ export function EmployeeSummaryCard({
   positionLabel,
   managerLabel,
   hireDateLabel,
-  isActive,
+  employmentStatus,
 }: EmployeeSummaryCardProps) {
   const fullName = `${firstName} ${lastName}`.trim();
+  const status = employmentStatus ?? 'ACTIVE';
 
   return (
     <Card>
@@ -93,22 +101,14 @@ export function EmployeeSummaryCard({
             {hireDateLabel ?? 'Not selected'}
           </SummaryRow>
           <SummaryRow icon={ShieldCheck} label="Status">
-            <Badge
-              className={
-                (isActive ?? true)
-                  ? 'rounded-sm bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400'
-                  : 'rounded-sm'
-              }
-              variant={(isActive ?? true) ? undefined : 'secondary'}
-            >
+            <Badge className={cn('rounded-sm', EMPLOYMENT_STATUS_BADGE_CLASSES[status])}>
               <span
-                className={
-                  (isActive ?? true)
-                    ? 'size-1.5 shrink-0 rounded-full bg-green-500'
-                    : 'bg-muted-foreground size-1.5 shrink-0 rounded-full'
-                }
+                className={cn(
+                  'size-1.5 shrink-0 rounded-full',
+                  EMPLOYMENT_STATUS_DOT_CLASSES[status],
+                )}
               />
-              {(isActive ?? true) ? 'Active' : 'Inactive'}
+              {EMPLOYMENT_STATUS_LABELS[status]}
             </Badge>
           </SummaryRow>
         </div>

@@ -21,6 +21,10 @@ import {
   type SelectOption,
   toDateInputValue,
 } from '@/features/employees/lib/employee-form';
+import {
+  EMPLOYMENT_STATUS_LABELS,
+  EMPLOYMENT_STATUSES,
+} from '@/features/employees/lib/employment-status';
 import { generateEmployeeCodeAction } from '@/server/employees/actions/generate-employee-code.action';
 
 type EmployeeEmploymentInfoCardProps = {
@@ -132,13 +136,13 @@ export function EmployeeEmploymentInfoCard({
 
           <FormField
             control={control}
-            name="isActive"
+            name="employmentStatus"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-medium tracking-wide">Status</FormLabel>
+                <FormLabel className="font-medium tracking-wide">Employment Status</FormLabel>
                 <Select
-                  value={(field.value ?? true) ? 'active' : 'inactive'}
-                  onValueChange={(value) => field.onChange(value === 'active')}
+                  value={field.value ?? 'ACTIVE'}
+                  onValueChange={(value) => field.onChange(value)}
                   disabled={isPending}
                 >
                   <FormControl>
@@ -147,8 +151,11 @@ export function EmployeeEmploymentInfoCard({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
+                    {EMPLOYMENT_STATUSES.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {EMPLOYMENT_STATUS_LABELS[status]}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

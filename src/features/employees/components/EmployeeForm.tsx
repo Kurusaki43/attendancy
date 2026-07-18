@@ -79,7 +79,7 @@ export function EmployeeForm({
           departmentId: employee.department?.id,
           positionId: employee.position?.id,
           managerId: employee.manager?.id,
-          isActive: employee.isActive,
+          employmentStatus: employee.employmentStatus,
           avatar: employee.user.avatar ?? '',
         }
       : {
@@ -90,7 +90,7 @@ export function EmployeeForm({
           phone: '',
           hireDate: undefined,
           address: '',
-          isActive: true,
+          employmentStatus: 'ACTIVE',
           avatar: '',
         },
   });
@@ -150,9 +150,9 @@ export function EmployeeForm({
     isUpdateMode ? manager.id !== employee.id : true,
   );
 
-  const [departmentId, positionId, managerId, isActive, hireDate, avatar] = useWatch({
+  const [departmentId, positionId, managerId, employmentStatus, hireDate, avatar] = useWatch({
     control: form.control,
-    name: ['departmentId', 'positionId', 'managerId', 'isActive', 'hireDate', 'avatar'],
+    name: ['departmentId', 'positionId', 'managerId', 'employmentStatus', 'hireDate', 'avatar'],
   });
 
   const [watchedFirstName, watchedLastName, watchedEmail] = useWatch({
@@ -217,7 +217,7 @@ export function EmployeeForm({
               positionLabel={positionLabel}
               managerLabel={managerLabel}
               hireDateLabel={hireDateLabel}
-              isActive={isActive}
+              employmentStatus={employmentStatus}
             />
 
             {!isUpdateMode && <EmployeeAccountInvitationCard email={watchedEmail ?? ''} />}

@@ -7,6 +7,10 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { AddEmployeeButton } from '@/features/employees/components/AddEmployeeButton';
 import { EmployeesTable } from '@/features/employees/components/EmployeesTable';
+import {
+  EMPLOYMENT_STATUS_LABELS,
+  EMPLOYMENT_STATUSES,
+} from '@/features/employees/lib/employment-status';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 import { getAllEmployeesAction } from '@/server/employees/actions/get-all-employees.action';
 import { getAllPositionsAction } from '@/server/positions/actions/get-all-positions.action';
@@ -41,7 +45,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
 
   const hasActiveFilters =
     Boolean(params.search) ||
-    Boolean(params.isActive) ||
+    Boolean(params.employmentStatus) ||
     Boolean(params.departmentId) ||
     Boolean(params.positionId);
   const isTrulyEmpty = result.success && result.data.employees.length === 0 && !hasActiveFilters;
@@ -79,6 +83,14 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
                 { label: 'Earliest Hired', value: 'hireDate' },
                 { label: 'Recently Updated', value: '-updatedAt' },
               ]}
+              statusFilter={{
+                queryKey: 'employmentStatus',
+                label: 'Employment Status',
+                options: EMPLOYMENT_STATUSES.map((status) => ({
+                  label: EMPLOYMENT_STATUS_LABELS[status],
+                  value: status,
+                })),
+              }}
               filters={[
                 {
                   queryKey: 'departmentId',

@@ -40,7 +40,7 @@ export const createEmployeeSchema = z.object({
   positionId: z.string().trim().optional(),
   managerId: z.string().trim().optional(),
 
-  isActive: z.boolean().default(true),
+  employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).default('ACTIVE'),
 
   // Only ever an uploaded image (data URI) or omitted — there is no free-text URL input.
   avatar: z

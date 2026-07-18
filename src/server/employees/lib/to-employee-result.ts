@@ -10,7 +10,7 @@ export function toEmployeeResult(employee: EmployeeWithRelations): EmployeeResul
     gender: employee.gender,
     birthDate: employee.birthDate,
     address: employee.address,
-    isActive: employee.isActive,
+    employmentStatus: employee.employmentStatus,
     createdAt: employee.createdAt,
     updatedAt: employee.updatedAt,
     user: employee.user,

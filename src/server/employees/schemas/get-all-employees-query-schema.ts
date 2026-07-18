@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { BaseQuerySchema } from '@/shared/types/base-query-schema';
 
 export const employeeQuerySchema = BaseQuerySchema.extend({
-  isActive: z.enum(['true', 'false']).optional(),
+  employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).optional(),
   departmentId: z.string().optional(),
   positionId: z.string().optional(),
   sort: z

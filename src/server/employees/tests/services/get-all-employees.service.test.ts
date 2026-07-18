@@ -36,14 +36,14 @@ describe('getAllEmployees', () => {
     });
   });
 
-  it('applies the isActive filter when provided', async () => {
+  it('applies the employmentStatus filter when provided', async () => {
     vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
     vi.mocked(employeeRepository.count).mockResolvedValue(0);
 
-    await getAllEmployees({ isActive: 'true' });
+    await getAllEmployees({ employmentStatus: 'ACTIVE' });
 
     expect(employeeRepository.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: expect.objectContaining({ isActive: true }) }),
+      expect.objectContaining({ where: expect.objectContaining({ employmentStatus: 'ACTIVE' }) }),
     );
   });
 

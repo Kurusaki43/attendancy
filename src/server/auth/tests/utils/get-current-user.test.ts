@@ -76,9 +76,7 @@ describe('getCurrentUser', () => {
   });
 
   it('redirects to invalid-session when the user has not yet accepted their invite', async () => {
-    vi.mocked(userRepository.findById).mockResolvedValue(
-      buildUser({ status: 'INVITED' }) as never,
-    );
+    vi.mocked(userRepository.findById).mockResolvedValue(buildUser({ status: 'INVITED' }) as never);
 
     await expect(getCurrentUser()).rejects.toBeInstanceOf(RedirectSignal);
   });
