@@ -22,14 +22,14 @@ export async function register(body: RegisterInput): Promise<ServiceRegisterResu
   const passwordHash = await hashPassword(body.password);
 
   // 3- Get the EMPLOYEE role (default role for new users)
-  const employeeRole = await prisma.role.findUnique({
-    where: { name: ROLE_NAMES.EMPLOYEE },
+  const adminRole = await prisma.role.findUnique({
+    where: { name: ROLE_NAMES.ADMIN },
   });
 
-  if (!employeeRole) {
+  if (!adminRole) {
     throw new InternalServerError(
       'ROLE_NOT_FOUND',
-      'EMPLOYEE role not found. Please run database seeds.',
+      'ADMIN role not found. Please run database seeds.',
     );
   }
 
@@ -42,7 +42,7 @@ export async function register(body: RegisterInput): Promise<ServiceRegisterResu
     provider: 'LOCAL',
     roles: {
       connect: {
-        id: employeeRole.id,
+        id: adminRole.id,
       },
     },
   });

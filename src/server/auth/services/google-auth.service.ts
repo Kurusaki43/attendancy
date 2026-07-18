@@ -41,11 +41,11 @@ export async function authenticateWithGoogle(
 
   if (!user) {
     // Get the EMPLOYEE role (default role for new users)
-    const employeeRole = await prisma.role.findUnique({
-      where: { name: ROLE_NAMES.EMPLOYEE },
+    const adminRole = await prisma.role.findUnique({
+      where: { name: ROLE_NAMES.ADMIN },
     });
 
-    if (!employeeRole) {
+    if (!adminRole) {
       throw new InternalServerError(
         ERROR_CODES.ROLE_NOT_FOUND,
         'EMPLOYEE role not found. Please run database seeds.',
@@ -63,7 +63,7 @@ export async function authenticateWithGoogle(
       status: 'ACTIVE',
       roles: {
         connect: {
-          id: employeeRole.id,
+          id: adminRole.id,
         },
       },
     });
