@@ -148,7 +148,7 @@ const columns: ColumnDef<EmployeeResult>[] = [
   },
   {
     key: 'status',
-    header: 'Status',
+    header: 'Employment status',
     cell: (row) => <StatusBadge isActive={row.isActive} />,
   },
   {
