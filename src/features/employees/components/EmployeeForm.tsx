@@ -95,13 +95,19 @@ export function EmployeeForm({
         },
   });
 
+  // formState is a Proxy that only tracks a field once it's read during render — reading
+  // dirtyFields.avatar for the first time inside the async onSubmit handler below (instead of
+  // here) meant RHF never subscribed to it, so it always read as falsy and the avatar was
+  // silently stripped from every submission.
+  const { dirtyFields } = form.formState;
+
   const onSubmit = async (data: CreateEmployeeInput | UpdateEmployeeInput) => {
     setIsPending(true);
 
     // Only send avatar when the user actually changed it — an untouched value doesn't need to be
     // resubmitted, and keeps a no-op edit from re-validating an already-stored data URI.
     const payload = { ...data };
-    if (!form.formState.dirtyFields.avatar) {
+    if (!dirtyFields.avatar) {
       delete payload.avatar;
     }
 
