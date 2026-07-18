@@ -5,13 +5,13 @@ import DataTablePagination from '@/components/shared/data-table/DataTablePaginat
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
-import { AddEmployeeDialog } from '@/features/employees/components/AddEmployeeDialog';
+import { AddEmployeeButton } from '@/features/employees/components/AddEmployeeButton';
 import { EmployeesTable } from '@/features/employees/components/EmployeesTable';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 import { getAllEmployeesAction } from '@/server/employees/actions/get-all-employees.action';
 import { getAllPositionsAction } from '@/server/positions/actions/get-all-positions.action';
 
-// Select options for the add/edit dialogs — active records only, capped at the max page size.
+// Select options for the toolbar filters — active records only, capped at the max page size.
 const OPTIONS_QUERY = { limit: '100', isActive: 'true' };
 
 type EmployeesPageProps = {
@@ -20,11 +20,10 @@ type EmployeesPageProps = {
 
 export default async function EmployeesPage({ searchParams }: EmployeesPageProps) {
   const params = await searchParams;
-  const [result, departmentsResult, positionsResult, managersResult] = await Promise.all([
+  const [result, departmentsResult, positionsResult] = await Promise.all([
     getAllEmployeesAction(params),
     getAllDepartmentsAction({ ...OPTIONS_QUERY, sort: 'name' }),
     getAllPositionsAction({ ...OPTIONS_QUERY, sort: 'title' }),
-    getAllEmployeesAction(OPTIONS_QUERY),
   ]);
 
   const departments = departmentsResult.success
@@ -39,12 +38,6 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
         label: position.title,
       }))
     : [];
-  const managers = managersResult.success
-    ? managersResult.data.employees.map((employee) => ({
-        id: employee.id,
-        label: `${employee.user.firstName} ${employee.user.lastName}`,
-      }))
-    : [];
 
   const hasActiveFilters =
     Boolean(params.search) ||
@@ -52,10 +45,6 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
     Boolean(params.departmentId) ||
     Boolean(params.positionId);
   const isTrulyEmpty = result.success && result.data.employees.length === 0 && !hasActiveFilters;
-
-  const addEmployeeDialog = (
-    <AddEmployeeDialog departments={departments} positions={positions} managers={managers} />
-  );
 
   return (
     <div className="space-y-4">
@@ -67,7 +56,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
             Manage your organisation&apos;s employees and their employment details.
           </p>
         </div>
-        {result.success && !isTrulyEmpty && addEmployeeDialog}
+        {result.success && !isTrulyEmpty && <AddEmployeeButton />}
       </div>
       {/* Content */}
       {result.success ? (
@@ -76,7 +65,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
             icon={Users}
             title="No employees yet"
             description="Invite your first employee to begin."
-            action={addEmployeeDialog}
+            action={<AddEmployeeButton />}
             className="rounded-md border"
           />
         ) : (
@@ -109,12 +98,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
                 },
               ]}
             />
-            <EmployeesTable
-              employees={result.data.employees}
-              departments={departments}
-              positions={positions}
-              managers={managers}
-            />
+            <EmployeesTable employees={result.data.employees} />
             <DataTablePagination
               limit={result.data.pagination.limit}
               page={result.data.pagination.page}
