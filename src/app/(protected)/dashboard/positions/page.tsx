@@ -7,7 +7,9 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { AddPositionDialog } from '@/features/positions/components/AddPositionDialog';
 import { PositionsTable } from '@/features/positions/components/PositionsTable';
+import { PositionStats } from '@/features/positions/components/PositionStats';
 import { getAllPositionsAction } from '@/server/positions/actions/get-all-positions.action';
+import { getPositionStatsAction } from '@/server/positions/actions/get-position-stats.action';
 
 type PositionsPageProps = {
   searchParams: Promise<Record<string, string>>;
@@ -15,14 +17,23 @@ type PositionsPageProps = {
 
 export default async function PositionsPage({ searchParams }: PositionsPageProps) {
   const params = await searchParams;
-  const result = await getAllPositionsAction(params);
+
+  const [result, statsResult] = await Promise.all([
+    getAllPositionsAction(params),
+    getPositionStatsAction(),
+  ]);
+
+  const stats = statsResult.success
+    ? statsResult.data
+    : { totalPositions: 0, activePositions: 0, inactivePositions: 0 };
+
   const hasActiveFilters = Boolean(params.search) || Boolean(params.isActive);
   const isTrulyEmpty = result.success && result.data.positions.length === 0 && !hasActiveFilters;
 
   return (
     <div className="space-y-4">
       {/* Page header */}
-      <div className="flex flex-wrap items-start justify-between gap-6 pb-6">
+      <div className="flex flex-wrap items-start justify-between gap-6 pb-2">
         <div>
           <h1 className="text-2xl font-semibold tracking-wide">Positions</h1>
           <p className="text-muted-foreground mt-1.5 text-sm">
@@ -31,6 +42,10 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
         </div>
         {result.success && !isTrulyEmpty && <AddPositionDialog />}
       </div>
+
+      {/* Stats */}
+      <PositionStats stats={stats} />
+
       {/* Content */}
       {result.success ? (
         isTrulyEmpty ? (
