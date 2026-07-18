@@ -66,6 +66,19 @@ describe('login', () => {
     await expect(result).rejects.toMatchObject({ code: ERROR_CODES.INVALID_CREDENTIALS });
   });
 
+  it('throws UnauthorizedError (not a status-specific error) for an invited user who has not set a password yet', async () => {
+    // Invited employees have no passwordHash until they complete accept-invite, so they're
+    // blocked here rather than needing an explicit INVITED status check.
+    vi.mocked(userRepository.findByEmail).mockResolvedValue(
+      buildUser({ status: 'INVITED', passwordHash: null, emailVerifiedAt: null }) as never,
+    );
+
+    const result = login(credentials);
+
+    await expect(result).rejects.toBeInstanceOf(UnauthorizedError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.INVALID_CREDENTIALS });
+  });
+
   it('throws UnauthorizedError when the password does not match', async () => {
     vi.mocked(userRepository.findByEmail).mockResolvedValue(buildUser() as never);
     vi.mocked(verifyPassword).mockResolvedValue(false);

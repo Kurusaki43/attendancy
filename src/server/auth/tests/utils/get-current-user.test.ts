@@ -75,6 +75,14 @@ describe('getCurrentUser', () => {
     await expect(getCurrentUser()).rejects.toBeInstanceOf(RedirectSignal);
   });
 
+  it('redirects to invalid-session when the user has not yet accepted their invite', async () => {
+    vi.mocked(userRepository.findById).mockResolvedValue(
+      buildUser({ status: 'INVITED' }) as never,
+    );
+
+    await expect(getCurrentUser()).rejects.toBeInstanceOf(RedirectSignal);
+  });
+
   it('returns the user when active', async () => {
     const user = buildUser();
     vi.mocked(userRepository.findById).mockResolvedValue(user as never);

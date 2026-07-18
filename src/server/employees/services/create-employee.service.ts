@@ -79,6 +79,7 @@ export async function createEmployee(
         email: input.email,
         avatar: input.avatar || null,
         provider: 'LOCAL',
+        status: 'INVITED',
         roles: { connect: { id: employeeRole.id } },
       },
     });
