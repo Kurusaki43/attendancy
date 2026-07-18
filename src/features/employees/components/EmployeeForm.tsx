@@ -2,29 +2,24 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusIcon, SaveIcon } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { type Resolver, useForm } from 'react-hook-form';
+import { type Control, type Resolver, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
-import type { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+import { Form } from '@/components/ui/form';
+import { EmployeeAccountInvitationCard } from '@/features/employees/components/EmployeeAccountInvitationCard';
+import { EmployeeEmploymentInfoCard } from '@/features/employees/components/EmployeeEmploymentInfoCard';
+import { EmployeePersonalInfoCard } from '@/features/employees/components/EmployeePersonalInfoCard';
+import { EmployeeSummaryCard } from '@/features/employees/components/EmployeeSummaryCard';
+import type {
+  CreateEmployeeFormValues,
+  EmployeeFormOutput,
+  EmployeeFormValues,
+  SelectOption,
+} from '@/features/employees/lib/employee-form';
 import { createEmployeeAction } from '@/server/employees/actions/create-employee.action';
 import { updateEmployeeAction } from '@/server/employees/actions/update-employee.action';
 import {
@@ -37,18 +32,6 @@ import {
 } from '@/server/employees/schemas/update-employee.schema';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 
-const NONE = 'none';
-
-type SelectOption = { id: string; label: string };
-
-// zodResolver types against the schema's pre-coercion input shape (hireDate is `unknown` here,
-// since it's `z.coerce.date()`), not the CreateEmployeeInput/UpdateEmployeeInput output types
-// the server actions expect — so the form itself is typed against the raw input shape.
-type CreateEmployeeFormValues = z.input<typeof createEmployeeSchema>;
-type UpdateEmployeeFormValues = z.input<typeof updateEmployeeSchema>;
-type EmployeeFormValues = CreateEmployeeFormValues | UpdateEmployeeFormValues;
-type EmployeeFormOutput = CreateEmployeeInput | UpdateEmployeeInput;
-
 type EmployeeFormOptions = {
   departments: SelectOption[];
   positions: SelectOption[];
@@ -57,33 +40,25 @@ type EmployeeFormOptions = {
 
 type CreateEmployeeFormProps = EmployeeFormOptions & {
   mode: 'create';
-  onSuccess?: () => void;
   employee?: never;
 };
 
 type UpdateEmployeeFormProps = EmployeeFormOptions & {
   mode: 'update';
-  onSuccess?: () => void;
   employee: EmployeeResult;
 };
 
 type EmployeeFormProps = CreateEmployeeFormProps | UpdateEmployeeFormProps;
 
-function toDateInputValue(value: unknown) {
-  if (!(value instanceof Date) && typeof value !== 'string') return '';
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '' : date.toISOString().slice(0, 10);
-}
-
 export function EmployeeForm({
   mode,
-  onSuccess,
   employee,
   departments,
   positions,
   managers,
 }: EmployeeFormProps) {
   const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
 
   const isUpdateMode = mode === 'update';
 
@@ -98,10 +73,14 @@ export function EmployeeForm({
           employeeCode: employee.employeeCode,
           phone: employee.phone ?? '',
           hireDate: employee.hireDate,
+          gender: employee.gender ?? undefined,
+          birthDate: employee.birthDate ?? undefined,
+          address: employee.address ?? '',
           departmentId: employee.department?.id,
           positionId: employee.position?.id,
           managerId: employee.manager?.id,
           isActive: employee.isActive,
+          avatar: employee.user.avatar ?? '',
         }
       : {
           firstName: '',
@@ -109,26 +88,34 @@ export function EmployeeForm({
           email: '',
           employeeCode: '',
           phone: '',
-          hireDate: new Date(),
+          hireDate: undefined,
+          address: '',
           isActive: true,
+          avatar: '',
         },
   });
 
   const onSubmit = async (data: CreateEmployeeInput | UpdateEmployeeInput) => {
     setIsPending(true);
 
+    // Only send avatar when the user actually changed it — an untouched value doesn't need to be
+    // resubmitted, and keeps a no-op edit from re-validating an already-stored data URI.
+    const payload = { ...data };
+    if (!form.formState.dirtyFields.avatar) {
+      delete payload.avatar;
+    }
+
     try {
       const result = isUpdateMode
-        ? await updateEmployeeAction(employee.id, data)
-        : await createEmployeeAction(data as CreateEmployeeInput);
+        ? await updateEmployeeAction(employee.id, payload)
+        : await createEmployeeAction(payload as CreateEmployeeInput);
 
       if (result.success) {
         toast.success(
           result.message ??
             (isUpdateMode ? 'Employee updated successfully!' : 'Employee invited successfully!'),
         );
-        form.reset();
-        onSuccess?.();
+        router.push('/dashboard/employees');
       } else {
         toast.error(
           result.message ??
@@ -157,261 +144,90 @@ export function EmployeeForm({
     isUpdateMode ? manager.id !== employee.id : true,
   );
 
+  const [departmentId, positionId, managerId, isActive, hireDate, avatar] = useWatch({
+    control: form.control,
+    name: ['departmentId', 'positionId', 'managerId', 'isActive', 'hireDate', 'avatar'],
+  });
+
+  const [watchedFirstName, watchedLastName, watchedEmail] = useWatch({
+    control: form.control as unknown as Control<CreateEmployeeFormValues>,
+    name: ['firstName', 'lastName', 'email'],
+  });
+
+  const summaryFirstName = isUpdateMode ? employee.user.firstName : (watchedFirstName ?? '');
+  const summaryLastName = isUpdateMode ? employee.user.lastName : (watchedLastName ?? '');
+  const summaryEmail = isUpdateMode ? employee.user.email : (watchedEmail ?? '');
+
+  const departmentLabel = departments.find((department) => department.id === departmentId)?.label;
+  const positionLabel = positions.find((position) => position.id === positionId)?.label;
+  const managerLabel = managerOptions.find((manager) => manager.id === managerId)?.label;
+  const hireDateLabel = hireDate
+    ? new Date(hireDate as string | number | Date).toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+    : undefined;
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {!isUpdateMode && (
-          <>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid gap-6 xl:grid-cols-3">
+          {/* Left column */}
+          <div className="space-y-6 xl:col-span-2">
+            {isUpdateMode ? (
+              <EmployeePersonalInfoCard
+                mode="update"
+                employee={employee}
                 control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium tracking-wide">First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Ada"
-                        {...field}
-                        value={field.value ?? ''}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                isPending={isPending}
               />
-
-              <FormField
+            ) : (
+              <EmployeePersonalInfoCard
+                mode="create"
                 control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium tracking-wide">Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Lovelace"
-                        {...field}
-                        value={field.value ?? ''}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                isPending={isPending}
               />
-            </div>
+            )}
 
-            <FormField
+            <EmployeeEmploymentInfoCard
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-medium tracking-wide">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="ada@example.com"
-                      {...field}
-                      value={field.value ?? ''}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              isPending={isPending}
+              departments={departments}
+              positions={positions}
+              managerOptions={managerOptions}
             />
-          </>
-        )}
+          </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="employeeCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-medium tracking-wide">Employee Code</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="e.g. EMP-001"
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Right column */}
+          <div className="mx-auto w-full max-w-[550px] space-y-6 xl:max-w-full">
+            <EmployeeSummaryCard
+              firstName={summaryFirstName}
+              lastName={summaryLastName}
+              email={summaryEmail}
+              avatar={avatar}
+              departmentLabel={departmentLabel}
+              positionLabel={positionLabel}
+              managerLabel={managerLabel}
+              hireDateLabel={hireDateLabel}
+              isActive={isActive}
+            />
 
-          <FormField
-            control={form.control}
-            name="hireDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-medium tracking-wide">Hire Date</FormLabel>
-                <FormControl>
-                  <Input
-                    type="date"
-                    value={toDateInputValue(field.value)}
-                    onChange={(event) => field.onChange(event.target.valueAsDate ?? undefined)}
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {!isUpdateMode && <EmployeeAccountInvitationCard email={watchedEmail ?? ''} />}
+          </div>
         </div>
 
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium tracking-wide">Phone (Optional)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="555-0100"
-                  {...field}
-                  value={field.value ?? ''}
-                  disabled={isPending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="departmentId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium tracking-wide">Department</FormLabel>
-              <Select
-                value={field.value ?? NONE}
-                onValueChange={(value) => field.onChange(value === NONE ? undefined : value)}
-                disabled={isPending}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select department">
-                      {(selected: string) =>
-                        selected === NONE
-                          ? 'No department'
-                          : departments.find((department) => department.id === selected)?.label
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value={NONE}>No department</SelectItem>
-                  {departments.map((department) => (
-                    <SelectItem key={department.id} value={department.id}>
-                      {department.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="positionId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium tracking-wide">Position</FormLabel>
-              <Select
-                value={field.value ?? NONE}
-                onValueChange={(value) => field.onChange(value === NONE ? undefined : value)}
-                disabled={isPending}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select position">
-                      {(selected: string) =>
-                        selected === NONE
-                          ? 'No position'
-                          : positions.find((position) => position.id === selected)?.label
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value={NONE}>No position</SelectItem>
-                  {positions.map((position) => (
-                    <SelectItem key={position.id} value={position.id}>
-                      {position.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="managerId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium tracking-wide">Manager</FormLabel>
-              <Select
-                value={field.value ?? NONE}
-                onValueChange={(value) => field.onChange(value === NONE ? undefined : value)}
-                disabled={isPending}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select manager">
-                      {(selected: string) =>
-                        selected === NONE
-                          ? 'No manager'
-                          : managerOptions.find((manager) => manager.id === selected)?.label
-                      }
-                    </SelectValue>
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value={NONE}>No manager</SelectItem>
-                  {managerOptions.map((manager) => (
-                    <SelectItem key={manager.id} value={manager.id}>
-                      {manager.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="isActive"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-md border p-3">
-              <div className="space-y-0.5">
-                <FormLabel className="font-medium tracking-wide">Status</FormLabel>
-                <p className="text-muted-foreground text-xs">Set the employee status</p>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value ?? true}
-                  onCheckedChange={field.onChange}
-                  disabled={isPending}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex justify-center gap-2 xl:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            disabled={isPending}
+            nativeButton={false}
+            render={<Link href="/dashboard/employees" />}
+          >
+            Cancel
+          </Button>
           <Button type="submit" disabled={isPending} size="lg" className="font-semibold">
             {isUpdateMode ? (
               <SaveIcon data-icon="inline-start" />
