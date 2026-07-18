@@ -61,3 +61,10 @@ export type DeleteEmployeeActionResult = void;
 export type GenerateEmployeeCodeActionResult = {
   employeeCode: string;
 };
+
+export type GetEmployeeStatsActionResult = {
+  totalEmployees: number;
+  activeEmployees: number;
+  onLeaveEmployees: number;
+  inactiveEmployees: number;
+};

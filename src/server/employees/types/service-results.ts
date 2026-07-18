@@ -12,3 +12,10 @@ export type UpdateEmployeeServiceResult = EmployeeWithRelations;
 export type GetEmployeeServiceResult = EmployeeWithRelations;
 
 export type DeleteEmployeeServiceResult = void;
+
+export type GetEmployeeStatsServiceResult = {
+  totalEmployees: number;
+  activeEmployees: number;
+  onLeaveEmployees: number;
+  inactiveEmployees: number;
+};
