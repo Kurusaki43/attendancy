@@ -31,11 +31,11 @@ export const positionRepository = {
     return prisma.position.delete({ where: { id: positionID } });
   },
 
-  async findMany(query: PositionFindManyQuery) {
+  findMany(query: PositionFindManyQuery) {
     return prisma.position.findMany(query);
   },
 
-  async count(where?: Prisma.PositionWhereInput) {
+  count(where?: Prisma.PositionWhereInput) {
     return prisma.position.count({ where });
   },
 };

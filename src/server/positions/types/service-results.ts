@@ -7,3 +7,9 @@ export type UpdatePositionServiceResult = Position;
 export type GetPositionServiceResult = Position;
 
 export type DeletePositionServiceResult = void;
+
+export type GetPositionStatsServiceResult = {
+  totalPositions: number;
+  activePositions: number;
+  inactivePositions: number;
+};

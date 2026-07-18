@@ -22,3 +22,9 @@ export type GetAllPositionsActionResult = {
 };
 
 export type DeletePositionActionResult = void;
+
+export type GetPositionStatsActionResult = {
+  totalPositions: number;
+  activePositions: number;
+  inactivePositions: number;
+};
