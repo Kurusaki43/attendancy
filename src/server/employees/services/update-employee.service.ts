@@ -2,6 +2,7 @@ import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
+import { userRepository } from '@/server/auth/repositories/user.repository';
 import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import { employeeRepository } from '@/server/employees/repositories/employee.repository';
 import type { UpdateEmployeeInput } from '@/server/employees/schemas/update-employee.schema';
@@ -57,5 +58,14 @@ export async function updateEmployee(
     }
   }
 
-  return await employeeRepository.update(employeeId, input);
+  const { avatar, ...employeeData } = input;
+
+  if (avatar !== undefined) {
+    await userRepository.update({
+      userId: employee.userId,
+      newData: { avatar: avatar === '' ? null : avatar },
+    });
+  }
+
+  return await employeeRepository.update(employeeId, employeeData);
 }

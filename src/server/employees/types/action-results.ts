@@ -23,6 +23,9 @@ export type EmployeeResult = {
   employeeCode: string;
   phone: string | null;
   hireDate: Date;
+  gender: 'MALE' | 'FEMALE' | null;
+  birthDate: Date | null;
+  address: string | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

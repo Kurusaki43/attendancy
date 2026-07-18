@@ -1,5 +1,10 @@
 import z from 'zod';
 
+// Generous ceiling for a base64-encoded 500x500 JPEG (the client crops/compresses to that size
+// before submitting) — this is a defense-in-depth check, not the primary size gate, which is the
+// 1MB raw-upload limit enforced client-side before cropping.
+const AVATAR_MAX_LENGTH = 3_000_000;
+
 export const createEmployeeSchema = z.object({
   firstName: z
     .string()
@@ -27,11 +32,24 @@ export const createEmployeeSchema = z.object({
 
   hireDate: z.coerce.date('Hire date is required.').default(new Date()),
 
+  gender: z.enum(['MALE', 'FEMALE']).optional(),
+  birthDate: z.coerce.date().optional(),
+  address: z.string().trim().max(255, 'Address must not exceed 255 characters.').optional(),
+
   departmentId: z.string().trim().optional(),
   positionId: z.string().trim().optional(),
   managerId: z.string().trim().optional(),
 
   isActive: z.boolean().default(true),
+
+  // Only ever an uploaded image (data URI) or omitted — there is no free-text URL input.
+  avatar: z
+    .string()
+    .max(AVATAR_MAX_LENGTH, 'Avatar image is too large.')
+    .refine((value) => value === '' || value.startsWith('data:image/'), {
+      message: 'Avatar must be an uploaded image.',
+    })
+    .optional(),
 });
 
 export type CreateEmployeeInput = z.infer<typeof createEmployeeSchema>;
