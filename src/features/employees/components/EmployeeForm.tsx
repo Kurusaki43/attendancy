@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { createEmployeeAction } from '@/server/employees/actions/create-employee.action';
 import { updateEmployeeAction } from '@/server/employees/actions/update-employee.action';
 import {
@@ -100,6 +101,7 @@ export function EmployeeForm({
           departmentId: employee.department?.id,
           positionId: employee.position?.id,
           managerId: employee.manager?.id,
+          isActive: employee.isActive,
         }
       : {
           firstName: '',
@@ -385,6 +387,26 @@ export function EmployeeForm({
                 </SelectContent>
               </Select>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isActive"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-md border p-3">
+              <div className="space-y-0.5">
+                <FormLabel className="font-medium tracking-wide">Status</FormLabel>
+                <p className="text-muted-foreground text-xs">Set the employee status</p>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value ?? true}
+                  onCheckedChange={field.onChange}
+                  disabled={isPending}
+                />
+              </FormControl>
             </FormItem>
           )}
         />
