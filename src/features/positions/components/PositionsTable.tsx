@@ -1,59 +1,29 @@
 'use client';
 
 import { PencilIcon, SearchX, Trash } from 'lucide-react';
-import { useState, useTransition } from 'react';
-import { toast } from 'sonner';
+import { useState } from 'react';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
 import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
+import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Spinner } from '@/components/ui/spinner';
-import { Switch } from '@/components/ui/switch';
-import { updatePositionAction } from '@/server/positions/actions/update-position.action';
 import type { PositionResult } from '@/server/positions/types/action-results';
 
 import { DeletePositionDialog } from './DeletePositionDialog';
 import { EditPositionDialog } from './EditPositionDialog';
 
-function StatusSwitch({ id, title, isActive }: { id: string; title: string; isActive: boolean }) {
-  const [checked, setChecked] = useState(isActive);
-  const [isPending, startTransition] = useTransition();
-
-  const handleToggleStatus = () => {
-    const nextValue = !checked;
-
-    // Optimistic update
-    setChecked(nextValue);
-
-    startTransition(async () => {
-      const result = await updatePositionAction(id, {
-        isActive: nextValue,
-      });
-
-      if (!result.success) {
-        setChecked(!nextValue);
-
-        toast.error(`Failed to ${nextValue ? 'activate' : 'deactivate'} ${title} position`);
-
-        return;
-      }
-
-      toast.success(`${title} Position ${nextValue ? 'activated' : 'deactivated'} successfully`);
-    });
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <Switch
-        checked={checked}
-        onCheckedChange={handleToggleStatus}
-        disabled={isPending}
-        className="select-none"
-      />
-
-      {isPending && <Spinner />}
-    </div>
+function StatusBadge({ isActive }: { isActive: boolean }) {
+  return isActive ? (
+    <Badge className="rounded-sm bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400">
+      <span className="size-1.5 shrink-0 rounded-full bg-green-500" />
+      Active
+    </Badge>
+  ) : (
+    <Badge variant="secondary" className="rounded-sm">
+      <span className="bg-muted-foreground size-1.5 shrink-0 rounded-full" />
+      Inactive
+    </Badge>
   );
 }
 
@@ -108,7 +78,7 @@ const columns: ColumnDef<PositionResult>[] = [
   {
     key: 'status',
     header: 'Status',
-    cell: (row) => <StatusSwitch id={row.id} title={row.title} isActive={row.isActive} />,
+    cell: (row) => <StatusBadge isActive={row.isActive} />,
   },
   {
     key: 'createdAt',
