@@ -1,6 +1,7 @@
 'use client';
 
 import { Filter } from 'lucide-react';
+import { useId } from 'react';
 
 import {
   Select,
@@ -36,6 +37,7 @@ export default function FilterSelect({
   options,
 }: FilterSelectProps) {
   const { getParam, setParam } = useQueryParams();
+  const id = useId();
 
   const value = getParam(queryKey) ?? DEFAULT_VALUE;
 
@@ -45,14 +47,20 @@ export default function FilterSelect({
 
   return (
     <div className="relative">
+      <label
+        htmlFor={id}
+        className="bg-card text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
+      >
+        {label}
+      </label>
+
       <Filter
         className="text-muted-foreground absolute top-1/2 left-2 z-10 -translate-y-1/2"
         size={16}
       />
 
       <Select value={value} onValueChange={handleValueChange}>
-        <SelectTrigger className="min-w-36 pl-7">
-          <span className="text-muted-foreground mr-1">{label}:</span>
+        <SelectTrigger id={id} className="min-w-36 ps-7">
           <SelectValue placeholder={placeholder}>
             {(selected: string) =>
               selected === DEFAULT_VALUE
