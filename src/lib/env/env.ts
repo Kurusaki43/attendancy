@@ -27,6 +27,7 @@ const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.custom<StringValue>(),
   JWT_REFRESH_EXPIRES_IN: z.custom<StringValue>(),
   OTP_EXPIRED_IN: z.custom<StringValue>(),
+  INVITATION_LINK_EXPIRED_IN: z.custom<StringValue>(),
 
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),

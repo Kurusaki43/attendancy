@@ -1,4 +1,4 @@
-export function passwordResetTemplate(firstName: string, resetUrl: string) {
+export function passwordResetTemplate(firstName: string, resetUrl: string, expiresIn: string) {
   return {
     subject: 'Reset your password 🔐',
 
@@ -47,7 +47,7 @@ export function passwordResetTemplate(firstName: string, resetUrl: string) {
         </div>
 
         <p style="font-size: 14px; color: #6b7280;">
-          This link will expire in <strong>15 minutes</strong>.
+          This link will expire in <strong>${expiresIn}</strong>.
         </p>
 
         <p style="font-size: 14px; color: #6b7280;">

@@ -1,4 +1,4 @@
-export function emailVerificationTemplate(firstName: string, code: string) {
+export function emailVerificationTemplate(firstName: string, code: string, expiresIn: string) {
   return {
     subject: 'Verify your email address ✉️',
 
@@ -41,7 +41,7 @@ export function emailVerificationTemplate(firstName: string, code: string) {
         </div>
 
         <p style="font-size: 14px; color: #6b7280;">
-          This code will expire in <strong>15 minutes</strong>.
+          This code will expire in <strong>${expiresIn}</strong>.
         </p>
 
         <p style="font-size: 14px; color: #6b7280;">

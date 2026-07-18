@@ -1,4 +1,4 @@
-export function employeeInviteTemplate(firstName: string, inviteUrl: string) {
+export function employeeInviteTemplate(firstName: string, inviteUrl: string, expiresIn: string) {
   return {
     subject: "You've been invited to Attendancy 👋",
 
@@ -44,7 +44,7 @@ export function employeeInviteTemplate(firstName: string, inviteUrl: string) {
         </div>
 
         <p style="font-size: 14px; color: #6b7280;">
-          This link will expire in <strong>7 days</strong>.
+          This link will expire in <strong>${expiresIn}</strong>.
         </p>
 
         <p style="font-size: 14px; color: #6b7280;">

@@ -67,6 +67,7 @@ export async function register(body: RegisterInput): Promise<ServiceRegisterResu
     to: user.email,
     firstName: user.firstName,
     code,
+    expiresIn: authConfig.otp.expiresInHuman,
   });
 
   return {

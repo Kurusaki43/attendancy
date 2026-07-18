@@ -1,6 +1,7 @@
 import ms from 'ms';
 
 import { env } from '@/lib/env/env';
+import { humanizeDuration } from '@/shared/utils/humanize-duration';
 
 // How long a just-rotated-away refresh token is still accepted after being superseded. Covers
 // concurrent requests (parallel tabs, prefetch + navigation, etc.) that race on the same
@@ -28,6 +29,7 @@ export const authConfig = {
 
   otp: {
     expiresIn: env.OTP_EXPIRED_IN,
+    expiresInHuman: humanizeDuration(env.OTP_EXPIRED_IN),
     maxAge: Math.floor(ms(env.OTP_EXPIRED_IN) / 1000),
 
     expiresAt() {

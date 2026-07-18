@@ -21,6 +21,7 @@ export default defineConfig({
       JWT_ACCESS_EXPIRES_IN: '15m',
       JWT_REFRESH_EXPIRES_IN: '7d',
       OTP_EXPIRED_IN: '15m',
+      INVITATION_LINK_EXPIRED_IN: '7d',
       GOOGLE_CLIENT_ID: 'test-google-client-id',
       GOOGLE_CLIENT_SECRET: 'test-google-client-secret',
       GOOGLE_REDIRECT_URI: 'http://localhost:3000/api/auth/google/callback',

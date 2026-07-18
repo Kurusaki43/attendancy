@@ -39,5 +39,6 @@ export async function forgotPassword(email: string) {
     to: user.email,
     firstName: user.firstName,
     resetUrl: url,
+    expiresIn: authConfig.otp.expiresInHuman,
   });
 }

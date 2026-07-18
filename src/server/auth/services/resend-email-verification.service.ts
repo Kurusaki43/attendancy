@@ -36,5 +36,6 @@ export async function resendEmailVerification(email: string) {
     to: user.email,
     firstName: user.firstName,
     code,
+    expiresIn: authConfig.otp.expiresInHuman,
   });
 }

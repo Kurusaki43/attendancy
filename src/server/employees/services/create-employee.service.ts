@@ -16,8 +16,7 @@ import type { CreateEmployeeInput } from '@/server/employees/schemas/create-empl
 import type { CreateEmployeeServiceResult } from '@/server/employees/types';
 import { emailQueueService } from '@/server/mail/services/email-queue.service';
 import { positionRepository } from '@/server/positions/repositories/position.repository';
-
-const INVITE_EXPIRES_IN = '7d';
+import { humanizeDuration } from '@/shared/utils/humanize-duration';
 
 export async function createEmployee(
   input: CreateEmployeeInput,
@@ -105,7 +104,7 @@ export async function createEmployee(
         userId: user.id,
         type: 'EMPLOYEE_INVITE',
         codeHash,
-        expiresAt: new Date(Date.now() + ms(INVITE_EXPIRES_IN)),
+        expiresAt: new Date(Date.now() + ms(env.INVITATION_LINK_EXPIRED_IN)),
       },
     });
 
@@ -118,6 +117,7 @@ export async function createEmployee(
     to: user.email,
     firstName: user.firstName,
     inviteUrl,
+    expiresIn: humanizeDuration(env.INVITATION_LINK_EXPIRED_IN),
   });
 
   const created = await employeeRepository.findById(employee.id);

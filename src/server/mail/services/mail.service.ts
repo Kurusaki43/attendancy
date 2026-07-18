@@ -13,9 +13,24 @@ type SendMailParams = {
 };
 
 export type SendWelcome = { to: string; firstName: string };
-export type SendResetPassword = { to: string; resetUrl: string; firstName: string };
-export type SendVerificationEmail = { to: string; code: string; firstName: string };
-export type SendEmployeeInvite = { to: string; inviteUrl: string; firstName: string };
+export type SendResetPassword = {
+  to: string;
+  resetUrl: string;
+  firstName: string;
+  expiresIn: string;
+};
+export type SendVerificationEmail = {
+  to: string;
+  code: string;
+  firstName: string;
+  expiresIn: string;
+};
+export type SendEmployeeInvite = {
+  to: string;
+  inviteUrl: string;
+  firstName: string;
+  expiresIn: string;
+};
 
 export class MailService {
   private static async sendMail({ to, subject, html }: SendMailParams) {
@@ -32,7 +47,11 @@ export class MailService {
     });
   }
   static sendVerificationEmail(emailData: SendVerificationEmail) {
-    const { html, subject } = emailVerificationTemplate(emailData.firstName, emailData.code);
+    const { html, subject } = emailVerificationTemplate(
+      emailData.firstName,
+      emailData.code,
+      emailData.expiresIn,
+    );
     return this.sendMail({
       ...emailData,
       subject,
@@ -48,7 +67,11 @@ export class MailService {
     });
   }
   static sendResetPasswordEmail(emailData: SendResetPassword) {
-    const { html, subject } = passwordResetTemplate(emailData.firstName, emailData.resetUrl);
+    const { html, subject } = passwordResetTemplate(
+      emailData.firstName,
+      emailData.resetUrl,
+      emailData.expiresIn,
+    );
     return this.sendMail({
       ...emailData,
       subject,
@@ -56,7 +79,11 @@ export class MailService {
     });
   }
   static sendEmployeeInviteEmail(emailData: SendEmployeeInvite) {
-    const { html, subject } = employeeInviteTemplate(emailData.firstName, emailData.inviteUrl);
+    const { html, subject } = employeeInviteTemplate(
+      emailData.firstName,
+      emailData.inviteUrl,
+      emailData.expiresIn,
+    );
     return this.sendMail({
       ...emailData,
       subject,
