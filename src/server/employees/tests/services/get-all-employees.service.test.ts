@@ -47,6 +47,19 @@ describe('getAllEmployees', () => {
     );
   });
 
+  it('applies the accountStatus filter as a nested user relation filter', async () => {
+    vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
+    vi.mocked(employeeRepository.count).mockResolvedValue(0);
+
+    await getAllEmployees({ accountStatus: 'INVITED' });
+
+    expect(employeeRepository.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ user: { status: 'INVITED' } }),
+      }),
+    );
+  });
+
   it('applies the departmentId filter when provided', async () => {
     vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
     vi.mocked(employeeRepository.count).mockResolvedValue(0);

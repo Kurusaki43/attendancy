@@ -11,6 +11,7 @@ import {
   EMPLOYMENT_STATUS_LABELS,
   EMPLOYMENT_STATUSES,
 } from '@/features/employees/lib/employment-status';
+import { USER_STATUS_LABELS, USER_STATUSES } from '@/features/employees/lib/user-status';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 import { getAllEmployeesAction } from '@/server/employees/actions/get-all-employees.action';
 import { getAllPositionsAction } from '@/server/positions/actions/get-all-positions.action';
@@ -46,6 +47,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
   const hasActiveFilters =
     Boolean(params.search) ||
     Boolean(params.employmentStatus) ||
+    Boolean(params.accountStatus) ||
     Boolean(params.departmentId) ||
     Boolean(params.positionId);
   const isTrulyEmpty = result.success && result.data.employees.length === 0 && !hasActiveFilters;
@@ -92,6 +94,14 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
                 })),
               }}
               filters={[
+                {
+                  queryKey: 'accountStatus',
+                  label: 'Account Status',
+                  options: USER_STATUSES.map((status) => ({
+                    label: USER_STATUS_LABELS[status],
+                    value: status,
+                  })),
+                },
                 {
                   queryKey: 'departmentId',
                   label: 'Department',

@@ -48,7 +48,7 @@ const DataTableToolbar = ({
     <Card size="sm" className="border-border rounded-sm border border-dashed shadow-none ring-0">
       <CardContent className="flex flex-wrap items-center justify-between gap-6">
         <SearchInput placeholder={searchPlaceholder} />
-        <div className="flex flex-wrap items-center gap-6">
+        <div className="flex flex-wrap items-center gap-4">
           <FilterSelect
             queryKey={statusFilter.queryKey}
             label={statusFilter.label}

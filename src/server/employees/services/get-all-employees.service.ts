@@ -38,7 +38,7 @@ function normalizeAndValidate(rawQuery: URLSearchParams | Record<string, string>
 export async function getAllEmployees(
   rawQuery: URLSearchParams | Record<string, string>,
 ): Promise<GetAllEmployeesResult> {
-  const { asObject } = normalizeAndValidate(rawQuery);
+  const { validated, asObject } = normalizeAndValidate(rawQuery);
 
   const features = new ApiFeaturesBuilder<
     Prisma.EmployeeWhereInput,
@@ -51,6 +51,12 @@ export async function getAllEmployees(
     .paginate();
 
   const query = features.build();
+
+  // accountStatus lives on the related User, not Employee itself, so it can't go through the
+  // builder's flat filterableFields allowlist — merge it in as a nested relation filter instead.
+  if (validated.accountStatus) {
+    query.where = { ...query.where, user: { status: validated.accountStatus } };
+  }
 
   const [employees, totalCount] = await Promise.all([
     employeeRepository.findMany(query),

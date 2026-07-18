@@ -4,6 +4,7 @@ import { BaseQuerySchema } from '@/shared/types/base-query-schema';
 
 export const employeeQuerySchema = BaseQuerySchema.extend({
   employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).optional(),
+  accountStatus: z.enum(['ACTIVE', 'INACTIVE', 'INVITED', 'SUSPENDED']).optional(),
   departmentId: z.string().optional(),
   positionId: z.string().optional(),
   sort: z
