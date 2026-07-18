@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { AddEmployeeButton } from '@/features/employees/components/AddEmployeeButton';
 import { EmployeesTable } from '@/features/employees/components/EmployeesTable';
+import { EmployeeStats } from '@/features/employees/components/EmployeeStats';
 import {
   EMPLOYMENT_STATUS_LABELS,
   EMPLOYMENT_STATUSES,
@@ -14,9 +15,9 @@ import {
 import { USER_STATUS_LABELS, USER_STATUSES } from '@/features/employees/lib/user-status';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 import { getAllEmployeesAction } from '@/server/employees/actions/get-all-employees.action';
+import { getEmployeeStatsAction } from '@/server/employees/actions/get-employee-stats.action';
 import { getAllPositionsAction } from '@/server/positions/actions/get-all-positions.action';
 
-// Select options for the toolbar filters — active records only, capped at the max page size.
 const OPTIONS_QUERY = { limit: '100', isActive: 'true' };
 
 type EmployeesPageProps = {
@@ -25,11 +26,16 @@ type EmployeesPageProps = {
 
 export default async function EmployeesPage({ searchParams }: EmployeesPageProps) {
   const params = await searchParams;
-  const [result, departmentsResult, positionsResult] = await Promise.all([
+  const [result, statsResult, departmentsResult, positionsResult] = await Promise.all([
     getAllEmployeesAction(params),
+    getEmployeeStatsAction(),
     getAllDepartmentsAction({ ...OPTIONS_QUERY, sort: 'name' }),
     getAllPositionsAction({ ...OPTIONS_QUERY, sort: 'title' }),
   ]);
+
+  const stats = statsResult.success
+    ? statsResult.data
+    : { totalEmployees: 0, activeEmployees: 0, onLeaveEmployees: 0, inactiveEmployees: 0 };
 
   const departments = departmentsResult.success
     ? departmentsResult.data.departments.map((department) => ({
@@ -55,7 +61,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
   return (
     <div className="space-y-4">
       {/* Page header */}
-      <div className="flex flex-wrap items-start justify-between gap-6 pb-6">
+      <div className="flex flex-wrap items-start justify-between gap-6 pb-2">
         <div>
           <h1 className="text-2xl font-semibold tracking-wide">Employees</h1>
           <p className="text-muted-foreground mt-1.5 text-sm">
@@ -64,6 +70,10 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
         </div>
         {result.success && !isTrulyEmpty && <AddEmployeeButton />}
       </div>
+
+      {/* Stats */}
+      <EmployeeStats stats={stats} />
+
       {/* Content */}
       {result.success ? (
         isTrulyEmpty ? (
