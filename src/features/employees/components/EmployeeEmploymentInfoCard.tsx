@@ -1,5 +1,7 @@
-import { Briefcase } from 'lucide-react';
+import { Briefcase, Loader2, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
 import type { Control } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -18,8 +20,10 @@ import {
   type SelectOption,
   toDateInputValue,
 } from '@/features/employees/lib/employee-form';
+import { generateEmployeeCodeAction } from '@/server/employees/actions/generate-employee-code.action';
 
 type EmployeeEmploymentInfoCardProps = {
+  mode: 'create' | 'update';
   control: Control<EmployeeFormValues, unknown, EmployeeFormOutput>;
   isPending: boolean;
   departments: SelectOption[];
@@ -28,12 +32,15 @@ type EmployeeEmploymentInfoCardProps = {
 };
 
 export function EmployeeEmploymentInfoCard({
+  mode,
   control,
   isPending,
   departments,
   positions,
   managerOptions,
 }: EmployeeEmploymentInfoCardProps) {
+  const [isGenerating, setIsGenerating] = useState(false);
+
   return (
     <Card>
       <CardHeader className="flex-row items-center gap-3 space-y-0">
@@ -54,12 +61,44 @@ export function EmployeeEmploymentInfoCard({
                   Employee Code <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="e.g. EMP-001"
-                    {...field}
-                    value={field.value ?? ''}
-                    disabled={isPending}
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder="e.g. EMP-00001"
+                      {...field}
+                      value={field.value ?? ''}
+                      disabled={isPending}
+                      className={mode === 'create' ? 'pe-9' : undefined}
+                    />
+                    {mode === 'create' && (
+                      <button
+                        type="button"
+                        aria-label="Generate employee code"
+                        disabled={isPending || isGenerating}
+                        onClick={async () => {
+                          setIsGenerating(true);
+                          try {
+                            const result = await generateEmployeeCodeAction();
+                            if (result.success) {
+                              field.onChange(result.data.employeeCode);
+                            } else {
+                              toast.error(result.message ?? 'Failed to generate employee code.');
+                            }
+                          } catch {
+                            toast.error('An unexpected error occurred.');
+                          } finally {
+                            setIsGenerating(false);
+                          }
+                        }}
+                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer disabled:pointer-events-none disabled:opacity-50"
+                      >
+                        {isGenerating ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <RefreshCw className="size-4" />
+                        )}
+                      </button>
+                    )}
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

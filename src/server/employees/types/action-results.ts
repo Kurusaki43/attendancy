@@ -57,3 +57,7 @@ export type GetAllEmployeesActionResult = {
 };
 
 export type DeleteEmployeeActionResult = void;
+
+export type GenerateEmployeeCodeActionResult = {
+  employeeCode: string;
+};

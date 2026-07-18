@@ -197,6 +197,7 @@ export function EmployeeForm({
             )}
 
             <EmployeeEmploymentInfoCard
+              mode={mode}
               control={form.control}
               isPending={isPending}
               departments={departments}
