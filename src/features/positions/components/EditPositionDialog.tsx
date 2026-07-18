@@ -1,17 +1,13 @@
 'use client';
 
-import { PencilIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import type { PositionResult } from '@/server/positions/types/action-results';
 
@@ -19,24 +15,20 @@ import { PositionForm } from './PositionForm';
 
 type EditPositionDialogProps = {
   position: PositionResult;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export function EditPositionDialog({ position }: EditPositionDialogProps) {
-  const [open, setOpen] = useState(false);
+export function EditPositionDialog({ position, open, onOpenChange }: EditPositionDialogProps) {
   const router = useRouter();
 
   const handleSuccess = () => {
-    setOpen(false);
+    onOpenChange(false);
     router.refresh();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="ghost" size="icon-sm" />}>
-        <PencilIcon />
-        <span className="sr-only">Edit {position.title}</span>
-      </DialogTrigger>
-
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="px-4 py-4 drop-shadow-2xl sm:max-w-md sm:px-8 sm:py-6">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-xl font-semibold">Edit Position</DialogTitle>

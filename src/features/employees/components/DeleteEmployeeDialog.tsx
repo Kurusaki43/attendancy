@@ -2,7 +2,7 @@
 
 import { Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -14,18 +14,17 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { deleteEmployeeAction } from '@/server/employees/actions/delete-employee.action';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 
 type DeleteEmployeeDialogProps = {
   employee: EmployeeResult;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export function DeleteEmployeeDialog({ employee }: DeleteEmployeeDialogProps) {
-  const [open, setOpen] = useState(false);
+export function DeleteEmployeeDialog({ employee, open, onOpenChange }: DeleteEmployeeDialogProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -41,21 +40,13 @@ export function DeleteEmployeeDialog({ employee }: DeleteEmployeeDialogProps) {
       }
 
       toast.success(result.message);
-      setOpen(false);
+      onOpenChange(false);
       router.refresh();
     });
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger
-        render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Delete ${employeeName}`}>
-            <Trash className="text-destructive size-4" />
-          </Button>
-        }
-      />
-
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="px-4 py-4 drop-shadow-2xl sm:max-w-md sm:px-6 sm:py-4">
         <AlertDialogHeader className="mb-2">
           <AlertDialogTitle className="text-xl font-semibold">

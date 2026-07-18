@@ -1,6 +1,6 @@
 import { Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -12,18 +12,17 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { deletePositionAction } from '@/server/positions/actions/delete-position.action';
 import type { PositionResult } from '@/server/positions/types';
 
 type DeletePositionDialogProps = {
   position: PositionResult;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export function DeletePositionDialog({ position }: DeletePositionDialogProps) {
-  const [open, setOpen] = useState(false);
+export function DeletePositionDialog({ position, open, onOpenChange }: DeletePositionDialogProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -37,21 +36,13 @@ export function DeletePositionDialog({ position }: DeletePositionDialogProps) {
       }
 
       toast.success(result.message);
-      setOpen(false);
+      onOpenChange(false);
       router.refresh();
     });
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger
-        render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Delete ${position.title} position`}>
-            <Trash className="text-destructive size-4" />
-          </Button>
-        }
-      />
-
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="px-4 py-4 drop-shadow-2xl sm:max-w-md sm:px-6 sm:py-4">
         <AlertDialogHeader className="mb-2">
           <AlertDialogTitle className="text-xl font-semibold">

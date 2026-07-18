@@ -1,6 +1,6 @@
 import { Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -12,18 +12,21 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { deleteDepartmentAction } from '@/server/departments/actions/delete-department.action';
 import type { DepartmentResult } from '@/server/departments/types';
 
 type DeleteDepartmentDialogProps = {
   department: DepartmentResult;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export function DeleteDepartmentDialog({ department }: DeleteDepartmentDialogProps) {
-  const [open, setOpen] = useState(false);
+export function DeleteDepartmentDialog({
+  department,
+  open,
+  onOpenChange,
+}: DeleteDepartmentDialogProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -37,25 +40,13 @@ export function DeleteDepartmentDialog({ department }: DeleteDepartmentDialogPro
       }
 
       toast.success(result.message);
-      setOpen(false);
+      onOpenChange(false);
       router.refresh();
     });
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            aria-label={`Delete ${department.name} department`}
-          >
-            <Trash className="text-destructive size-4" />
-          </Button>
-        }
-      />
-
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="px-4 py-4 drop-shadow-2xl sm:max-w-md sm:px-6 sm:py-4">
         <AlertDialogHeader className="mb-2">
           <AlertDialogTitle className="text-xl font-semibold">
@@ -65,13 +56,6 @@ export function DeleteDepartmentDialog({ department }: DeleteDepartmentDialogPro
           <AlertDialogDescription className="text-sm">
             This action cannot be undone. The department will be permanently removed from the
             system.
-            {/* {department.employeeCount > 0 && (
-              <>
-                {' '}
-                This department currently contains <strong>{department.employeeCount}</strong>{' '}
-                employee{department.employeeCount > 1 ? 's' : ''}.
-              </>
-            )} */}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
