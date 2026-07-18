@@ -27,7 +27,7 @@ export default function SearchInput({
 
   const { debounced, cancel } = useDebouncedCallback((value: string) => {
     setParam(queryKey, value);
-  }, 300);
+  }, 500);
 
   return (
     <div className="relative w-full max-w-xs">
