@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   type EmployeeFormOutput,
   type EmployeeFormValues,
@@ -70,33 +71,36 @@ export function EmployeeEmploymentInfoCard({
                       className={mode === 'create' ? 'pe-9' : undefined}
                     />
                     {mode === 'create' && (
-                      <button
-                        type="button"
-                        aria-label="Generate employee code"
-                        disabled={isPending || isGenerating}
-                        onClick={async () => {
-                          setIsGenerating(true);
-                          try {
-                            const result = await generateEmployeeCodeAction();
-                            if (result.success) {
-                              field.onChange(result.data.employeeCode);
-                            } else {
-                              toast.error(result.message ?? 'Failed to generate employee code.');
+                      <Tooltip>
+                        <TooltipTrigger
+                          type="button"
+                          aria-label="Generate employee code"
+                          disabled={isPending || isGenerating}
+                          onClick={async () => {
+                            setIsGenerating(true);
+                            try {
+                              const result = await generateEmployeeCodeAction();
+                              if (result.success) {
+                                field.onChange(result.data.employeeCode);
+                              } else {
+                                toast.error(result.message ?? 'Failed to generate employee code.');
+                              }
+                            } catch {
+                              toast.error('An unexpected error occurred.');
+                            } finally {
+                              setIsGenerating(false);
                             }
-                          } catch {
-                            toast.error('An unexpected error occurred.');
-                          } finally {
-                            setIsGenerating(false);
-                          }
-                        }}
-                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer disabled:pointer-events-none disabled:opacity-50"
-                      >
-                        {isGenerating ? (
-                          <Loader2 className="size-4 animate-spin" />
-                        ) : (
-                          <RefreshCw className="size-4" />
-                        )}
-                      </button>
+                          }}
+                          className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer disabled:pointer-events-none disabled:opacity-50"
+                        >
+                          {isGenerating ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <RefreshCw className="size-4" />
+                          )}
+                        </TooltipTrigger>
+                        <TooltipContent>Click to auto-generate a unique code</TooltipContent>
+                      </Tooltip>
                     )}
                   </div>
                 </FormControl>
