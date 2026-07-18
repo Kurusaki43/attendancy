@@ -21,7 +21,7 @@ export function StatCard({
   className,
 }: StatCardProps) {
   return (
-    <Card size="sm" className={cn(className, 'py-2.5')}>
+    <Card size="sm" className={cn(className, 'rounded-sm py-2.5')}>
       <CardContent className="flex items-center gap-4">
         <span
           className={cn(
