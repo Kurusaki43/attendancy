@@ -1,11 +1,13 @@
 'use client';
 
-import { SearchX } from 'lucide-react';
+import { PencilIcon, SearchX, Trash } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
+import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { updatePositionAction } from '@/server/positions/actions/update-position.action';
@@ -55,6 +57,33 @@ function StatusSwitch({ id, title, isActive }: { id: string; title: string; isAc
   );
 }
 
+function RowActions({ position }: { position: PositionResult }) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  return (
+    <>
+      <TableRowActions label={`Actions for ${position.title}`}>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setEditOpen(true)}>
+          <PencilIcon />
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          variant="destructive"
+          className="cursor-pointer"
+          onClick={() => setDeleteOpen(true)}
+        >
+          <Trash />
+          Delete
+        </DropdownMenuItem>
+      </TableRowActions>
+
+      <EditPositionDialog position={position} open={editOpen} onOpenChange={setEditOpen} />
+      <DeletePositionDialog position={position} open={deleteOpen} onOpenChange={setDeleteOpen} />
+    </>
+  );
+}
+
 const columns: ColumnDef<PositionResult>[] = [
   {
     key: 'title',
@@ -97,13 +126,9 @@ const columns: ColumnDef<PositionResult>[] = [
   {
     key: 'actions',
     header: 'Actions',
-    cell: (row) => (
-      <div className="flex gap-2">
-        <EditPositionDialog position={row} />
-        <DeletePositionDialog position={row} />
-      </div>
-    ),
-    cellClassName: 'text-right',
+    cell: (row) => <RowActions position={row} />,
+    headerClassName: 'text-center',
+    cellClassName: 'text-center',
   },
 ];
 

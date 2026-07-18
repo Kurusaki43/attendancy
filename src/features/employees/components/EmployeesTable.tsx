@@ -1,11 +1,13 @@
 'use client';
 
-import { SearchX } from 'lucide-react';
+import { PencilIcon, SearchX, Trash } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
+import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
@@ -55,6 +57,51 @@ function StatusSwitch({ id, name, isActive }: { id: string; name: string; isActi
 
       {isPending && <Spinner />}
     </div>
+  );
+}
+
+function RowActions({
+  employee,
+  departments,
+  positions,
+  managers,
+}: {
+  employee: EmployeeResult;
+  departments: SelectOption[];
+  positions: SelectOption[];
+  managers: SelectOption[];
+}) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const employeeName = `${employee.user.firstName} ${employee.user.lastName}`;
+
+  return (
+    <>
+      <TableRowActions label={`Actions for ${employeeName}`}>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setEditOpen(true)}>
+          <PencilIcon />
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          variant="destructive"
+          className="cursor-pointer"
+          onClick={() => setDeleteOpen(true)}
+        >
+          <Trash />
+          Delete
+        </DropdownMenuItem>
+      </TableRowActions>
+
+      <EditEmployeeDialog
+        employee={employee}
+        departments={departments}
+        positions={positions}
+        managers={managers}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
+      <DeleteEmployeeDialog employee={employee} open={deleteOpen} onOpenChange={setDeleteOpen} />
+    </>
   );
 }
 
@@ -149,17 +196,15 @@ function buildColumns(
       key: 'actions',
       header: 'Actions',
       cell: (row) => (
-        <div className="flex gap-2">
-          <EditEmployeeDialog
-            employee={row}
-            departments={departments}
-            positions={positions}
-            managers={managers}
-          />
-          <DeleteEmployeeDialog employee={row} />
-        </div>
+        <RowActions
+          employee={row}
+          departments={departments}
+          positions={positions}
+          managers={managers}
+        />
       ),
-      cellClassName: 'text-right',
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
     },
   ];
 }

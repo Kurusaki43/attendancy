@@ -1,12 +1,14 @@
 'use client';
 
-import { Building2, PencilIcon, SearchX, Users } from 'lucide-react';
+import { Building2, PencilIcon, SearchX, Trash, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
+import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import type { DepartmentResult } from '@/server/departments/types/action-results';
 
@@ -69,6 +71,38 @@ function ParentCell({ parent }: { parent: DepartmentResult['parent'] }) {
   );
 }
 
+function RowActions({ department }: { department: DepartmentResult }) {
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  return (
+    <>
+      <TableRowActions label={`Actions for ${department.name}`}>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          render={<Link href={`/dashboard/departments/${department.code}/edit`} />}
+        >
+          <PencilIcon />
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          variant="destructive"
+          className="cursor-pointer"
+          onClick={() => setDeleteOpen(true)}
+        >
+          <Trash />
+          Delete
+        </DropdownMenuItem>
+      </TableRowActions>
+
+      <DeleteDepartmentDialog
+        department={department}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+      />
+    </>
+  );
+}
+
 const columns: ColumnDef<DepartmentResult>[] = [
   {
     key: 'name',
@@ -116,21 +150,9 @@ const columns: ColumnDef<DepartmentResult>[] = [
   {
     key: 'actions',
     header: 'Actions',
-    cell: (row) => (
-      <div className="flex gap-2">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          nativeButton={false}
-          render={<Link href={`/dashboard/departments/${row.code}/edit`} />}
-        >
-          <PencilIcon />
-          <span className="sr-only">Edit {row.name}</span>
-        </Button>
-        <DeleteDepartmentDialog department={row} />
-      </div>
-    ),
-    cellClassName: 'text-right',
+    cell: (row) => <RowActions department={row} />,
+    headerClassName: 'text-center',
+    cellClassName: 'text-center',
   },
 ];
 
