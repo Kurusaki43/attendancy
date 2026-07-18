@@ -19,7 +19,6 @@ vi.mock('../../services/create-session.service', () => ({
 const { userRepository } = await import('../../repositories/user.repository');
 const { verifyPassword } = await import('../../lib/password');
 const { createSession } = await import('../../services/create-session.service');
-const { BadRequestError } = await import('@/lib/errors/bad-request.error');
 const { ForbiddenError } = await import('@/lib/errors/forbidden.error');
 const { UnauthorizedError } = await import('@/lib/errors/unauthorized.error');
 const { login } = await import('../../services/login.service');
@@ -54,15 +53,17 @@ describe('login', () => {
     await expect(result).rejects.toMatchObject({ code: ERROR_CODES.INVALID_CREDENTIALS });
   });
 
-  it('throws BadRequestError when the account has no password (social login only)', async () => {
+  it('throws UnauthorizedError (not a social-login-specific error) when the account has no password', async () => {
+    // Deliberately generic — revealing that an email is social-login-only would let an attacker
+    // enumerate which accounts exist and how they authenticate.
     vi.mocked(userRepository.findByEmail).mockResolvedValue(
       buildUser({ passwordHash: null }) as never,
     );
 
     const result = login(credentials);
 
-    await expect(result).rejects.toBeInstanceOf(BadRequestError);
-    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.SOCIAL_LOGIN_ONLY });
+    await expect(result).rejects.toBeInstanceOf(UnauthorizedError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.INVALID_CREDENTIALS });
   });
 
   it('throws UnauthorizedError when the password does not match', async () => {
@@ -87,7 +88,7 @@ describe('login', () => {
     await expect(result).rejects.toMatchObject({ code: ERROR_CODES.EMAIL_NOT_VERIFIED });
   });
 
-  it('throws ForbiddenError when the account is not active', async () => {
+  it('throws ForbiddenError when the account is suspended', async () => {
     vi.mocked(userRepository.findByEmail).mockResolvedValue(
       buildUser({ status: 'SUSPENDED' }) as never,
     );

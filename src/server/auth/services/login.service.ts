@@ -1,5 +1,4 @@
 import { UserStatus } from '@/generated/prisma/client';
-import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { ForbiddenError } from '@/lib/errors/forbidden.error';
 import { UnauthorizedError } from '@/lib/errors/unauthorized.error';
@@ -24,9 +23,8 @@ export async function login(
   }
 
   if (!user.passwordHash) {
-    throw new BadRequestError(ERROR_CODES.SOCIAL_LOGIN_ONLY, 'This account uses social login');
+    throw new UnauthorizedError(ERROR_CODES.INVALID_CREDENTIALS, 'Invalid email or password');
   }
-
   const isPasswordValid = await verifyPassword(password, user.passwordHash);
 
   if (!isPasswordValid) {
@@ -37,8 +35,8 @@ export async function login(
     throw new UnauthorizedError(ERROR_CODES.EMAIL_NOT_VERIFIED, 'Email not verified');
   }
 
-  if (user.status !== UserStatus.ACTIVE) {
-    throw new ForbiddenError(ERROR_CODES.FORBIDDEN, 'Your account is unavailable');
+  if (user.status === UserStatus.SUSPENDED) {
+    throw new ForbiddenError(ERROR_CODES.FORBIDDEN, 'Your account is suspended');
   }
 
   const { accessToken, refreshToken } = await createSession(user.id, ipAddress, userAgent);
