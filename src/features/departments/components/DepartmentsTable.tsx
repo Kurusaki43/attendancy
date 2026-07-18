@@ -15,11 +15,15 @@ import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
 
 function StatusBadge({ isActive }: { isActive: boolean }) {
   return isActive ? (
-    <Badge className="bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400">
+    <Badge className="rounded-sm bg-green-500/15 text-green-700 dark:bg-green-500/20 dark:text-green-400">
+      <span className="size-1.5 shrink-0 rounded-full bg-green-500" />
       Active
     </Badge>
   ) : (
-    <Badge variant="secondary">Inactive</Badge>
+    <Badge variant="secondary" className="rounded-sm">
+      <span className="bg-muted-foreground size-1.5 shrink-0 rounded-full" />
+      Inactive
+    </Badge>
   );
 }
 
@@ -34,8 +38,6 @@ function DepartmentCell({ row }: { row: DepartmentResult }) {
           row.color || 'bg-muted text-muted-foreground',
         )}
       >
-        {/* Icon is always one of a fixed set of module-level lucide-react components resolved
-        by key from DEPARTMENT_ICON_MAP — never freshly created — so this is safe. */}
         {/* eslint-disable-next-line react-hooks/static-components */}
         <Icon className="size-4" />
       </span>
@@ -81,7 +83,7 @@ const columns: ColumnDef<DepartmentResult>[] = [
   {
     key: 'code',
     header: 'Code',
-    cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
+    cell: (row) => <span className="font-mono text-xs">{row.code}</span>,
   },
   {
     key: 'employeeCount',
