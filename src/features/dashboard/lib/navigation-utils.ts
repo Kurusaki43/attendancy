@@ -12,7 +12,7 @@ export function canSeeNavItem(item: NavItem, user: AuthUser): boolean {
 
   // Check permission-based access
   if (item.permission) {
-    const [resource, action] = item.permission.split(':');
+    const { resource, action } = item.permission;
     const hasPermission = user.roles.some((role) =>
       role.permissions.some((p) => p.resource === resource && p.action === action),
     );
