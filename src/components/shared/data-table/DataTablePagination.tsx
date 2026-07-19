@@ -111,12 +111,12 @@ export default function DataTablePagination({ page, limit, totalItems, totalPage
 
           {renderPages().map((item, index) =>
             item === '...' ? (
-              <span key={index} className="text-muted-foreground w-8 text-center">
+              <span key={`ellipsis-${index}`} className="text-muted-foreground w-8 text-center">
                 …
               </span>
             ) : (
               <Button
-                key={item}
+                key={`page-${item}`}
                 size="icon"
                 variant={item === page ? 'default' : 'outline'}
                 onClick={() => goto(item)}
