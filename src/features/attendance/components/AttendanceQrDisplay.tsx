@@ -1,5 +1,6 @@
 'use client';
 
+import { Clock, ScanLine } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,8 +45,11 @@ export function AttendanceQrDisplay({ initialQr }: AttendanceQrDisplayProps) {
   }, []);
 
   return (
-    <Card className="mx-auto max-w-sm shadow-sm">
+    <Card className="card-shadow border-border mx-auto w-full max-w-sm rounded-lg">
       <CardHeader className="text-center">
+        <span className="bg-primary/10 mx-auto mb-2 flex size-12 items-center justify-center rounded-full">
+          <ScanLine className="text-primary size-5" />
+        </span>
         <CardTitle>Attendance Check-In</CardTitle>
         <CardDescription>
           Scan this code to check in. It refreshes automatically every 10 seconds.
@@ -57,13 +61,15 @@ export function AttendanceQrDisplay({ initialQr }: AttendanceQrDisplayProps) {
           <img
             src={qr.qrDataUrl}
             alt="Attendance check-in QR code"
-            className="block size-72"
-            width={288}
-            height={288}
+            className="block object-cover"
           />
         </div>
 
-        <p className="text-muted-foreground text-xs" suppressHydrationWarning>
+        <p
+          className="text-muted-foreground flex items-center gap-2 text-xs"
+          suppressHydrationWarning
+        >
+          <Clock size={12} className="text-primary" />
           Last refreshed at {new Date(qr.issuedAt).toLocaleTimeString()}
         </p>
         {error && <p className="text-destructive text-xs">{error}</p>}
