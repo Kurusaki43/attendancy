@@ -1,5 +1,3 @@
-// src/features/auth/constants/permissions.ts
-
 function permission(resource: string, action: string, description: string) {
   return {
     resource,
@@ -46,6 +44,12 @@ export const PERMISSIONS = {
   ATTENDANCE_CLOCK_OUT: permission('attendance', 'clock-out', 'Clock out from work'),
 
   ATTENDANCE_EDIT: permission('attendance', 'edit', 'Edit attendance records'),
+
+  ATTENDANCE_QR_VIEW: permission(
+    'attendance',
+    'qr:view',
+    'View the rotating attendance check-in QR code',
+  ),
 
   // Leave requests
   LEAVE_CREATE: permission('leave', 'create', 'Create leave requests'),
