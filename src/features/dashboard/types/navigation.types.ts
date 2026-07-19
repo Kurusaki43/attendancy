@@ -15,4 +15,6 @@ export type NavItem = {
 export type NavGroup = {
   label: string;
   items: NavItem[];
+  /** Rendered outside the scrollable nav list, pinned to the sidebar's bottom (e.g. Settings). */
+  pinned?: boolean;
 };

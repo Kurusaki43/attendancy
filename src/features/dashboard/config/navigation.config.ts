@@ -51,6 +51,11 @@ export const NAV_GROUPS: NavGroup[] = [
         roles: ['ADMIN', 'MANAGER'],
         permission: PERMISSIONS.EMPLOYEE_READ,
       },
+    ],
+  },
+  {
+    label: 'Attendance',
+    items: [
       {
         title: 'All Attendance',
         href: '/dashboard/attendance/all',
@@ -116,6 +121,7 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     label: 'Settings',
+    pinned: true,
     items: [
       {
         title: 'Settings',
