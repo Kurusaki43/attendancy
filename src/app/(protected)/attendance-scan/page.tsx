@@ -52,7 +52,7 @@ export default async function AttendanceScanPage({ searchParams }: Props) {
         </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center p-6">
+      <main className="flex flex-1 items-center justify-center p-4 px-3">
         {result.success ? (
           <AttendanceScanResult success data={result.data} />
         ) : (

@@ -29,7 +29,7 @@ export default async function AttendanceQrPage() {
         </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center p-4 px-2">
+      <main className="flex flex-1 items-center justify-center p-4 px-3">
         {result.success ? (
           <AttendanceQrDisplay initialQr={result.data} />
         ) : (
