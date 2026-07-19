@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import QRCode from 'qrcode';
 
 import { redis } from '@/infrastructure/redis/client';
+import { env } from '@/lib/env/env';
 import type { ServiceRotateAttendanceQrResult } from '@/server/attendance/types/service-results';
 
 export const ATTENDANCE_QR_REDIS_KEY = 'attendance:qr:current-token';
@@ -17,7 +18,10 @@ export async function rotateAttendanceQrCode(): Promise<ServiceRotateAttendanceQ
 
   await redis.set(ATTENDANCE_QR_REDIS_KEY, token, 'PX', QR_TOKEN_TTL_MS);
 
-  const qrDataUrl = await QRCode.toDataURL(token, { margin: 1, width: 320 });
+  const scanUrl = new URL('/attendance-scan', env.APP_URL);
+  scanUrl.searchParams.set('token', token);
+
+  const qrDataUrl = await QRCode.toDataURL(scanUrl.toString(), { margin: 1, width: 320 });
 
   return {
     token,

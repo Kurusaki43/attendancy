@@ -35,11 +35,13 @@ describe('rotateAttendanceQrCode', () => {
     );
   });
 
-  it('encodes the same token into the QR data URL that was stored in redis', async () => {
+  it('encodes a scan deep link carrying the same token that was stored in redis', async () => {
     const result = await rotateAttendanceQrCode();
 
     const [, storedToken] = vi.mocked(redis.set).mock.calls[0];
-    expect(mockToDataURL).toHaveBeenCalledWith(storedToken, expect.any(Object));
+    const [encodedUrl] = mockToDataURL.mock.calls[0];
+    expect(encodedUrl).toMatch(/\/attendance-scan\?token=/);
+    expect(new URL(encodedUrl).searchParams.get('token')).toBe(storedToken);
     expect(result.token).toBe(storedToken);
     expect(result.qrDataUrl).toBe('data:image/png;base64,mock');
   });
