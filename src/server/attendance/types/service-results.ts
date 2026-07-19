@@ -4,3 +4,7 @@ export type ServiceRotateAttendanceQrResult = {
   issuedAt: number;
   expiresInMs: number;
 };
+
+export type ServiceVerifyAttendanceQrResult = {
+  valid: true;
+};
