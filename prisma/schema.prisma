@@ -176,4 +176,56 @@ model Employee {
   employmentStatus EmploymentStatus @default(ACTIVE)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+
+  attendances Attendance[]
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  ON_LEAVE
+  HOLIDAY
+}
+
+enum AttendanceEventType {
+  CLOCK_IN
+  CLOCK_OUT
+}
+
+enum AttendanceMethod {
+  QR
+  FACE
+  FINGERPRINT
+  MANUAL
+}
+
+model Attendance {
+  id String @id @default(cuid())
+
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  date          DateTime
+  firstClockIn  DateTime?
+  lastClockOut  DateTime?
+  workedMinutes Int               @default(0)
+  status        AttendanceStatus
+  events        AttendanceEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([employeeId, date])
+}
+
+model AttendanceEvent {
+  id String @id @default(cuid())
+
+  attendanceId String
+  attendance   Attendance          @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+  type         AttendanceEventType
+  occurredAt   DateTime
+  method       AttendanceMethod
+
+  createdAt DateTime @default(now())
 }
