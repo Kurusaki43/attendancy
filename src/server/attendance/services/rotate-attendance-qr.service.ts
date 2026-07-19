@@ -10,7 +10,7 @@ export const ATTENDANCE_QR_REDIS_KEY = 'attendance:qr:current-token';
 
 // The client polls at this cadence; the Redis TTL is padded past it so a token doesn't expire
 // mid-cycle if a poll is a little late.
-export const ATTENDANCE_QR_ROTATE_INTERVAL_MS = 10_000;
+export const ATTENDANCE_QR_ROTATE_INTERVAL_MS = 60_000;
 const QR_TOKEN_TTL_MS = ATTENDANCE_QR_ROTATE_INTERVAL_MS + 5_000;
 
 export async function rotateAttendanceQrCode(): Promise<ServiceRotateAttendanceQrResult> {
