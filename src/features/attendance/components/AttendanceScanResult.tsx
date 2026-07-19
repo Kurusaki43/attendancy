@@ -1,20 +1,12 @@
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { formatWorkedMinutes } from '@/features/attendance/lib/attendance-status';
 import type { ScanAttendanceActionResult } from '@/server/attendance/types';
 
 type AttendanceScanResultProps =
   | { success: true; data: ScanAttendanceActionResult }
   | { success: false; title: string; description: string };
-
-function formatWorkedTime(workedMinutes: number) {
-  const hours = Math.floor(workedMinutes / 60);
-  const minutes = workedMinutes % 60;
-
-  if (hours === 0) return `${minutes}m`;
-
-  return `${hours}h ${minutes}m`;
-}
 
 export function AttendanceScanResult(props: AttendanceScanResultProps) {
   if (!props.success) {
@@ -48,7 +40,7 @@ export function AttendanceScanResult(props: AttendanceScanResultProps) {
         </p>
         {!isClockIn && (
           <p className="text-muted-foreground text-xs">
-            Worked {formatWorkedTime(workedMinutes)} today
+            Worked {formatWorkedMinutes(workedMinutes)} today
           </p>
         )}
       </CardContent>
