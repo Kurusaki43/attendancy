@@ -10,6 +10,18 @@ export const ATTENDANCE_INCLUDE = {
   events: { orderBy: { occurredAt: 'asc' } },
 } satisfies Prisma.AttendanceInclude;
 
+export const ATTENDANCE_LIST_INCLUDE = {
+  employee: {
+    select: {
+      id: true,
+      employeeCode: true,
+      user: { select: { firstName: true, lastName: true, avatar: true } },
+      department: { select: { id: true, name: true, code: true, icon: true, color: true } },
+      position: { select: { id: true, title: true } },
+    },
+  },
+} satisfies Prisma.AttendanceInclude;
+
 export type AttendanceFindManyQuery = PrismaQueryOptions<
   Prisma.AttendanceWhereInput,
   Prisma.AttendanceOrderByWithRelationInput,
@@ -18,6 +30,10 @@ export type AttendanceFindManyQuery = PrismaQueryOptions<
 
 export type AttendanceWithEvents = Prisma.AttendanceGetPayload<{
   include: typeof ATTENDANCE_INCLUDE;
+}>;
+
+export type AttendanceWithEmployee = Prisma.AttendanceGetPayload<{
+  include: typeof ATTENDANCE_LIST_INCLUDE;
 }>;
 
 export const attendanceRepository = {
@@ -52,7 +68,7 @@ export const attendanceRepository = {
   },
 
   findMany(query: AttendanceFindManyQuery) {
-    return prisma.attendance.findMany({ ...query, include: ATTENDANCE_INCLUDE });
+    return prisma.attendance.findMany({ ...query, include: ATTENDANCE_LIST_INCLUDE });
   },
 
   count(where?: Prisma.AttendanceWhereInput) {

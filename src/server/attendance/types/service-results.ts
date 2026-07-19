@@ -1,5 +1,10 @@
 import type { AttendanceEventType } from '@/generated/prisma/enums';
-import type { AttendanceWithEvents } from '@/server/attendance/repositories/attendance.repository';
+import type {
+  AttendanceWithEmployee,
+  AttendanceWithEvents,
+} from '@/server/attendance/repositories/attendance.repository';
+
+export type { AttendanceWithEmployee };
 
 export type ServiceRotateAttendanceQrResult = {
   token: string;
