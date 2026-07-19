@@ -16,6 +16,10 @@ export type AttendanceFindManyQuery = PrismaQueryOptions<
   Prisma.AttendanceSelect
 >;
 
+export type AttendanceWithEvents = Prisma.AttendanceGetPayload<{
+  include: typeof ATTENDANCE_INCLUDE;
+}>;
+
 export const attendanceRepository = {
   create(data: AttendanceUncheckedCreateInput) {
     return prisma.attendance.create({ data, include: ATTENDANCE_INCLUDE });
