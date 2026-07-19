@@ -34,8 +34,6 @@ export function AttendanceQrDisplay({ initialQr }: AttendanceQrDisplayProps) {
       }
     }
 
-    // Self-rescheduling setTimeout rather than setInterval: each refresh reschedules itself off
-    // the freshly fetched expiresInMs, so a slow request can't cause overlapping polls.
     timeoutRef.current = setTimeout(refresh, qr.expiresInMs);
 
     return () => {
