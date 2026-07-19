@@ -1,11 +1,13 @@
 import './globals.css';
 
-import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
 
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { cn } from '@/lib/utils';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'Attendancy',
@@ -21,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn('h-full', 'antialiased', 'font-sans', GeistSans.variable)}
+      className={cn('h-full', 'antialiased', 'font-sans', inter.variable)}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
