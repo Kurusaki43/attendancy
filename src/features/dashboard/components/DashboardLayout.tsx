@@ -43,14 +43,10 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <Header
-          user={user}
-          isSidebarOpen={isSidebarOpen}
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
+        <Header user={user} onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-[1800px] p-8">{children}</div>
+          <div className="mx-auto w-full max-w-[1800px] px-3 py-8 sm:px-4 lg:px-8">{children}</div>
         </main>
       </div>
     </div>
