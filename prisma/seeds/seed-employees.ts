@@ -4,7 +4,7 @@ import { ROLE_NAMES } from '@/server/auth/constants/roles';
 import { hashPassword } from '@/server/auth/lib/password';
 
 // Dev-only login for every seeded employee — never used outside local seeding.
-const SEED_PASSWORD = 'Passw0rd123!';
+const SEED_PASSWORD = '12345678';
 
 const EMPLOYEES = [
   {
