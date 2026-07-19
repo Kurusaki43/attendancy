@@ -2,6 +2,7 @@ import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
 
 import { seedRolePermissions } from './role-permissions';
+import { seedAttendance } from './seed-attendance';
 import { seedDepartments } from './seed-departments';
 import { seedEmployees } from './seed-employees';
 import { seedPermissions } from './seed-permissions';
@@ -17,6 +18,7 @@ async function main() {
   await seedDepartments();
   await seedPositions();
   await seedEmployees();
+  await seedAttendance();
 
   logger.info('🎉 Database seeded successfully.');
 }
