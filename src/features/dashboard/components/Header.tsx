@@ -1,7 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
-import { CalendarDays, Menu, X } from 'lucide-react';
+import { Bell, Menu, X } from 'lucide-react';
 
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { Button } from '@/components/ui/button';
@@ -18,35 +18,38 @@ type HeaderProps = {
 
 export function Header({ user, isSidebarOpen, onToggleSidebar, onLogout }: HeaderProps) {
   return (
-    <header className="border-border bg-background sticky top-0 z-15 border-b backdrop-blur">
-      <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        {/* Left: Mobile menu button + title */}
+    <header className="border-border/60 bg-background/80 sticky top-0 z-30 backdrop-blur-xl">
+      <div className="flex h-[72px] items-center justify-between px-6 lg:px-8">
+        {/* Left */}
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={onToggleSidebar}
-            aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-          >
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={onToggleSidebar}>
             {isSidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
 
-          <div className="hidden items-center gap-3 sm:flex">
-            <div className="bg-muted flex size-10 items-center justify-center rounded-xl">
-              <CalendarDays className="text-muted-foreground size-5" />
-            </div>
+          <div className="flex flex-col">
+            <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
 
-            <div className="">
-              <p className="text-primary text-sm font-bold tracking-wider uppercase">Today</p>
-              <h2 className="text-sm font-normal">{format(new Date(), 'EEEE, MMMM d')}</h2>
-            </div>
+            <p className="text-muted-foreground text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
           </div>
         </div>
 
-        {/* Right: Theme toggle + User menu */}
+        {/* Right */}
         <div className="flex items-center gap-2">
+          {/* Search */}
+          <Button variant="outline" className="hidden w-64 justify-between lg:flex">
+            <span className="text-muted-foreground">Search...</span>
+
+            <kbd className="text-xs">⌘K</kbd>
+          </Button>
+
+          {/* Notifications */}
+
+          <Button variant="ghost" size="icon">
+            <Bell className="size-5" />
+          </Button>
+
           <ThemeToggle />
+
           <UserMenu user={user} onLogout={onLogout} />
         </div>
       </div>
