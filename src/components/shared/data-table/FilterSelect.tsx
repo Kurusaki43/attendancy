@@ -48,7 +48,7 @@ export default function FilterSelect({
     <div className="relative">
       <label
         htmlFor={id}
-        className="text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
+        className="bg-card text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
       >
         {label}
       </label>
