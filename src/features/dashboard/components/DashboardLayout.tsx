@@ -21,10 +21,6 @@ type DashboardLayoutProps = {
 
 export function DashboardLayout({ children, user }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  // useSyncExternalStore (not a lazy initializer) is what actually avoids the hydration
-  // mismatch: React renders the server snapshot (false) on the client's first pass to match
-  // SSR exactly, then synchronously swaps to the real localStorage value right after hydration
-  // commits — no per-element suppressHydrationWarning needed anywhere in the subtree.
   const isCollapsed = useSyncExternalStore(
     subscribeSidebarCollapsed,
     getSidebarCollapsed,

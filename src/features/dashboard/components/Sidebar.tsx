@@ -150,10 +150,10 @@ export function Sidebar({
       {/* Sidebar panel */}
       <aside
         className={cn(
-          'bg-sidebar text-sidebar-foreground border-sidebar-border fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r shadow-lg transition-transform duration-300 ease-out will-change-transform',
+          'bg-sidebar text-sidebar-foreground border-sidebar-border fixed inset-y-0 left-0 z-40 flex w-54 flex-col border-r shadow-lg transition-transform duration-300 ease-out will-change-transform',
           'lg:transition-[width] lg:duration-300 lg:ease-in-out',
           'h-full lg:static lg:z-auto lg:my-3 lg:ms-3 lg:h-[calc(100vh-1.5rem)] lg:translate-x-0 lg:rounded-sm lg:border lg:shadow-xl',
-          isCollapsed ? 'lg:w-20' : 'lg:w-64',
+          isCollapsed ? 'lg:w-20' : 'lg:w-54',
           isOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >

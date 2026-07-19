@@ -3,7 +3,7 @@ const STORAGE_KEY = 'attendancy-sidebar-collapsed';
 const listeners = new Set<() => void>();
 
 export function getSidebarCollapsedServerSnapshot() {
-  return false;
+  return true;
 }
 
 export function getSidebarCollapsed() {
