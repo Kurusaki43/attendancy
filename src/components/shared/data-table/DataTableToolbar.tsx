@@ -48,7 +48,6 @@ const DataTableToolbar = ({
         <FilterSelect
           queryKey={statusFilter.queryKey}
           label={statusFilter.label}
-          defaultLabel="All Statuses"
           options={statusFilter.options}
         />
         {filters.map((filter) => (
