@@ -21,15 +21,21 @@ export function StatCard({
   className,
 }: StatCardProps) {
   return (
-    <Card size="sm" className={cn(className, 'rounded-sm py-2.5')}>
+    <Card
+      size="sm"
+      className={cn(
+        className,
+        'card-shadow border-border/60 rounded-sm border py-2.5 shadow-none ring-0',
+      )}
+    >
       <CardContent className="flex items-center gap-4">
         <span
           className={cn(
-            'flex size-12 shrink-0 items-center justify-center rounded-xl',
+            'flex size-14 shrink-0 items-center justify-center rounded-lg',
             iconClassName ?? 'bg-primary/10 text-primary',
           )}
         >
-          <Icon className="size-6" />
+          <Icon className="size-7" />
         </span>
         <div className="min-w-0 space-y-1 xl:space-y-2">
           <p className="text-muted-foreground text-sm font-semibold tracking-wider">{label}</p>

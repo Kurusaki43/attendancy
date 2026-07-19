@@ -22,7 +22,6 @@ type FilterSelectProps = {
   queryKey: string;
   label: string;
   placeholder?: string;
-  /** Label of the reset item that clears the filter from the URL. */
   defaultLabel?: string;
   options: Option[];
 };
@@ -49,7 +48,7 @@ export default function FilterSelect({
     <div className="relative">
       <label
         htmlFor={id}
-        className="bg-card text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
+        className="text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
       >
         {label}
       </label>
@@ -61,7 +60,7 @@ export default function FilterSelect({
 
       <Select value={value} onValueChange={handleValueChange}>
         <SelectTrigger id={id} className="min-w-36 ps-7">
-          <SelectValue placeholder={placeholder}>
+          <SelectValue placeholder={placeholder} className="text-sm font-light">
             {(selected: string) =>
               selected === DEFAULT_VALUE
                 ? defaultLabel

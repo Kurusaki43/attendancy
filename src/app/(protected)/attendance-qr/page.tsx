@@ -33,7 +33,7 @@ export default async function AttendanceQrPage() {
         ) : (
           <ErrorState
             {...getListErrorStateProps(result.code, { resourceLabel: 'attendance QR code' })}
-            className="rounded-md border"
+            className="border-border bg-card card-shadow rounded-sm"
           />
         )}
       </main>

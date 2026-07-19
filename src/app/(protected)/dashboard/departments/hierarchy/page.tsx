@@ -38,7 +38,7 @@ export default async function DepartmentHierarchyPage() {
       ) : (
         <ErrorState
           {...getListErrorStateProps(result.code, { resourceLabel: 'departments' })}
-          className="rounded-md border"
+          className="border-border bg-card card-shadow rounded-sm"
         />
       )}
     </div>

@@ -29,7 +29,7 @@ export default async function SettingsPage() {
             icon={Monitor}
             title="No active sessions"
             description="You aren't signed in anywhere right now."
-            className="rounded-md border"
+            className="border-border bg-card card-shadow rounded-sm"
           />
         ) : (
           <SessionsList sessions={result.data} />
@@ -37,7 +37,7 @@ export default async function SettingsPage() {
       ) : (
         <ErrorState
           {...getListErrorStateProps(result.code, { resourceLabel: 'sessions' })}
-          className="rounded-md border"
+          className="border-border bg-card card-shadow rounded-sm"
         />
       )}
     </div>

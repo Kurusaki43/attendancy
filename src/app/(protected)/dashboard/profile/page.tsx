@@ -16,7 +16,7 @@ export default async function ProfilePage() {
     return (
       <ErrorState
         {...getListErrorStateProps(result.code, { resourceLabel: 'profile' })}
-        className="rounded-md border"
+        className="border-border bg-card card-shadow rounded-sm"
       />
     );
   }

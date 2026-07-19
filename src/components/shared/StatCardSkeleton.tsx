@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function StatCardSkeleton() {
   return (
-    <Card size="sm">
+    <Card size="sm" className="card-shadow border-border/60 rounded-sm border shadow-none ring-0">
       <CardContent className="flex items-center gap-4">
         <Skeleton className="size-12 shrink-0 rounded-xl" />
         <div className="min-w-0 flex-1 space-y-2">

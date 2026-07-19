@@ -5,6 +5,7 @@ import DataTablePagination from '@/components/shared/data-table/DataTablePaginat
 import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AddPositionDialog } from '@/features/positions/components/AddPositionDialog';
 import { PositionsTable } from '@/features/positions/components/PositionsTable';
 import { PositionStats } from '@/features/positions/components/PositionStats';
@@ -31,7 +32,7 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
   const isTrulyEmpty = result.success && result.data.positions.length === 0 && !hasActiveFilters;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Page header */}
       <div className="flex flex-wrap items-start justify-between gap-6 pb-2">
         <div>
@@ -54,33 +55,39 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
             title="No positions yet"
             description="Create your first position to begin."
             action={<AddPositionDialog />}
-            className="rounded-md border"
+            className="border-border bg-card card-shadow rounded-sm"
           />
         ) : (
-          <>
-            <DataTableToolbar
-              searchPlaceholder="Search by title, code, or description"
-              sortOptions={[
-                { label: 'Newest First', value: '-createdAt' },
-                { label: 'Oldest First', value: 'createdAt' },
-                { label: 'Title (A-Z)', value: 'title' },
-                { label: 'Title (Z-A)', value: '-title' },
-                { label: 'Recently Updated', value: '-updatedAt' },
-              ]}
-            />
-            <PositionsTable positions={result.data.positions} />
-            <DataTablePagination
-              limit={result.data.pagination.limit}
-              page={result.data.pagination.page}
-              totalPages={result.data.pagination.totalPages}
-              totalItems={result.data.pagination.totalItems}
-            />
-          </>
+          <Card className="bg-card border-border card-shadow rounded-sm">
+            <CardHeader>
+              <DataTableToolbar
+                searchPlaceholder="Search by title, code, or description"
+                sortOptions={[
+                  { label: 'Newest First', value: '-createdAt' },
+                  { label: 'Oldest First', value: 'createdAt' },
+                  { label: 'Title (A-Z)', value: 'title' },
+                  { label: 'Title (Z-A)', value: '-title' },
+                  { label: 'Recently Updated', value: '-updatedAt' },
+                ]}
+              />
+            </CardHeader>
+            <CardContent>
+              <PositionsTable positions={result.data.positions} />
+            </CardContent>
+            <CardFooter className="block">
+              <DataTablePagination
+                limit={result.data.pagination.limit}
+                page={result.data.pagination.page}
+                totalPages={result.data.pagination.totalPages}
+                totalItems={result.data.pagination.totalItems}
+              />
+            </CardFooter>
+          </Card>
         )
       ) : (
         <ErrorState
           {...getListErrorStateProps(result.code, { resourceLabel: 'positions' })}
-          className="rounded-md border"
+          className="border-border bg-card card-shadow rounded-sm"
         />
       )}
     </div>

@@ -7,6 +7,7 @@ import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AddDepartmentButton } from '@/features/departments/components/AddDepartmentButton';
 import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 import { DepartmentStats } from '@/features/departments/components/DepartmentStats';
@@ -34,7 +35,7 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
   const isTrulyEmpty = result.success && result.data.departments.length === 0 && !hasActiveFilters;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Page header */}
       <div className="flex flex-wrap items-start justify-between gap-6 pb-2">
         <div>
@@ -70,24 +71,30 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
             title="No departments yet"
             description="Create your first department to begin."
             action={<AddDepartmentButton />}
-            className="rounded-md border"
+            className="border-border bg-card card-shadow rounded-sm"
           />
         ) : (
-          <>
-            <DataTableToolbar searchPlaceholder="Search by name, code, or description" />
-            <DepartmentsTable departments={result.data.departments} />
-            <DataTablePagination
-              limit={result.data.pagination.limit}
-              page={result.data.pagination.page}
-              totalPages={result.data.pagination.totalPages}
-              totalItems={result.data.pagination.totalItems}
-            />
-          </>
+          <Card className="bg-card border-border card-shadow rounded-sm">
+            <CardHeader>
+              <DataTableToolbar searchPlaceholder="Search by name, code, or description" />
+            </CardHeader>
+            <CardContent className="">
+              <DepartmentsTable departments={result.data.departments} />
+            </CardContent>
+            <CardFooter className="block">
+              <DataTablePagination
+                limit={result.data.pagination.limit}
+                page={result.data.pagination.page}
+                totalPages={result.data.pagination.totalPages}
+                totalItems={result.data.pagination.totalItems}
+              />
+            </CardFooter>
+          </Card>
         )
       ) : (
         <ErrorState
           {...getListErrorStateProps(result.code, { resourceLabel: 'departments' })}
-          className="rounded-md border"
+          className="border-border bg-card card-shadow rounded-sm"
         />
       )}
     </div>

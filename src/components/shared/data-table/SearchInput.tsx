@@ -30,7 +30,7 @@ export default function SearchInput({
   }, 500);
 
   return (
-    <div className="relative w-full max-w-[250px]">
+    <div className="relative w-full max-w-[270px]">
       <Input
         value={query}
         placeholder={placeholder}

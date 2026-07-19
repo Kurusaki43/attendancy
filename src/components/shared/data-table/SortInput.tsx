@@ -45,7 +45,7 @@ export default function SortInput({
     <div className="relative">
       <label
         htmlFor={id}
-        className="bg-card text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
+        className="text-muted-foreground absolute -top-2 left-2 z-10 px-1 text-xs font-medium"
       >
         Sort by
       </label>
@@ -57,7 +57,7 @@ export default function SortInput({
 
       <Select value={value} onValueChange={handleChange}>
         <SelectTrigger id={id} className="min-w-44 ps-7">
-          <SelectValue placeholder={placeholder}>
+          <SelectValue placeholder={placeholder} className="text-sm font-light">
             {(value: string) => options.find((option) => option.value === value)?.label}
           </SelectValue>
         </SelectTrigger>
