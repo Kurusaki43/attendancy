@@ -28,9 +28,9 @@ function isGuestOnlyRoute(pathname: string) {
   return GUEST_ONLY_ROUTES.some((route) => pathname.startsWith(route));
 }
 
-function redirectToLogin(request: NextRequest, pathname: string) {
+function redirectToLogin(request: NextRequest, redirectTarget: string) {
   const loginUrl = new URL('/login', request.url);
-  loginUrl.searchParams.set('redirect', pathname);
+  loginUrl.searchParams.set('redirect', redirectTarget);
 
   const response = NextResponse.redirect(loginUrl);
   response.cookies.delete(AUTH_COOKIES.ACCESS_TOKEN);
@@ -40,7 +40,7 @@ function redirectToLogin(request: NextRequest, pathname: string) {
 }
 
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   const guestOnly = isGuestOnlyRoute(pathname);
 
   const accessToken = request.cookies.get(AUTH_COOKIES.ACCESS_TOKEN)?.value;
@@ -108,13 +108,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return redirectToLogin(request, pathname);
+  return redirectToLogin(request, pathname + search);
 }
 
 export const config = {
   matcher: [
     '/dashboard/:path*',
     '/attendance-qr',
+    '/attendance-scan',
 
     '/login',
     '/register',
