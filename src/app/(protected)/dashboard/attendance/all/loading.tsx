@@ -17,7 +17,7 @@ export default function AllAttendanceLoading() {
         </div>
       </div>
 
-      <Card className="bg-card border-border card-shadow rounded-sm">
+      <Card className="bg-card border-border card-shadow">
         <CardHeader>
           <DataTableToolbarSkeleton />
         </CardHeader>

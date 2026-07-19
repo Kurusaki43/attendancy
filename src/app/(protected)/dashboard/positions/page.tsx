@@ -58,7 +58,7 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
             className="border-border bg-card card-shadow rounded-sm"
           />
         ) : (
-          <Card className="bg-card border-border card-shadow rounded-sm">
+          <Card className="bg-card border-border card-shadow">
             <CardHeader>
               <DataTableToolbar
                 searchPlaceholder="Search by title, code, or description"

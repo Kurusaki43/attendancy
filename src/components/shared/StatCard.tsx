@@ -23,10 +23,7 @@ export function StatCard({
   return (
     <Card
       size="sm"
-      className={cn(
-        className,
-        'card-shadow border-border/60 rounded-sm border py-2.5 shadow-none ring-0',
-      )}
+      className={cn(className, 'card-shadow border-border/60 border py-2.5 shadow-none ring-0')}
     >
       <CardContent className="flex items-center gap-4">
         <span
