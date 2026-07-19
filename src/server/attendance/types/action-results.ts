@@ -8,8 +8,7 @@ export type GetAttendanceQrActionResult = {
 
 export type ScanAttendanceActionResult = {
   eventType: AttendanceEventType;
+  occurredAt: Date;
   status: AttendanceStatus;
-  firstClockIn: Date | null;
-  lastClockOut: Date | null;
   workedMinutes: number;
 };

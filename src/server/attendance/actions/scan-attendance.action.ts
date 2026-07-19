@@ -40,12 +40,12 @@ export async function scanAttendanceAction(
     }
 
     const { eventType, attendance } = await scanAttendance(employee.id, validated.data.token);
+    const lastEvent = attendance.events[attendance.events.length - 1];
 
     return {
       eventType,
+      occurredAt: lastEvent.occurredAt,
       status: attendance.status,
-      firstClockIn: attendance.firstClockIn,
-      lastClockOut: attendance.lastClockOut,
       workedMinutes: attendance.workedMinutes,
     };
   });
