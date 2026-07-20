@@ -1,6 +1,7 @@
 import { User as UserIcon } from 'lucide-react';
 import { type Control, useWatch } from 'react-hook-form';
 
+import { DatePicker } from '@/components/shared/DatePicker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -16,7 +17,7 @@ import {
   type EmployeeFormOutput,
   type EmployeeFormValues,
   NONE,
-  toDateInputValue,
+  toDateValue,
 } from '@/features/employees/lib/employee-form';
 import { AvatarUploader } from '@/features/profile/components/AvatarUploader';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
@@ -182,10 +183,10 @@ export function EmployeePersonalInfoCard({
                   Date of Birth (Optional)
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    value={toDateInputValue(field.value)}
-                    onChange={(event) => field.onChange(event.target.valueAsDate ?? undefined)}
+                  <DatePicker
+                    value={toDateValue(field.value)}
+                    onChange={field.onChange}
+                    placeholder="Select date of birth"
                     disabled={isPending}
                   />
                 </FormControl>

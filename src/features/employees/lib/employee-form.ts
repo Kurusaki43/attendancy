@@ -21,8 +21,8 @@ export type UpdateEmployeeFormValues = z.input<typeof updateEmployeeSchema>;
 export type EmployeeFormValues = CreateEmployeeFormValues | UpdateEmployeeFormValues;
 export type EmployeeFormOutput = CreateEmployeeInput | UpdateEmployeeInput;
 
-export function toDateInputValue(value: unknown) {
-  if (!(value instanceof Date) && typeof value !== 'string') return '';
+export function toDateValue(value: unknown): Date | undefined {
+  if (!(value instanceof Date) && typeof value !== 'string') return undefined;
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '' : date.toISOString().slice(0, 10);
+  return Number.isNaN(date.getTime()) ? undefined : date;
 }

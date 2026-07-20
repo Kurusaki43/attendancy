@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Control } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { DatePicker } from '@/components/shared/DatePicker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -19,7 +20,7 @@ import {
   type EmployeeFormValues,
   NONE,
   type SelectOption,
-  toDateInputValue,
+  toDateValue,
 } from '@/features/employees/lib/employee-form';
 import {
   EMPLOYMENT_STATUS_LABELS,
@@ -122,10 +123,9 @@ export function EmployeeEmploymentInfoCard({
                   Hire Date <span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="date"
-                    value={toDateInputValue(field.value)}
-                    onChange={(event) => field.onChange(event.target.valueAsDate ?? undefined)}
+                  <DatePicker
+                    value={toDateValue(field.value)}
+                    onChange={field.onChange}
                     disabled={isPending}
                   />
                 </FormControl>
