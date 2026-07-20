@@ -89,7 +89,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
           <Card className="bg-card border-border card-shadow">
             <CardHeader>
               <DataTableToolbar
-                searchPlaceholder="Search by employee code or phone"
+                searchPlaceholder="Search by name, email, code, or phone"
                 sortOptions={[
                   { label: 'Newest First', value: '-createdAt' },
                   { label: 'Oldest First', value: 'createdAt' },

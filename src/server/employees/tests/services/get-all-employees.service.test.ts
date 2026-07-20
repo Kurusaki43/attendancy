@@ -60,6 +60,27 @@ describe('getAllEmployees', () => {
     );
   });
 
+  it('searches by employeeCode/phone alongside the user’s name and email', async () => {
+    vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
+    vi.mocked(employeeRepository.count).mockResolvedValue(0);
+
+    await getAllEmployees({ search: 'jane' });
+
+    expect(employeeRepository.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: [
+            { employeeCode: { contains: 'jane', mode: 'insensitive' } },
+            { phone: { contains: 'jane', mode: 'insensitive' } },
+            { user: { firstName: { contains: 'jane', mode: 'insensitive' } } },
+            { user: { lastName: { contains: 'jane', mode: 'insensitive' } } },
+            { user: { email: { contains: 'jane', mode: 'insensitive' } } },
+          ],
+        }),
+      }),
+    );
+  });
+
   it('applies the departmentId filter when provided', async () => {
     vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
     vi.mocked(employeeRepository.count).mockResolvedValue(0);

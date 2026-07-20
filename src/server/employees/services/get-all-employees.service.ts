@@ -52,8 +52,20 @@ export async function getAllEmployees(
 
   const query = features.build();
 
-  // accountStatus lives on the related User, not Employee itself, so it can't go through the
-  // builder's flat filterableFields allowlist — merge it in as a nested relation filter instead.
+  if (validated.search) {
+    const existingOr = (query.where as Prisma.EmployeeWhereInput | undefined)?.OR ?? [];
+
+    query.where = {
+      ...query.where,
+      OR: [
+        ...existingOr,
+        { user: { firstName: { contains: validated.search, mode: 'insensitive' } } },
+        { user: { lastName: { contains: validated.search, mode: 'insensitive' } } },
+        { user: { email: { contains: validated.search, mode: 'insensitive' } } },
+      ],
+    };
+  }
+
   if (validated.accountStatus) {
     query.where = { ...query.where, user: { status: validated.accountStatus } };
   }
