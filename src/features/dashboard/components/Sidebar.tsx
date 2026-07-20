@@ -1,10 +1,11 @@
 'use client';
 
-import { ChevronRight, ChevronsLeft, ChevronsRight, Users } from 'lucide-react';
+import { ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
 
+import { Logo } from '@/components/shared/Logo';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { canSeeNavItem } from '@/features/dashboard/lib/navigation-utils';
@@ -164,14 +165,7 @@ export function Sidebar({
             isCollapsed && 'lg:justify-center lg:gap-1.5 lg:px-2 sm:lg:px-2',
           )}
         >
-          <div
-            className={cn(
-              'bg-primary flex size-9 shrink-0 items-center justify-center rounded-sm shadow-sm',
-              isCollapsed && 'lg:size-7',
-            )}
-          >
-            <Users className="text-sidebar-primary-foreground size-4" />
-          </div>
+          <Logo size="md" className={cn(isCollapsed && 'lg:size-7')} />
           <div className={cn('min-w-0', isCollapsed && 'lg:hidden')}>
             <p className="text-sidebar-foreground truncate text-sm font-semibold">Attendancy</p>
             <p className="text-sidebar-foreground/60 truncate text-xs">HR Platform</p>

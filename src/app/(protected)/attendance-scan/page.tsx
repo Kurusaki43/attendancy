@@ -1,3 +1,4 @@
+import { Logo } from '@/components/shared/Logo';
 import { AttendanceScanResult } from '@/features/attendance/components/AttendanceScanResult';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { scanAttendanceAction } from '@/server/attendance/actions/scan-attendance.action';
@@ -43,9 +44,7 @@ export default async function AttendanceScanPage({ searchParams }: Props) {
   return (
     <div className="bg-background flex min-h-screen flex-col">
       <header className="flex items-center justify-center gap-3 py-8">
-        <div className="bg-primary flex size-9 items-center justify-center rounded-lg shadow-sm">
-          <span className="text-primary-foreground text-sm font-bold">A</span>
-        </div>
+        <Logo size="lg" />
         <div>
           <p className="text-lg font-semibold tracking-wide">Attendancy</p>
           <p className="text-muted-foreground text-xs">Employee Check-In</p>

@@ -2,6 +2,7 @@ import { Camera } from 'lucide-react';
 
 import { getListErrorStateProps } from '@/components/shared/data-table/data-table-utils';
 import { ErrorState } from '@/components/shared/ErrorState';
+import { Logo } from '@/components/shared/Logo';
 import { AttendanceQrDisplay } from '@/features/attendance/components/AttendanceQrDisplay';
 import { getAttendanceQrAction } from '@/server/attendance/actions/get-attendance-qr.action';
 import { formatDate } from '@/shared/utils/format-date';
@@ -23,9 +24,7 @@ export default async function AttendanceQrPage() {
   return (
     <div className="bg-background flex min-h-screen flex-col">
       <header className="flex items-center justify-center gap-3 py-6">
-        <div className="bg-primary flex size-9 items-center justify-center rounded-lg shadow-sm">
-          <span className="text-primary-foreground text-sm font-bold">A</span>
-        </div>
+        <Logo size="lg" />
         <div>
           <p className="text-lg font-semibold tracking-wide">Attendancy</p>
           <p className="text-muted-foreground text-xs">Employee Check-In</p>
