@@ -1,7 +1,8 @@
-import { addHours, addMinutes, isWeekend, startOfDay, subDays } from 'date-fns';
+import { addHours, addMinutes } from 'date-fns';
 
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
+import { isUtcWeekend, startOfUtcDay, subUtcDays } from '@/shared/utils/date';
 
 const DAYS_OF_HISTORY = 14;
 const CLOCK_IN_HOUR = 9;
@@ -17,7 +18,7 @@ function seededJitter(seed: string, max: number) {
 }
 
 function isSeededWorkday(date: Date, seedKey: string) {
-  return !isWeekend(date) && seededJitter(seedKey, ABSENCE_FREQUENCY) !== 0;
+  return !isUtcWeekend(date) && seededJitter(seedKey, ABSENCE_FREQUENCY) !== 0;
 }
 
 export async function seedAttendance() {
@@ -28,11 +29,11 @@ export async function seedAttendance() {
     select: { id: true, employeeCode: true },
   });
 
-  const today = startOfDay(new Date());
+  const today = startOfUtcDay();
 
   for (const employee of employees) {
     for (let daysAgo = 1; daysAgo <= DAYS_OF_HISTORY; daysAgo++) {
-      const date = subDays(today, daysAgo);
+      const date = subUtcDays(today, daysAgo);
       const seedKey = `${employee.employeeCode}-${daysAgo}`;
 
       if (!isSeededWorkday(date, seedKey)) continue;

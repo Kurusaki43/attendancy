@@ -1,15 +1,14 @@
-import { startOfDay } from 'date-fns';
-
 import { AttendanceStatus } from '@/generated/prisma/enums';
 import {
   attendanceRepository,
   type AttendanceWithEvents,
 } from '@/server/attendance/repositories/attendance.repository';
+import { startOfUtcDay } from '@/shared/utils/date';
 
 export async function findOrCreateTodayAttendance(
   employeeId: string,
 ): Promise<AttendanceWithEvents> {
-  const date = startOfDay(new Date());
+  const date = startOfUtcDay();
 
   const existing = await attendanceRepository.findByEmployeeAndDate(employeeId, date);
 
