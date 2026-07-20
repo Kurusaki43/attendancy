@@ -9,8 +9,10 @@ import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTa
 import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { cn } from '@/lib/utils';
 import type { DepartmentResult } from '@/server/departments/types/action-results';
+import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 import { DEPARTMENT_ICON_MAP } from '../lib/department-visuals';
 import { DeleteDepartmentDialog } from './DeleteDepartmentDialog';
@@ -103,70 +105,72 @@ function RowActions({ department }: { department: DepartmentResult }) {
   );
 }
 
-const columns: ColumnDef<DepartmentResult>[] = [
-  {
-    key: 'name',
-    header: 'Department',
-    cell: (row) => <DepartmentCell row={row} />,
-  },
-  {
-    key: 'parent',
-    header: 'Parent',
-    cell: (row) => <ParentCell parent={row.parent} />,
-  },
-  {
-    key: 'code',
-    header: 'Code',
-    cell: (row) => <span className="font-mono text-xs">{row.code}</span>,
-  },
-  {
-    key: 'employeeCount',
-    header: 'Employees',
-    cell: (row) => (
-      <span className="text-muted-foreground flex items-center justify-center gap-1.5 text-center">
-        <Users className="size-3.5" />
-        {row.employeeCount ?? 0}
-      </span>
-    ),
-    headerClassName: 'text-center',
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    cell: (row) => <StatusBadge isActive={row.isActive} />,
-  },
-  {
-    key: 'createdAt',
-    header: 'Created',
-    cell: (row) => (
-      <span className="text-muted-foreground block text-center tabular-nums">
-        {new Date(row.createdAt).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        })}
-      </span>
-    ),
-    headerClassName: 'text-center',
-  },
-  {
-    key: 'actions',
-    header: 'Actions',
-    cell: (row) => <RowActions department={row} />,
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-];
+type UserLocale = { locale?: string; timezone?: string };
+
+function buildColumns(userLocale: UserLocale): ColumnDef<DepartmentResult>[] {
+  return [
+    {
+      key: 'name',
+      header: 'Department',
+      cell: (row) => <DepartmentCell row={row} />,
+    },
+    {
+      key: 'parent',
+      header: 'Parent',
+      cell: (row) => <ParentCell parent={row.parent} />,
+    },
+    {
+      key: 'code',
+      header: 'Code',
+      cell: (row) => <span className="font-mono text-xs">{row.code}</span>,
+    },
+    {
+      key: 'employeeCount',
+      header: 'Employees',
+      cell: (row) => (
+        <span className="text-muted-foreground flex items-center justify-center gap-1.5 text-center">
+          <Users className="size-3.5" />
+          {row.employeeCount ?? 0}
+        </span>
+      ),
+      headerClassName: 'text-center',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      cell: (row) => <StatusBadge isActive={row.isActive} />,
+    },
+    {
+      key: 'createdAt',
+      header: 'Created',
+      cell: (row) => (
+        <span className="text-muted-foreground block text-center tabular-nums">
+          {formatDate(row.createdAt, { ...userLocale, ...DATE_FORMAT })}
+        </span>
+      ),
+      headerClassName: 'text-center',
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      cell: (row) => <RowActions department={row} />,
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+  ];
+}
 
 type DepartmentsTableProps = {
   departments: DepartmentResult[];
 };
 
 export function DepartmentsTable({ departments }: DepartmentsTableProps) {
+  const userLocale = useUserLocale();
+
   return (
     <DataTable
       data={departments}
-      columns={columns}
+      columns={buildColumns(userLocale)}
       emptyMessage="No matching departments"
       emptyDescription="Try adjusting your search or filters."
       emptyIcon={SearchX}

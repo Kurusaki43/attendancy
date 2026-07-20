@@ -9,6 +9,8 @@ export type ServiceProfileResult = {
   hasPassword: boolean;
   roles: string[];
   createdAt: Date;
+  locale: string;
+  timezone: string;
 };
 
 export type ServiceGetProfileResult = ServiceProfileResult;

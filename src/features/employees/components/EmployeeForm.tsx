@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
+import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { EmployeeAccountInvitationCard } from '@/features/employees/components/EmployeeAccountInvitationCard';
 import { EmployeeEmploymentInfoCard } from '@/features/employees/components/EmployeeEmploymentInfoCard';
 import { EmployeePersonalInfoCard } from '@/features/employees/components/EmployeePersonalInfoCard';
@@ -20,6 +21,7 @@ import type {
   EmployeeFormValues,
   SelectOption,
 } from '@/features/employees/lib/employee-form';
+import { getBrowserLocaleAndTimezone } from '@/lib/browser-locale';
 import { createEmployeeAction } from '@/server/employees/actions/create-employee.action';
 import { updateEmployeeAction } from '@/server/employees/actions/update-employee.action';
 import {
@@ -31,6 +33,7 @@ import {
   updateEmployeeSchema,
 } from '@/server/employees/schemas/update-employee.schema';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
+import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 type EmployeeFormOptions = {
   departments: SelectOption[];
@@ -59,6 +62,7 @@ export function EmployeeForm({
 }: EmployeeFormProps) {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
+  const userLocale = useUserLocale();
 
   const isUpdateMode = mode === 'update';
 
@@ -114,7 +118,10 @@ export function EmployeeForm({
     try {
       const result = isUpdateMode
         ? await updateEmployeeAction(employee.id, payload)
-        : await createEmployeeAction(payload as CreateEmployeeInput);
+        : await createEmployeeAction({
+            ...(payload as CreateEmployeeInput),
+            ...getBrowserLocaleAndTimezone(),
+          });
 
       if (result.success) {
         toast.success(
@@ -168,11 +175,7 @@ export function EmployeeForm({
   const positionLabel = positions.find((position) => position.id === positionId)?.label;
   const managerLabel = managerOptions.find((manager) => manager.id === managerId)?.label;
   const hireDateLabel = hireDate
-    ? new Date(hireDate as string | number | Date).toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      })
+    ? formatDate(hireDate as string | number | Date, { ...userLocale, ...DATE_FORMAT })
     : undefined;
 
   return (

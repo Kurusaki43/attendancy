@@ -8,7 +8,9 @@ import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTa
 import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import type { PositionResult } from '@/server/positions/types/action-results';
+import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 import { DeletePositionDialog } from './DeletePositionDialog';
 import { EditPositionDialog } from './EditPositionDialog';
@@ -54,64 +56,66 @@ function RowActions({ position }: { position: PositionResult }) {
   );
 }
 
-const columns: ColumnDef<PositionResult>[] = [
-  {
-    key: 'title',
-    header: 'Position',
-    cell: (row) => <span className="text-foreground font-medium">{row.title}</span>,
-  },
-  {
-    key: 'code',
-    header: 'Code',
-    cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
-  },
-  {
-    key: 'description',
-    header: 'Description',
-    cell: (row) => (
-      <p className="text-muted-foreground max-w-sm truncate">
-        {row.description ?? <span className="italic opacity-50">No description</span>}
-      </p>
-    ),
-    cellClassName: 'max-w-sm',
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    cell: (row) => <StatusBadge isActive={row.isActive} />,
-  },
-  {
-    key: 'createdAt',
-    header: 'Created',
-    cell: (row) => (
-      <span className="text-muted-foreground block text-center tabular-nums">
-        {new Date(row.createdAt).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        })}
-      </span>
-    ),
-    headerClassName: 'text-center',
-  },
-  {
-    key: 'actions',
-    header: 'Actions',
-    cell: (row) => <RowActions position={row} />,
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-];
+type UserLocale = { locale?: string; timezone?: string };
+
+function buildColumns(userLocale: UserLocale): ColumnDef<PositionResult>[] {
+  return [
+    {
+      key: 'title',
+      header: 'Position',
+      cell: (row) => <span className="text-foreground font-medium">{row.title}</span>,
+    },
+    {
+      key: 'code',
+      header: 'Code',
+      cell: (row) => <span className="text-muted-foreground font-mono text-xs">{row.code}</span>,
+    },
+    {
+      key: 'description',
+      header: 'Description',
+      cell: (row) => (
+        <p className="text-muted-foreground max-w-sm truncate">
+          {row.description ?? <span className="italic opacity-50">No description</span>}
+        </p>
+      ),
+      cellClassName: 'max-w-sm',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      cell: (row) => <StatusBadge isActive={row.isActive} />,
+    },
+    {
+      key: 'createdAt',
+      header: 'Created',
+      cell: (row) => (
+        <span className="text-muted-foreground block text-center tabular-nums">
+          {formatDate(row.createdAt, { ...userLocale, ...DATE_FORMAT })}
+        </span>
+      ),
+      headerClassName: 'text-center',
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      cell: (row) => <RowActions position={row} />,
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+  ];
+}
 
 type PositionsTableProps = {
   positions: PositionResult[];
 };
 
 export function PositionsTable({ positions }: PositionsTableProps) {
+  const userLocale = useUserLocale();
+
   return (
     <DataTable
       data={positions}
-      columns={columns}
+      columns={buildColumns(userLocale)}
       emptyMessage="No matching positions"
       emptyDescription="Try adjusting your search or filters."
       emptyIcon={SearchX}

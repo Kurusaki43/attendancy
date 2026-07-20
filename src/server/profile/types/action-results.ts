@@ -9,6 +9,8 @@ export type ProfileResult = {
   hasPassword: boolean;
   roles: string[];
   createdAt: Date;
+  locale: string;
+  timezone: string;
 };
 
 export type GetProfileActionResult = ProfileResult;

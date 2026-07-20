@@ -10,6 +10,7 @@ import { TableRowActions } from '@/components/shared/data-table/TableRowActions'
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
+import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { DEPARTMENT_ICON_MAP } from '@/features/departments/lib/department-visuals';
 import {
   EMPLOYMENT_STATUS_BADGE_CLASSES,
@@ -25,6 +26,7 @@ import {
 } from '@/features/employees/lib/user-status';
 import { cn } from '@/lib/utils';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
+import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 import { DeleteEmployeeDialog } from './DeleteEmployeeDialog';
 
@@ -100,93 +102,95 @@ function RowActions({ employee }: { employee: EmployeeResult }) {
   );
 }
 
-const columns: ColumnDef<EmployeeResult>[] = [
-  {
-    key: 'name',
-    header: 'Employee',
-    cell: (row) => (
-      <div className="flex items-center gap-3">
-        <UserAvatar
-          firstName={row.user.firstName}
-          lastName={row.user.lastName}
-          avatar={row.user.avatar}
-        />
-        <div>
-          <span className="text-foreground block font-medium">
-            {row.user.firstName} {row.user.lastName}
-          </span>
-          <span className="text-muted-foreground text-xs">{row.employeeCode}</span>
+type UserLocale = { locale?: string; timezone?: string };
+
+function buildColumns(userLocale: UserLocale): ColumnDef<EmployeeResult>[] {
+  return [
+    {
+      key: 'name',
+      header: 'Employee',
+      cell: (row) => (
+        <div className="flex items-center gap-3">
+          <UserAvatar
+            firstName={row.user.firstName}
+            lastName={row.user.lastName}
+            avatar={row.user.avatar}
+          />
+          <div>
+            <span className="text-foreground block font-medium">
+              {row.user.firstName} {row.user.lastName}
+            </span>
+            <span className="text-muted-foreground text-xs">{row.employeeCode}</span>
+          </div>
         </div>
-      </div>
-    ),
-  },
-  {
-    key: 'department',
-    header: 'Department',
-    cell: (row) => <DepartmentCell department={row.department} />,
-  },
-  {
-    key: 'position',
-    header: 'Position',
-    cell: (row) => (
-      <span>{row.position?.title ?? <span className="italic opacity-50">None</span>}</span>
-    ),
-  },
-  {
-    key: 'manager',
-    header: 'Manager',
-    cell: (row) => (
-      <span className="text-muted-foreground">
-        {row.manager ? (
-          `${row.manager.user.firstName} ${row.manager.user.lastName}`
-        ) : (
-          <span className="italic opacity-50">None</span>
-        )}
-      </span>
-    ),
-  },
-  {
-    key: 'hireDate',
-    header: 'Hired',
-    cell: (row) => (
-      <span className="text-muted-foreground block text-center tabular-nums">
-        {new Date(row.hireDate).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        })}
-      </span>
-    ),
-    headerClassName: 'text-center',
-  },
-  {
-    key: 'status',
-    header: 'Employment',
-    cell: (row) => <StatusBadge status={row.employmentStatus} />,
-  },
-  {
-    key: 'accountStatus',
-    header: 'Account',
-    cell: (row) => <AccountStatusBadge status={row.user.status} />,
-  },
-  {
-    key: 'actions',
-    header: 'Actions',
-    cell: (row) => <RowActions employee={row} />,
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-];
+      ),
+    },
+    {
+      key: 'department',
+      header: 'Department',
+      cell: (row) => <DepartmentCell department={row.department} />,
+    },
+    {
+      key: 'position',
+      header: 'Position',
+      cell: (row) => (
+        <span>{row.position?.title ?? <span className="italic opacity-50">None</span>}</span>
+      ),
+    },
+    {
+      key: 'manager',
+      header: 'Manager',
+      cell: (row) => (
+        <span className="text-muted-foreground">
+          {row.manager ? (
+            `${row.manager.user.firstName} ${row.manager.user.lastName}`
+          ) : (
+            <span className="italic opacity-50">None</span>
+          )}
+        </span>
+      ),
+    },
+    {
+      key: 'hireDate',
+      header: 'Hired',
+      cell: (row) => (
+        <span className="text-muted-foreground block text-center tabular-nums">
+          {formatDate(row.hireDate, { ...userLocale, ...DATE_FORMAT })}
+        </span>
+      ),
+      headerClassName: 'text-center',
+    },
+    {
+      key: 'status',
+      header: 'Employment',
+      cell: (row) => <StatusBadge status={row.employmentStatus} />,
+    },
+    {
+      key: 'accountStatus',
+      header: 'Account',
+      cell: (row) => <AccountStatusBadge status={row.user.status} />,
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      cell: (row) => <RowActions employee={row} />,
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+  ];
+}
 
 type EmployeesTableProps = {
   employees: EmployeeResult[];
 };
 
 export function EmployeesTable({ employees }: EmployeesTableProps) {
+  const userLocale = useUserLocale();
+
   return (
     <DataTable
       data={employees}
-      columns={columns}
+      columns={buildColumns(userLocale)}
       emptyMessage="No matching employees"
       emptyDescription="Try adjusting your search or filters."
       emptyIcon={SearchX}

@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import type { ProfileResult } from '@/server/profile/types/action-results';
+import { formatDate } from '@/shared/utils/format-date';
 
 type ProfileHeaderProps = {
   profile: ProfileResult;
@@ -98,7 +99,9 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
               <dt className="text-muted-foreground text-xs">Member since</dt>
               <dd
                 className="text-sm font-medium"
-                title={new Date(profile.createdAt).toLocaleDateString('en-US', {
+                title={formatDate(profile.createdAt, {
+                  locale: profile.locale,
+                  timezone: profile.timezone,
                   dateStyle: 'long',
                 })}
               >

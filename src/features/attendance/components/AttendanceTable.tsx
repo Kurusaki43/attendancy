@@ -12,9 +12,11 @@ import {
   formatWorkedMinutes,
 } from '@/features/attendance/lib/attendance-status';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
+import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { DEPARTMENT_ICON_MAP } from '@/features/departments/lib/department-visuals';
 import { cn } from '@/lib/utils';
 import type { AttendanceEmployeeResult, AttendanceResult } from '@/server/attendance/types';
+import { DATE_FORMAT, formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
 
 function DepartmentCell({ department }: { department: AttendanceEmployeeResult['department'] }) {
   if (!department) {
@@ -50,110 +52,112 @@ function StatusBadge({ status }: { status: AttendanceResult['status'] }) {
   );
 }
 
-function formatClockTime(value: Date | null) {
+type UserLocale = { locale?: string; timezone?: string };
+
+function formatClockTime(value: Date | null, userLocale: UserLocale) {
   if (!value) return <span className="italic opacity-50">—</span>;
 
-  return new Date(value).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  return formatDate(value, { ...userLocale, ...TIME_FORMAT });
 }
 
-const columns: ColumnDef<AttendanceResult>[] = [
-  {
-    key: 'employee',
-    header: 'Employee',
-    cell: (row) => (
-      <div className="flex items-center gap-3">
-        <UserAvatar
-          firstName={row.employee.user.firstName}
-          lastName={row.employee.user.lastName}
-          avatar={row.employee.user.avatar}
-        />
-        <div>
-          <span className="text-foreground block font-medium">
-            {row.employee.user.firstName} {row.employee.user.lastName}
-          </span>
-          <span className="text-muted-foreground text-xs">{row.employee.employeeCode}</span>
+function buildColumns(userLocale: UserLocale): ColumnDef<AttendanceResult>[] {
+  return [
+    {
+      key: 'employee',
+      header: 'Employee',
+      cell: (row) => (
+        <div className="flex items-center gap-3">
+          <UserAvatar
+            firstName={row.employee.user.firstName}
+            lastName={row.employee.user.lastName}
+            avatar={row.employee.user.avatar}
+          />
+          <div>
+            <span className="text-foreground block font-medium">
+              {row.employee.user.firstName} {row.employee.user.lastName}
+            </span>
+            <span className="text-muted-foreground text-xs">{row.employee.employeeCode}</span>
+          </div>
         </div>
-      </div>
-    ),
-  },
-  {
-    key: 'department',
-    header: 'Department',
-    cell: (row) => <DepartmentCell department={row.employee.department} />,
-  },
-  {
-    key: 'date',
-    header: 'Date',
-    cell: (row) => (
-      <span
-        className="text-muted-foreground block text-center tabular-nums"
-        suppressHydrationWarning
-      >
-        {new Date(row.date).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        })}
-      </span>
-    ),
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-  {
-    key: 'clockIn',
-    header: 'Clock In',
-    cell: (row) => (
-      <span
-        className="text-muted-foreground block text-center tabular-nums"
-        suppressHydrationWarning
-      >
-        {formatClockTime(row.firstClockIn)}
-      </span>
-    ),
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-  {
-    key: 'clockOut',
-    header: 'Clock Out',
-    cell: (row) => (
-      <span
-        className="text-muted-foreground block text-center tabular-nums"
-        suppressHydrationWarning
-      >
-        {formatClockTime(row.lastClockOut)}
-      </span>
-    ),
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-  {
-    key: 'workedMinutes',
-    header: 'Worked',
-    cell: (row) => (
-      <span className="text-muted-foreground block text-center tabular-nums">
-        {formatWorkedMinutes(row.workedMinutes)}
-      </span>
-    ),
-    headerClassName: 'text-center',
-    cellClassName: 'text-center',
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    cell: (row) => <StatusBadge status={row.status} />,
-  },
-];
+      ),
+    },
+    {
+      key: 'department',
+      header: 'Department',
+      cell: (row) => <DepartmentCell department={row.employee.department} />,
+    },
+    {
+      key: 'date',
+      header: 'Date',
+      cell: (row) => (
+        <span
+          className="text-muted-foreground block text-center tabular-nums"
+          suppressHydrationWarning
+        >
+          {formatDate(row.date, { ...userLocale, ...DATE_FORMAT })}
+        </span>
+      ),
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'clockIn',
+      header: 'Clock In',
+      cell: (row) => (
+        <span
+          className="text-muted-foreground block text-center tabular-nums"
+          suppressHydrationWarning
+        >
+          {formatClockTime(row.firstClockIn, userLocale)}
+        </span>
+      ),
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'clockOut',
+      header: 'Clock Out',
+      cell: (row) => (
+        <span
+          className="text-muted-foreground block text-center tabular-nums"
+          suppressHydrationWarning
+        >
+          {formatClockTime(row.lastClockOut, userLocale)}
+        </span>
+      ),
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'workedMinutes',
+      header: 'Worked',
+      cell: (row) => (
+        <span className="text-muted-foreground block text-center tabular-nums">
+          {formatWorkedMinutes(row.workedMinutes)}
+        </span>
+      ),
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      cell: (row) => <StatusBadge status={row.status} />,
+    },
+  ];
+}
 
 type AttendanceTableProps = {
   attendance: AttendanceResult[];
 };
 
 export function AttendanceTable({ attendance }: AttendanceTableProps) {
+  const userLocale = useUserLocale();
+
   return (
     <DataTable
       data={attendance}
-      columns={columns}
+      columns={buildColumns(userLocale)}
       emptyMessage="No matching attendance records"
       emptyDescription="Try adjusting your search or filters."
       emptyIcon={SearchX}

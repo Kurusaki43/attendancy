@@ -13,5 +13,7 @@ export function getProfile(user: AuthUser): ServiceGetProfileResult {
     hasPassword: user.passwordHash !== null,
     roles: user.roles.map((role) => role.name),
     createdAt: user.createdAt,
+    locale: user.locale,
+    timezone: user.timezone,
   };
 }
