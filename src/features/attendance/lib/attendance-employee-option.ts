@@ -1,3 +1,5 @@
+import type { EmployeeResult } from '@/server/employees/types';
+
 export type AttendanceEmployeeOption = {
   id: string;
   firstName: string;
@@ -5,4 +7,17 @@ export type AttendanceEmployeeOption = {
   avatar: string | null;
   position: string | null;
   department: string | null;
+  employeeCode: string;
 };
+
+export function toEmployeeOption(employee: EmployeeResult): AttendanceEmployeeOption {
+  return {
+    id: employee.id,
+    firstName: employee.user.firstName,
+    lastName: employee.user.lastName,
+    avatar: employee.user.avatar,
+    position: employee.position?.title ?? null,
+    department: employee.department?.name ?? null,
+    employeeCode: employee.employeeCode,
+  };
+}

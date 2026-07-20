@@ -4,27 +4,19 @@ import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import type { AttendanceEmployeeOption } from '@/features/attendance/lib/attendance-employee-option';
+import {
+  type AttendanceEmployeeOption,
+  toEmployeeOption,
+} from '@/features/attendance/lib/attendance-employee-option';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { getAllEmployeesAction } from '@/server/employees/actions/get-all-employees.action';
-import type { EmployeeResult } from '@/server/employees/types/action-results';
 
 const SEARCH_RESULTS_LIMIT = '20';
-
-function toEmployeeOption(employee: EmployeeResult): AttendanceEmployeeOption {
-  return {
-    id: employee.id,
-    firstName: employee.user.firstName,
-    lastName: employee.user.lastName,
-    avatar: employee.user.avatar,
-    position: employee.position?.title ?? null,
-    department: employee.department?.name ?? null,
-  };
-}
 
 type EmployeeComboboxProps = {
   value: AttendanceEmployeeOption | null;
@@ -110,10 +102,13 @@ export function EmployeeCombobox({ value, onChange, disabled }: EmployeeCombobox
               avatar={value.avatar}
               size="sm"
             />
-            <span className="text-start">
-              <span className="block font-medium">
-                {value.firstName} {value.lastName}
-              </span>
+            <span className="space-y-1 text-start">
+              <p className="flex items-center gap-2">
+                <span className="block font-medium">
+                  {value.firstName} {value.lastName}
+                </span>
+                <Badge className="bg-primary/60 rounded-sm">{value.employeeCode}</Badge>
+              </p>
               <span className="text-muted-foreground block text-xs">
                 {[value.position, value.department].filter(Boolean).join(' • ')}
               </span>
@@ -161,6 +156,7 @@ export function EmployeeCombobox({ value, onChange, disabled }: EmployeeCombobox
                   <span className="block font-medium">
                     {option.firstName} {option.lastName}
                   </span>
+
                   <span className="text-muted-foreground block truncate text-xs">
                     {[option.position, option.department].filter(Boolean).join(' • ')}
                   </span>
