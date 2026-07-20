@@ -35,7 +35,7 @@ model User {
   firstName       String
   lastName        String
   email           String     @unique
-  emailVerifiedAt DateTime?
+  emailVerifiedAt DateTime?  @db.Timestamptz(3)
   passwordHash    String?
   avatar          String?
   provider        Provider   @default(LOCAL)
@@ -47,8 +47,8 @@ model User {
   otps     Otp[]
   employee Employee?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 }
 
 model Session {
@@ -57,16 +57,16 @@ model Session {
   refreshTokenHash String    @unique
   ipAddress        String?
   userAgent        String?
-  expiresAt        DateTime
-  revokedAt        DateTime?
+  expiresAt        DateTime  @db.Timestamptz(3)
+  revokedAt        DateTime? @db.Timestamptz(3)
 
   previousRefreshTokenHash      String?
-  previousRefreshTokenExpiresAt DateTime?
+  previousRefreshTokenExpiresAt DateTime? @db.Timestamptz(3)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@index([userId])
   @@index([expiresAt])
@@ -78,8 +78,8 @@ model Role {
   description String?
   users       User[]       @relation("UserRoles")
   permissions Permission[] @relation("RolePermissions")
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @db.Timestamptz(3)
 }
 
 model Permission {
@@ -88,8 +88,8 @@ model Permission {
   action      String
   description String?
   roles       Role[]   @relation("RolePermissions")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(3)
 
   @@unique([resource, action])
 }
@@ -106,11 +106,11 @@ model Otp {
   userId        String
   type          OtpType
   codeHash      String
-  expiresAt     DateTime
-  usedAt        DateTime?
-  invalidatedAt DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  expiresAt     DateTime  @db.Timestamptz(3)
+  usedAt        DateTime? @db.Timestamptz(3)
+  invalidatedAt DateTime? @db.Timestamptz(3)
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -131,8 +131,8 @@ model Department {
   children Department[] @relation("DepartmentHierarchy")
 
   isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   employees Employee[]
 
@@ -146,8 +146,8 @@ model Position {
   description String?
 
   isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   employees Employee[]
 }
@@ -156,10 +156,10 @@ model Employee {
   id           String   @id @default(cuid())
   employeeCode String   @unique
   phone        String?
-  hireDate     DateTime
+  hireDate     DateTime @db.Timestamptz(3)
 
   gender    Gender?
-  birthDate DateTime?
+  birthDate DateTime? @db.Timestamptz(3)
   address   String?
 
   userId       String  @unique
@@ -174,8 +174,8 @@ model Employee {
   position     Position?   @relation(fields: [positionId], references: [id])
 
   employmentStatus EmploymentStatus @default(ACTIVE)
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  createdAt        DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime         @updatedAt @db.Timestamptz(3)
 
   attendances Attendance[]
 }
@@ -205,15 +205,15 @@ model Attendance {
   employeeId String
   employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
-  date          DateTime
-  firstClockIn  DateTime?
-  lastClockOut  DateTime?
+  date          DateTime          @db.Timestamptz(3)
+  firstClockIn  DateTime?         @db.Timestamptz(3)
+  lastClockOut  DateTime?         @db.Timestamptz(3)
   workedMinutes Int               @default(0)
   status        AttendanceStatus
   events        AttendanceEvent[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@unique([employeeId, date])
 }
@@ -224,8 +224,8 @@ model AttendanceEvent {
   attendanceId String
   attendance   Attendance          @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
   type         AttendanceEventType
-  occurredAt   DateTime
+  occurredAt   DateTime            @db.Timestamptz(3)
   method       AttendanceMethod
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
 }
