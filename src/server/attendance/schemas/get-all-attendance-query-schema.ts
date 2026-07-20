@@ -6,6 +6,8 @@ export const attendanceQuerySchema = BaseQuerySchema.extend({
   status: z.enum(['PRESENT', 'ABSENT', 'ON_LEAVE', 'HOLIDAY']).optional(),
   employeeId: z.string().optional(),
   departmentId: z.string().optional(),
+  dateFrom: z.iso.date().optional(),
+  dateTo: z.iso.date().optional(),
   sort: z
     .enum(['date', '-date', 'createdAt', '-createdAt', 'workedMinutes', '-workedMinutes'])
     .default('-date'),

@@ -36,7 +36,11 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
     : [];
 
   const hasActiveFilters =
-    Boolean(params.search) || Boolean(params.status) || Boolean(params.departmentId);
+    Boolean(params.search) ||
+    Boolean(params.status) ||
+    Boolean(params.departmentId) ||
+    Boolean(params.dateFrom) ||
+    Boolean(params.dateTo);
   const isTrulyEmpty = result.success && result.data.attendance.length === 0 && !hasActiveFilters;
 
   return (
@@ -89,6 +93,7 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
                     })),
                   },
                 ]}
+                dateRange={{ label: 'Date range' }}
               />
             </CardHeader>
             <CardContent>

@@ -10,6 +10,15 @@ import type { PaginationMeta } from '@/shared/types/api-feature';
 
 const ATTENDANCE_FILTERABLE_FIELDS = ['status', 'employeeId'];
 
+// Parses a 'YYYY-MM-DD' string as a local-midnight Date directly, rather than going through
+// `new Date(isoString)` (which parses date-only strings as UTC midnight) followed by a
+// local-timezone conversion — that round trip can shift the date by a day depending on the
+// server's timezone offset from UTC.
+function parseLocalDate(isoDate: string): Date {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export interface GetAllAttendanceResult {
   attendance: AttendanceWithEmployee[];
   pagination: PaginationMeta;
@@ -66,6 +75,23 @@ export async function getAllAttendance(
 
   if (Object.keys(employeeWhere).length > 0) {
     query.where = { ...query.where, employee: employeeWhere };
+  }
+
+  // date is always stored as a calendar day's midnight instant (see
+  // findOrCreateTodayAttendance), so a plain gte/lte against day boundaries is correct here —
+  // no need for an exclusive upper bound like a datetime range would need.
+  if (validated.dateFrom || validated.dateTo) {
+    const dateFilter: Prisma.DateTimeFilter = {};
+
+    if (validated.dateFrom) {
+      dateFilter.gte = parseLocalDate(validated.dateFrom);
+    }
+
+    if (validated.dateTo) {
+      dateFilter.lte = parseLocalDate(validated.dateTo);
+    }
+
+    query.where = { ...query.where, date: dateFilter };
   }
 
   const [attendance, totalCount] = await Promise.all([

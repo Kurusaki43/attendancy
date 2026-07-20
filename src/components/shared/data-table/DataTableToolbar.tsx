@@ -1,6 +1,7 @@
 'use client';
 
 import ClearFiltersButton from './ClearFilterButton';
+import DateRangeFilter from './DateRangeFilter';
 import FilterSelect from './FilterSelect';
 import SearchInput from './SearchInput';
 import SortInput, { type SortOption } from './SortInput';
@@ -19,6 +20,12 @@ type FilterSelectConfig = {
   options: { label: string; value: string }[];
 };
 
+type DateRangeFilterConfig = {
+  fromQueryKey?: string;
+  toQueryKey?: string;
+  label?: string;
+};
+
 const DEFAULT_STATUS_FILTER: FilterSelectConfig = {
   queryKey: 'isActive',
   label: 'Status',
@@ -33,6 +40,7 @@ type DataTableToolbarProps = {
   sortOptions?: SortOption[];
   filters?: FilterSelectConfig[];
   statusFilter?: FilterSelectConfig;
+  dateRange?: DateRangeFilterConfig;
 };
 
 const DataTableToolbar = ({
@@ -40,6 +48,7 @@ const DataTableToolbar = ({
   sortOptions = DEFAULT_SORT_OPTIONS,
   filters = [],
   statusFilter = DEFAULT_STATUS_FILTER,
+  dateRange,
 }: DataTableToolbarProps) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-6">
@@ -58,6 +67,7 @@ const DataTableToolbar = ({
             options={filter.options}
           />
         ))}
+        {dateRange && <DateRangeFilter {...dateRange} />}
         <SortInput queryKey="sort" defaultValue="-createdAt" options={sortOptions} />
         <ClearFiltersButton />
       </div>
