@@ -49,7 +49,13 @@ export default function DateRangeFilter({
 
       <Popover>
         <PopoverTrigger
-          render={<Button id={triggerId} variant="outline" className="min-w-56 justify-start" />}
+          render={
+            <Button
+              id={triggerId}
+              variant="outline"
+              className="bg-card hover:bg-card min-w-56 justify-start font-light"
+            />
+          }
         >
           <CalendarIcon data-icon="inline-start" />
           {range?.from ? (
