@@ -81,6 +81,43 @@ describe('getAllEmployees', () => {
     );
   });
 
+  it('sorts by the user’s first/last name via a nested relation orderBy', async () => {
+    vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
+    vi.mocked(employeeRepository.count).mockResolvedValue(0);
+
+    await getAllEmployees({ sort: 'name' });
+
+    expect(employeeRepository.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderBy: [{ user: { firstName: 'asc' } }, { user: { lastName: 'asc' } }],
+      }),
+    );
+  });
+
+  it('sorts by name descending when sort=-name', async () => {
+    vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
+    vi.mocked(employeeRepository.count).mockResolvedValue(0);
+
+    await getAllEmployees({ sort: '-name' });
+
+    expect(employeeRepository.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderBy: [{ user: { firstName: 'desc' } }, { user: { lastName: 'desc' } }],
+      }),
+    );
+  });
+
+  it('sorts by employeeCode using the flat column', async () => {
+    vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
+    vi.mocked(employeeRepository.count).mockResolvedValue(0);
+
+    await getAllEmployees({ sort: '-employeeCode' });
+
+    expect(employeeRepository.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ orderBy: [{ employeeCode: 'desc' }] }),
+    );
+  });
+
   it('applies the departmentId filter when provided', async () => {
     vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
     vi.mocked(employeeRepository.count).mockResolvedValue(0);

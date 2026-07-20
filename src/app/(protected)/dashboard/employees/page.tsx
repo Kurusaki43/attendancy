@@ -93,6 +93,10 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
                 sortOptions={[
                   { label: 'Newest First', value: '-createdAt' },
                   { label: 'Oldest First', value: 'createdAt' },
+                  { label: 'Name (A-Z)', value: 'name' },
+                  { label: 'Name (Z-A)', value: '-name' },
+                  { label: 'Code (A-Z)', value: 'employeeCode' },
+                  { label: 'Code (Z-A)', value: '-employeeCode' },
                   { label: 'Recently Hired', value: '-hireDate' },
                   { label: 'Earliest Hired', value: 'hireDate' },
                   { label: 'Recently Updated', value: '-updatedAt' },

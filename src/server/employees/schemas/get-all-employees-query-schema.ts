@@ -16,6 +16,9 @@ export const employeeQuerySchema = BaseQuerySchema.extend({
       'hireDate',
       '-hireDate',
       'employeeCode',
+      '-employeeCode',
+      'name',
+      '-name',
     ])
     .default('-createdAt'),
 });

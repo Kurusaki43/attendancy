@@ -52,6 +52,13 @@ export async function getAllEmployees(
 
   const query = features.build();
 
+  // "name" isn't a column on Employee (it's user.firstName/lastName), so the builder's generic
+  // sort() can't express it — override with the nested relation order it actually needs.
+  if (validated.sort === 'name' || validated.sort === '-name') {
+    const direction = validated.sort.startsWith('-') ? 'desc' : 'asc';
+    query.orderBy = [{ user: { firstName: direction } }, { user: { lastName: direction } }];
+  }
+
   if (validated.search) {
     const existingOr = (query.where as Prisma.EmployeeWhereInput | undefined)?.OR ?? [];
 
