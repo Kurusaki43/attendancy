@@ -22,12 +22,21 @@ vi.mock('@/server/positions/repositories/position.repository', () => ({
   },
 }));
 
+vi.mock('@/server/auth/repositories/user.repository', () => ({
+  userRepository: {
+    update: vi.fn(),
+    findByEmail: vi.fn(),
+  },
+}));
+
 const { employeeRepository } = await import('../../repositories/employee.repository');
 const { departmentRepository } =
   await import('@/server/departments/repositories/department.repository');
 const { positionRepository } = await import('@/server/positions/repositories/position.repository');
+const { userRepository } = await import('@/server/auth/repositories/user.repository');
 const { BadRequestError } = await import('@/lib/errors/bad-request.error');
 const { ConflictError } = await import('@/lib/errors/conflict.error');
+const { ForbiddenError } = await import('@/lib/errors/forbidden.error');
 const { NotFoundError } = await import('@/lib/errors/not-found.error');
 const { updateEmployee } = await import('../../services/update-employee.service');
 
@@ -108,5 +117,67 @@ describe('updateEmployee', () => {
     await expect(result).rejects.toBeInstanceOf(NotFoundError);
     await expect(result).rejects.toMatchObject({ code: ERROR_CODES.EMPLOYEE_NOT_FOUND });
     expect(employeeRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('throws ForbiddenError when changing name/email on a non-invited employee', async () => {
+    vi.mocked(employeeRepository.findById).mockResolvedValue({
+      id: 'employee-1',
+      userId: 'user-1',
+      user: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com', status: 'ACTIVE' },
+    } as never);
+
+    const result = updateEmployee('employee-1', { firstName: 'Grace' });
+
+    await expect(result).rejects.toBeInstanceOf(ForbiddenError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.EMPLOYEE_IDENTITY_LOCKED });
+    expect(employeeRepository.update).not.toHaveBeenCalled();
+    expect(userRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('allows changing name/email while the employee is still invited', async () => {
+    vi.mocked(employeeRepository.findById).mockResolvedValue({
+      id: 'employee-1',
+      userId: 'user-1',
+      user: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com', status: 'INVITED' },
+    } as never);
+    vi.mocked(userRepository.findByEmail).mockResolvedValue(null);
+    vi.mocked(employeeRepository.update).mockResolvedValue({ id: 'employee-1' } as never);
+
+    await updateEmployee('employee-1', { firstName: 'Grace', email: 'grace@example.com' });
+
+    expect(userRepository.update).toHaveBeenCalledWith({
+      userId: 'user-1',
+      newData: { firstName: 'Grace', email: 'grace@example.com' },
+    });
+    expect(employeeRepository.update).toHaveBeenCalledWith('employee-1', {});
+  });
+
+  it('throws ConflictError when the new email belongs to a different user', async () => {
+    vi.mocked(employeeRepository.findById).mockResolvedValue({
+      id: 'employee-1',
+      userId: 'user-1',
+      user: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com', status: 'INVITED' },
+    } as never);
+    vi.mocked(userRepository.findByEmail).mockResolvedValue({ id: 'user-2' } as never);
+
+    const result = updateEmployee('employee-1', { email: 'taken@example.com' });
+
+    await expect(result).rejects.toBeInstanceOf(ConflictError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.EMAIL_ALREADY_EXISTS });
+    expect(userRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('does not treat an unchanged name/email as a locked-identity edit', async () => {
+    vi.mocked(employeeRepository.findById).mockResolvedValue({
+      id: 'employee-1',
+      userId: 'user-1',
+      user: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com', status: 'ACTIVE' },
+    } as never);
+    vi.mocked(employeeRepository.update).mockResolvedValue({ id: 'employee-1' } as never);
+
+    await updateEmployee('employee-1', { firstName: 'Ada', phone: '555-0100' });
+
+    expect(userRepository.update).not.toHaveBeenCalled();
+    expect(employeeRepository.update).toHaveBeenCalledWith('employee-1', { phone: '555-0100' });
   });
 });

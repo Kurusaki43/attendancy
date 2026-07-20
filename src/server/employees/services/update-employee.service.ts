@@ -1,6 +1,7 @@
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { ForbiddenError } from '@/lib/errors/forbidden.error';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { userRepository } from '@/server/auth/repositories/user.repository';
 import { departmentRepository } from '@/server/departments/repositories/department.repository';
@@ -58,12 +59,36 @@ export async function updateEmployee(
     }
   }
 
-  const { avatar, ...employeeData } = input;
+  const { avatar, firstName, lastName, email, ...employeeData } = input;
 
-  if (avatar !== undefined) {
+  const identityFieldsRequested =
+    (firstName !== undefined && firstName !== employee.user.firstName) ||
+    (lastName !== undefined && lastName !== employee.user.lastName) ||
+    (email !== undefined && email !== employee.user.email);
+
+  if (identityFieldsRequested && employee.user.status !== 'INVITED') {
+    throw new ForbiddenError(
+      ERROR_CODES.EMPLOYEE_IDENTITY_LOCKED,
+      'Name and email can only be changed while the employee invitation is still pending.',
+    );
+  }
+
+  if (email && email !== employee.user.email) {
+    const existingUser = await userRepository.findByEmail(email);
+    if (existingUser && existingUser.id !== employee.userId) {
+      throw new ConflictError(ERROR_CODES.EMAIL_ALREADY_EXISTS, 'Email already exists');
+    }
+  }
+
+  if (avatar !== undefined || identityFieldsRequested) {
     await userRepository.update({
       userId: employee.userId,
-      newData: { avatar: avatar === '' ? null : avatar },
+      newData: {
+        ...(avatar !== undefined && { avatar: avatar === '' ? null : avatar }),
+        ...(firstName !== undefined && { firstName }),
+        ...(lastName !== undefined && { lastName }),
+        ...(email !== undefined && { email }),
+      },
     });
   }
 

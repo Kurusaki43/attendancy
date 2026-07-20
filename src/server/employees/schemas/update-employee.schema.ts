@@ -1,11 +1,24 @@
 import z from 'zod';
 
-// Generous ceiling for a base64-encoded 500x500 JPEG (the client crops/compresses to that size
-// before submitting) — this is a defense-in-depth check, not the primary size gate, which is the
-// 1MB raw-upload limit enforced client-side before cropping.
 const AVATAR_MAX_LENGTH = 3_000_000;
 
 export const updateEmployeeSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(2, 'First name must be at least 2 characters.')
+    .max(50, 'First name must not exceed 50 characters.')
+    .optional(),
+
+  lastName: z
+    .string()
+    .trim()
+    .min(2, 'Last name must be at least 2 characters.')
+    .max(50, 'Last name must not exceed 50 characters.')
+    .optional(),
+
+  email: z.email('Invalid email address.').trim().toLowerCase().optional(),
+
   employeeCode: z
     .string()
     .trim()
@@ -34,8 +47,6 @@ export const updateEmployeeSchema = z.object({
 
   employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).optional(),
 
-  // Only ever an uploaded image (data URI) or '' to clear it — there is no free-text URL input.
-  // An unchanged existing avatar is simply omitted from the submitted payload by the form.
   avatar: z
     .string()
     .max(AVATAR_MAX_LENGTH, 'Avatar image is too large.')
