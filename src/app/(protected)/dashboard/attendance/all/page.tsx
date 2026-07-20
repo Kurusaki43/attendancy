@@ -6,6 +6,7 @@ import DataTableToolbar from '@/components/shared/data-table/DataTableToolbar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { AddAttendanceDialog } from '@/features/attendance/components/AddAttendanceDialog';
 import { AttendanceTable } from '@/features/attendance/components/AttendanceTable';
 import {
   ATTENDANCE_STATUS_LABELS,
@@ -53,6 +54,7 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
             View every employee&apos;s clock-in and clock-out history.
           </p>
         </div>
+        {result.success && !isTrulyEmpty && <AddAttendanceDialog />}
       </div>
 
       {/* Content */}
@@ -61,7 +63,8 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
           <EmptyState
             icon={CalendarDays}
             title="No attendance records yet"
-            description="Records appear here once employees start clocking in."
+            description="Records appear here once employees start clocking in, or add one manually."
+            action={<AddAttendanceDialog />}
             className="border-border bg-card card-shadow rounded-sm"
           />
         ) : (
