@@ -41,6 +41,8 @@ model User {
   provider        Provider   @default(LOCAL)
   providerId      String?
   status          UserStatus @default(INACTIVE)
+  locale          String     @default("en")
+  timezone        String     @default("America/New_York")
 
   sessions Session[]
   roles    Role[]    @relation("UserRoles")
