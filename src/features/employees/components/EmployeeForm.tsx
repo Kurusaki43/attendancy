@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { EmployeeAccountInvitationCard } from '@/features/employees/components/EmployeeAccountInvitationCard';
 import { EmployeeEmploymentInfoCard } from '@/features/employees/components/EmployeeEmploymentInfoCard';
 import { EmployeePersonalInfoCard } from '@/features/employees/components/EmployeePersonalInfoCard';
@@ -33,7 +32,6 @@ import {
   updateEmployeeSchema,
 } from '@/server/employees/schemas/update-employee.schema';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
-import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 type EmployeeFormOptions = {
   departments: SelectOption[];
@@ -62,9 +60,9 @@ export function EmployeeForm({
 }: EmployeeFormProps) {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
-  const userLocale = useUserLocale();
 
   const isUpdateMode = mode === 'update';
+  const canEditIdentity = !isUpdateMode || employee.user.status === 'INVITED';
 
   const form = useForm<EmployeeFormValues, unknown, EmployeeFormOutput>({
     resolver: zodResolver(isUpdateMode ? updateEmployeeSchema : createEmployeeSchema) as Resolver<
@@ -72,47 +70,39 @@ export function EmployeeForm({
       unknown,
       EmployeeFormOutput
     >,
-    defaultValues: isUpdateMode
-      ? {
-          employeeCode: employee.employeeCode,
-          phone: employee.phone ?? '',
-          hireDate: employee.hireDate,
-          gender: employee.gender ?? undefined,
-          birthDate: employee.birthDate ?? undefined,
-          address: employee.address ?? '',
-          departmentId: employee.department?.id,
-          positionId: employee.position?.id,
-          managerId: employee.manager?.id,
-          employmentStatus: employee.employmentStatus,
-          avatar: employee.user.avatar ?? '',
-        }
-      : {
-          firstName: '',
-          lastName: '',
-          email: '',
-          employeeCode: '',
-          phone: '',
-          hireDate: undefined,
-          address: '',
-          employmentStatus: 'ACTIVE',
-          avatar: '',
-        },
+    defaultValues: {
+      firstName: employee?.user.firstName ?? '',
+      lastName: employee?.user.lastName ?? '',
+      email: employee?.user.email ?? '',
+      employeeCode: employee?.employeeCode ?? '',
+      phone: employee?.phone ?? '',
+      hireDate: employee?.hireDate,
+      gender: employee?.gender ?? undefined,
+      birthDate: employee?.birthDate ?? undefined,
+      address: employee?.address ?? '',
+      departmentId: employee?.department?.id,
+      positionId: employee?.position?.id,
+      managerId: employee?.manager?.id,
+      employmentStatus: employee?.employmentStatus ?? 'ACTIVE',
+      avatar: employee?.user.avatar ?? '',
+    },
   });
 
-  // formState is a Proxy that only tracks a field once it's read during render — reading
-  // dirtyFields.avatar for the first time inside the async onSubmit handler below (instead of
-  // here) meant RHF never subscribed to it, so it always read as falsy and the avatar was
-  // silently stripped from every submission.
   const { dirtyFields } = form.formState;
 
   const onSubmit = async (data: CreateEmployeeInput | UpdateEmployeeInput) => {
     setIsPending(true);
 
-    // Only send avatar when the user actually changed it — an untouched value doesn't need to be
-    // resubmitted, and keeps a no-op edit from re-validating an already-stored data URI.
     const payload = { ...data };
     if (!dirtyFields.avatar) {
       delete payload.avatar;
+    }
+
+    if (isUpdateMode && !canEditIdentity) {
+      const lockedPayload = payload as UpdateEmployeeInput;
+      delete lockedPayload.firstName;
+      delete lockedPayload.lastName;
+      delete lockedPayload.email;
     }
 
     try {
@@ -157,26 +147,10 @@ export function EmployeeForm({
     isUpdateMode ? manager.id !== employee.id : true,
   );
 
-  const [departmentId, positionId, managerId, employmentStatus, hireDate, avatar] = useWatch({
-    control: form.control,
-    name: ['departmentId', 'positionId', 'managerId', 'employmentStatus', 'hireDate', 'avatar'],
-  });
-
-  const [watchedFirstName, watchedLastName, watchedEmail] = useWatch({
+  const watchedEmail = useWatch({
     control: form.control as unknown as Control<CreateEmployeeFormValues>,
-    name: ['firstName', 'lastName', 'email'],
+    name: 'email',
   });
-
-  const summaryFirstName = isUpdateMode ? employee.user.firstName : (watchedFirstName ?? '');
-  const summaryLastName = isUpdateMode ? employee.user.lastName : (watchedLastName ?? '');
-  const summaryEmail = isUpdateMode ? employee.user.email : (watchedEmail ?? '');
-
-  const departmentLabel = departments.find((department) => department.id === departmentId)?.label;
-  const positionLabel = positions.find((position) => position.id === positionId)?.label;
-  const managerLabel = managerOptions.find((manager) => manager.id === managerId)?.label;
-  const hireDateLabel = hireDate
-    ? formatDate(hireDate as string | number | Date, { ...userLocale, ...DATE_FORMAT })
-    : undefined;
 
   return (
     <Form {...form}>
@@ -211,17 +185,24 @@ export function EmployeeForm({
 
           {/* Right column */}
           <div className="mx-auto w-full max-w-[550px] space-y-6 xl:max-w-full">
-            <EmployeeSummaryCard
-              firstName={summaryFirstName}
-              lastName={summaryLastName}
-              email={summaryEmail}
-              avatar={avatar}
-              departmentLabel={departmentLabel}
-              positionLabel={positionLabel}
-              managerLabel={managerLabel}
-              hireDateLabel={hireDateLabel}
-              employmentStatus={employmentStatus}
-            />
+            {isUpdateMode ? (
+              <EmployeeSummaryCard
+                mode="update"
+                employee={employee}
+                control={form.control}
+                departments={departments}
+                positions={positions}
+                managerOptions={managerOptions}
+              />
+            ) : (
+              <EmployeeSummaryCard
+                mode="create"
+                control={form.control}
+                departments={departments}
+                positions={positions}
+                managerOptions={managerOptions}
+              />
+            )}
 
             {!isUpdateMode && <EmployeeAccountInvitationCard email={watchedEmail ?? ''} />}
           </div>

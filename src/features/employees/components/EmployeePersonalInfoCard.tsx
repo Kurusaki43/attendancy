@@ -34,6 +34,7 @@ export function EmployeePersonalInfoCard({
   employee,
 }: EmployeePersonalInfoCardProps) {
   const isUpdateMode = mode === 'update';
+  const canEditIdentity = !isUpdateMode || employee.user.status === 'INVITED';
 
   const createControl = control as unknown as Control<CreateEmployeeFormValues>;
   const [firstName, lastName] = useWatch({
@@ -72,88 +73,69 @@ export function EmployeePersonalInfoCard({
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {isUpdateMode ? (
-            <>
-              <div className="space-y-2">
-                <FormLabel className="font-medium tracking-wide">First Name</FormLabel>
-                <Input value={employee.user.firstName} disabled readOnly />
-              </div>
-              <div className="space-y-2">
-                <FormLabel className="font-medium tracking-wide">Last Name</FormLabel>
-                <Input value={employee.user.lastName} disabled readOnly />
-              </div>
-              <div className="space-y-2">
-                <FormLabel className="font-medium tracking-wide">Email Address</FormLabel>
-                <Input value={employee.user.email} disabled readOnly />
-              </div>
-            </>
-          ) : (
-            <>
-              <FormField
-                control={createControl}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium tracking-wide">
-                      First Name <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Ada"
-                        {...field}
-                        value={field.value ?? ''}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={createControl}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-medium tracking-wide">
+                  First Name <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Ada"
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={isPending || !canEditIdentity}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-              <FormField
-                control={createControl}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium tracking-wide">
-                      Last Name <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Lovelace"
-                        {...field}
-                        value={field.value ?? ''}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <FormField
+            control={createControl}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-medium tracking-wide">
+                  Last Name <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Lovelace"
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={isPending || !canEditIdentity}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-              <FormField
-                control={createControl}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium tracking-wide">
-                      Email Address <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="ada@example.com"
-                        {...field}
-                        value={field.value ?? ''}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </>
-          )}
+          <FormField
+            control={createControl}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-medium tracking-wide">
+                  Email Address <span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="ada@example.com"
+                    {...field}
+                    value={field.value ?? ''}
+                    disabled={isPending || !canEditIdentity}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={control}
