@@ -8,7 +8,15 @@ export const employeeQuerySchema = BaseQuerySchema.extend({
   departmentId: z.string().optional(),
   positionId: z.string().optional(),
   sort: z
-    .enum(['createdAt', '-createdAt', 'updatedAt', '-updatedAt', 'hireDate', '-hireDate'])
+    .enum([
+      'createdAt',
+      '-createdAt',
+      'updatedAt',
+      '-updatedAt',
+      'hireDate',
+      '-hireDate',
+      'employeeCode',
+    ])
     .default('-createdAt'),
 });
 
