@@ -8,7 +8,9 @@ import type { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { useQueryParams } from '@/hooks/use-query-params';
+import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 type DateRangeFilterProps = {
   fromQueryKey?: string;
@@ -22,6 +24,7 @@ export default function DateRangeFilter({
   label = 'Date range',
 }: DateRangeFilterProps) {
   const { getParam, setParams } = useQueryParams();
+  const userLocale = useUserLocale();
   const triggerId = useId();
 
   const fromParam = getParam(fromQueryKey);
@@ -61,10 +64,11 @@ export default function DateRangeFilter({
           {range?.from ? (
             range.to ? (
               <>
-                {format(range.from, 'LLL dd, y')} – {format(range.to, 'LLL dd, y')}
+                {formatDate(range.from, { ...userLocale, ...DATE_FORMAT })} –{' '}
+                {formatDate(range.to, { ...userLocale, ...DATE_FORMAT })}
               </>
             ) : (
-              format(range.from, 'LLL dd, y')
+              formatDate(range.from, { ...userLocale, ...DATE_FORMAT })
             )
           ) : (
             <span className="text-muted-foreground">Default Range</span>
