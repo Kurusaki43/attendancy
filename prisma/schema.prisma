@@ -214,6 +214,9 @@ model Attendance {
   status        AttendanceStatus
   events        AttendanceEvent[]
 
+  // True if at least one event was manually added or edited
+  hasManualChanges Boolean @default(false)
+
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
@@ -228,6 +231,8 @@ model AttendanceEvent {
   type         AttendanceEventType
   occurredAt   DateTime            @db.Timestamptz(3)
   method       AttendanceMethod
+  // Only required when method == MANUAL
+  reason       String?
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 }
