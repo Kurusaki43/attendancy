@@ -69,6 +69,14 @@ export default async function PositionsPage({ searchParams }: PositionsPageProps
                   { label: 'Title (Z-A)', value: '-title' },
                   { label: 'Recently Updated', value: '-updatedAt' },
                 ]}
+                statusFilter={{
+                  queryKey: 'isActive',
+                  label: 'Status',
+                  options: [
+                    { label: 'Active', value: 'true' },
+                    { label: 'Inactive', value: 'false' },
+                  ],
+                }}
               />
             </CardHeader>
             <CardContent>

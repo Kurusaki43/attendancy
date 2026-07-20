@@ -76,7 +76,24 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
         ) : (
           <Card className="bg-card border-border card-shadow">
             <CardHeader>
-              <DataTableToolbar searchPlaceholder="Search by name, code, or description" />
+              <DataTableToolbar
+                searchPlaceholder="Search by name, code, or description"
+                sortOptions={[
+                  { label: 'Newest First', value: '-createdAt' },
+                  { label: 'Oldest First', value: 'createdAt' },
+                  { label: 'Name (A-Z)', value: 'name' },
+                  { label: 'Name (Z-A)', value: '-name' },
+                  { label: 'Recently Updated', value: '-updatedAt' },
+                ]}
+                statusFilter={{
+                  queryKey: 'isActive',
+                  label: 'Status',
+                  options: [
+                    { label: 'Active', value: 'true' },
+                    { label: 'Inactive', value: 'false' },
+                  ],
+                }}
+              />
             </CardHeader>
             <CardContent className="">
               <DepartmentsTable departments={result.data.departments} />

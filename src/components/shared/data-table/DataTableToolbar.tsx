@@ -6,14 +6,6 @@ import FilterSelect from './FilterSelect';
 import SearchInput from './SearchInput';
 import SortInput, { type SortOption } from './SortInput';
 
-const DEFAULT_SORT_OPTIONS: SortOption[] = [
-  { label: 'Newest First', value: '-createdAt' },
-  { label: 'Oldest First', value: 'createdAt' },
-  { label: 'Name (A-Z)', value: 'name' },
-  { label: 'Name (Z-A)', value: '-name' },
-  { label: 'Recently Updated', value: '-updatedAt' },
-];
-
 type FilterSelectConfig = {
   queryKey: string;
   label: string;
@@ -26,18 +18,11 @@ type DateRangeFilterConfig = {
   label?: string;
 };
 
-const DEFAULT_STATUS_FILTER: FilterSelectConfig = {
-  queryKey: 'isActive',
-  label: 'Status',
-  options: [
-    { label: 'Active', value: 'true' },
-    { label: 'Inactive', value: 'false' },
-  ],
-};
-
 type DataTableToolbarProps = {
   searchPlaceholder?: string;
-  sortOptions?: SortOption[];
+  sortOptions: SortOption[];
+  /** The sort value applied when no `sort` param is present. Defaults to `sortOptions[0]`. */
+  sortDefaultValue?: string;
   filters?: FilterSelectConfig[];
   statusFilter?: FilterSelectConfig;
   dateRange?: DateRangeFilterConfig;
@@ -45,20 +30,23 @@ type DataTableToolbarProps = {
 
 const DataTableToolbar = ({
   searchPlaceholder = 'Search by name',
-  sortOptions = DEFAULT_SORT_OPTIONS,
+  sortOptions,
+  sortDefaultValue,
   filters = [],
-  statusFilter = DEFAULT_STATUS_FILTER,
+  statusFilter,
   dateRange,
 }: DataTableToolbarProps) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-6">
       <SearchInput placeholder={searchPlaceholder} />
       <div className="flex flex-wrap items-center gap-4">
-        <FilterSelect
-          queryKey={statusFilter.queryKey}
-          label={statusFilter.label}
-          options={statusFilter.options}
-        />
+        {statusFilter && (
+          <FilterSelect
+            queryKey={statusFilter.queryKey}
+            label={statusFilter.label}
+            options={statusFilter.options}
+          />
+        )}
         {filters.map((filter) => (
           <FilterSelect
             key={filter.queryKey}
@@ -68,7 +56,7 @@ const DataTableToolbar = ({
           />
         ))}
         {dateRange && <DateRangeFilter {...dateRange} />}
-        <SortInput queryKey="sort" defaultValue="-createdAt" options={sortOptions} />
+        <SortInput queryKey="sort" defaultValue={sortDefaultValue} options={sortOptions} />
         <ClearFiltersButton />
       </div>
     </div>
