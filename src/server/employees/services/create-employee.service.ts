@@ -80,6 +80,8 @@ export async function createEmployee(
         avatar: input.avatar || null,
         provider: 'LOCAL',
         status: 'INVITED',
+        locale: input.locale,
+        timezone: input.timezone,
         roles: { connect: { id: employeeRole.id } },
       },
     });

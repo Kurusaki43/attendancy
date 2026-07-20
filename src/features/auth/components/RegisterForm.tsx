@@ -12,6 +12,7 @@ import RHFInput from '@/components/shared/RHFInput';
 import { SubmitButton } from '@/components/shared/SubmitButton';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
+import { getBrowserLocaleAndTimezone } from '@/lib/browser-locale';
 import { registerAction } from '@/server/auth/actions/register.action';
 import { type RegisterFormInput, registerFormSchema } from '@/server/auth/schemas/register.schema';
 
@@ -50,7 +51,7 @@ const RegisterForm = () => {
     form.clearErrors();
 
     startTransition(async () => {
-      const result = await registerAction(data);
+      const result = await registerAction({ ...data, ...getBrowserLocaleAndTimezone() });
 
       if (!result.success) {
         if (result.message) {

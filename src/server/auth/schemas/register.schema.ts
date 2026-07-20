@@ -20,6 +20,11 @@ export const registerSchema = z.object({
     .min(8, 'Password must be at least 8 characters.')
     .max(100, 'Password must not exceed 100 characters.'),
   captchaToken: z.string().min(1, 'Please complete the captcha'),
+
+  // Detected client-side from the browser (Intl API) — optional so a missing/failed detection
+  // falls back to the User model's own schema defaults instead of failing registration.
+  locale: z.string().trim().min(1).max(35).optional(),
+  timezone: z.string().trim().min(1).max(60).optional(),
 });
 
 export const registerFormSchema = registerSchema

@@ -40,6 +40,8 @@ export async function register(body: RegisterInput): Promise<ServiceRegisterResu
     email: body.email,
     passwordHash,
     provider: 'LOCAL',
+    locale: body.locale,
+    timezone: body.timezone,
     roles: {
       connect: {
         id: adminRole.id,
