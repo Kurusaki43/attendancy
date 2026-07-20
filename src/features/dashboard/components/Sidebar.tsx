@@ -161,11 +161,11 @@ export function Sidebar({
         {/* Logo / Brand */}
         <div
           className={cn(
-            'border-sidebar-border flex h-16 shrink-0 items-center gap-3 px-4 sm:px-6',
-            isCollapsed && 'lg:justify-center lg:gap-1.5 lg:px-2 sm:lg:px-2',
+            'border-sidebar-border flex h-16 shrink-0 items-center gap-3 px-2',
+            isCollapsed && 'lg:justify-center lg:gap-1.5',
           )}
         >
-          <Logo size="md" className={cn(isCollapsed && 'lg:size-7')} />
+          <Logo size="lg" className={cn(isCollapsed && 'lg:size-7')} />
           <div className={cn('min-w-0', isCollapsed && 'lg:hidden')}>
             <p className="text-sidebar-foreground truncate text-sm font-semibold">Attendancy</p>
             <p className="text-sidebar-foreground/60 truncate text-xs">HR Platform</p>
