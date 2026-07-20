@@ -4,13 +4,16 @@ import { getListErrorStateProps } from '@/components/shared/data-table/data-tabl
 import { ErrorState } from '@/components/shared/ErrorState';
 import { AttendanceQrDisplay } from '@/features/attendance/components/AttendanceQrDisplay';
 import { getAttendanceQrAction } from '@/server/attendance/actions/get-attendance-qr.action';
+import { formatDate } from '@/shared/utils/format-date';
 
 // Deliberately outside the dashboard layout — this is meant to be shown full-screen on a
 // reception/kiosk display, so it must not render the sidebar or any other admin navigation.
 export default async function AttendanceQrPage() {
   const result = await getAttendanceQrAction();
 
-  const today = new Date().toLocaleDateString(undefined, {
+  const today = formatDate(new Date(), {
+    locale: result.success ? result.data.locale : undefined,
+    timezone: result.success ? result.data.timezone : undefined,
     weekday: 'long',
     year: 'numeric',
     month: 'long',

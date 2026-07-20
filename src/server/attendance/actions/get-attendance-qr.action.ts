@@ -9,10 +9,16 @@ import { runAction } from '@/shared/utils/run-action';
 
 export async function getAttendanceQrAction(): Promise<ActionResult<GetAttendanceQrActionResult>> {
   return runAction(async () => {
-    await requirePermission(PERMISSIONS.ATTENDANCE_QR_VIEW);
+    const user = await requirePermission(PERMISSIONS.ATTENDANCE_QR_VIEW);
 
     const { qrDataUrl, issuedAt, expiresInMs } = await rotateAttendanceQrCode();
 
-    return { qrDataUrl, issuedAt, expiresInMs };
+    return {
+      qrDataUrl,
+      issuedAt,
+      expiresInMs,
+      locale: user.locale,
+      timezone: user.timezone,
+    };
   });
 }

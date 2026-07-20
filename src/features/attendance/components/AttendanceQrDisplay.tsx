@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getAttendanceQrAction } from '@/server/attendance/actions/get-attendance-qr.action';
 import type { GetAttendanceQrActionResult } from '@/server/attendance/types';
+import { formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
 
 type AttendanceQrDisplayProps = {
   initialQr: GetAttendanceQrActionResult;
@@ -70,7 +71,8 @@ export function AttendanceQrDisplay({ initialQr }: AttendanceQrDisplayProps) {
           suppressHydrationWarning
         >
           <Clock size={12} className="text-primary" />
-          Last refreshed at {new Date(qr.issuedAt).toLocaleTimeString()}
+          Last refreshed at{' '}
+          {formatDate(qr.issuedAt, { locale: qr.locale, timezone: qr.timezone, ...TIME_FORMAT })}
         </p>
         {error && <p className="text-destructive text-xs">{error}</p>}
       </CardContent>

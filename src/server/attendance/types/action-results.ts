@@ -5,6 +5,8 @@ export type GetAttendanceQrActionResult = {
   qrDataUrl: string;
   issuedAt: number;
   expiresInMs: number;
+  locale: string;
+  timezone: string;
 };
 
 export type ScanAttendanceActionResult = {
@@ -12,6 +14,8 @@ export type ScanAttendanceActionResult = {
   occurredAt: Date;
   status: AttendanceStatus;
   workedMinutes: number;
+  locale: string;
+  timezone: string;
 };
 
 export type AttendanceEmployeeResult = {

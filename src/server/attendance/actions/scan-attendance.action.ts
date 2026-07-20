@@ -47,6 +47,8 @@ export async function scanAttendanceAction(
       occurredAt: lastEvent.occurredAt,
       status: attendance.status,
       workedMinutes: attendance.workedMinutes,
+      locale: user.locale,
+      timezone: user.timezone,
     };
   });
 
