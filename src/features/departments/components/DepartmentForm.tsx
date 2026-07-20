@@ -166,7 +166,7 @@ export function DepartmentForm({ mode, parentOptions, department }: DepartmentFo
               </CardHeader>
 
               <CardContent className="space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-6 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="name"
@@ -268,7 +268,7 @@ export function DepartmentForm({ mode, parentOptions, department }: DepartmentFo
                               <SelectValue placeholder="Select parent department">
                                 {(selected: string) =>
                                   selected === NONE
-                                    ? 'No parent department'
+                                    ? 'None'
                                     : parentOptions.find((option) => option.id === selected)?.label
                                 }
                               </SelectValue>

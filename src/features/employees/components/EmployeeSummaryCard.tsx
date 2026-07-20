@@ -39,7 +39,7 @@ function SummaryRow({
         <Icon className="size-4 shrink-0" />
         {label}
       </span>
-      <span className="font-semibold">{children}</span>
+      <span className="font-medium">{children}</span>
     </div>
   );
 }
@@ -62,7 +62,7 @@ export function EmployeeSummaryCard({
     <Card>
       <CardHeader className="flex items-start justify-between gap-3 space-y-0">
         <div className="flex items-center gap-3">
-          <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-md">
+          <div className="bg-primary/10 text-primary hidden size-10 shrink-0 items-center justify-center rounded-md sm:flex">
             <User className="size-5" />
           </div>
           <div>
@@ -83,22 +83,22 @@ export function EmployeeSummaryCard({
       <CardContent>
         <div className="divide-y rounded-md border text-sm">
           <SummaryRow icon={User} label="Full Name">
-            {fullName || 'Employee Name'}
+            {fullName || '-'}
           </SummaryRow>
           <SummaryRow icon={Mail} label="Email">
-            {email || 'No email yet'}
+            {email || '-'}
           </SummaryRow>
           <SummaryRow icon={Building2} label="Department">
-            {departmentLabel ?? 'Not selected'}
+            {departmentLabel ?? '-'}
           </SummaryRow>
           <SummaryRow icon={Briefcase} label="Position">
-            {positionLabel ?? 'Not selected'}
+            {positionLabel ?? '-'}
           </SummaryRow>
           <SummaryRow icon={Users} label="Manager">
-            {managerLabel ?? 'Not selected'}
+            {managerLabel ?? '-'}
           </SummaryRow>
           <SummaryRow icon={Calendar} label="Hire Date">
-            {hireDateLabel ?? 'Not selected'}
+            {hireDateLabel ?? '-'}
           </SummaryRow>
           <SummaryRow icon={ShieldCheck} label="Status">
             <Badge className={cn('rounded-sm', EMPLOYMENT_STATUS_BADGE_CLASSES[status])}>
