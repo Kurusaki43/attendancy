@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useQueryParams } from '@/hooks/use-query-params';
+import { cn } from '@/lib/utils';
 
 type Option = {
   label: string;
@@ -39,6 +40,7 @@ export default function FilterSelect({
   const id = useId();
 
   const value = getParam(queryKey) ?? DEFAULT_VALUE;
+  const isActive = value !== DEFAULT_VALUE;
 
   const handleValueChange = (newValue: string | null) => {
     setParam(queryKey, newValue === DEFAULT_VALUE ? null : newValue);
@@ -59,7 +61,10 @@ export default function FilterSelect({
       />
 
       <Select value={value} onValueChange={handleValueChange}>
-        <SelectTrigger id={id} className="min-w-36 ps-7">
+        <SelectTrigger
+          id={id}
+          className={cn('min-w-36 ps-7', isActive && 'border-ring ring-ring/50 ring-2')}
+        >
           <SelectValue placeholder={placeholder} className="text-sm font-light">
             {(selected: string) =>
               selected === DEFAULT_VALUE

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { useQueryParams } from '@/hooks/use-query-params';
+import { cn } from '@/lib/utils';
 
 export default function SearchInput({
   queryKey = 'search',
@@ -34,7 +35,7 @@ export default function SearchInput({
       <Input
         value={query}
         placeholder={placeholder}
-        className="placeholder:text-xs"
+        className={cn('placeholder:text-xs', query && 'border-ring ring-ring/50 ring-2')}
         onChange={(e) => {
           const value = e.target.value;
           setQuery(value);

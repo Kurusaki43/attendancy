@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useQueryParams } from '@/hooks/use-query-params';
+import { cn } from '@/lib/utils';
 
 export type SortOption = {
   label: string;
@@ -36,6 +37,7 @@ export default function SortInput({
   const id = useId();
 
   const value = getParam(queryKey) ?? defaultValue;
+  const isActive = value !== defaultValue;
 
   const handleChange = (value: string | null) => {
     setParam(queryKey, value === defaultValue ? null : value);
@@ -56,7 +58,10 @@ export default function SortInput({
       />
 
       <Select value={value} onValueChange={handleChange}>
-        <SelectTrigger id={id} className="min-w-44 ps-7">
+        <SelectTrigger
+          id={id}
+          className={cn('min-w-44 ps-7', isActive && 'border-ring ring-ring/50 ring-2')}
+        >
           <SelectValue placeholder={placeholder} className="text-sm font-light">
             {(value: string) => options.find((option) => option.value === value)?.label}
           </SelectValue>

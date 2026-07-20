@@ -10,6 +10,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { useQueryParams } from '@/hooks/use-query-params';
+import { cn } from '@/lib/utils';
 import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 type DateRangeFilterProps = {
@@ -56,7 +57,10 @@ export default function DateRangeFilter({
             <Button
               id={triggerId}
               variant="outline"
-              className="bg-card hover:bg-card min-w-56 justify-start font-light"
+              className={cn(
+                'bg-card hover:bg-card min-w-56 justify-start font-light',
+                range?.from && 'border-ring ring-ring/50 ring-2',
+              )}
             />
           }
         >
