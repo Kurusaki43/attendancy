@@ -1,8 +1,12 @@
 import { Button } from '@/components/ui/button';
+import { getBrowserLocaleAndTimezone } from '@/lib/browser-locale';
 
 export function GoogleLoginButton() {
   const handleLogin = () => {
-    window.location.href = '/api/auth/google';
+    const { locale, timezone } = getBrowserLocaleAndTimezone();
+    const params = new URLSearchParams({ locale, timezone });
+
+    window.location.href = `/api/auth/google?${params.toString()}`;
   };
   return (
     <Button variant="outline" className="h-11 w-full gap-3" onClick={handleLogin}>

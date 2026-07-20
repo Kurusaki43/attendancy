@@ -18,13 +18,22 @@ export async function GET(request: Request) {
   const storedState = cookieStore.get(AUTH_COOKIES.GOOGLE_STATE_COOKIE)?.value;
 
   const codeVerifier = cookieStore.get(AUTH_COOKIES.GOOGLE_CODE_VERIFIER_COOKIE)?.value;
+  const locale = cookieStore.get(AUTH_COOKIES.GOOGLE_LOCALE_COOKIE)?.value;
+  const timezone = cookieStore.get(AUTH_COOKIES.GOOGLE_TIMEZONE_COOKIE)?.value;
+
+  function clearOauthCookies() {
+    cookieStore.delete(AUTH_COOKIES.GOOGLE_STATE_COOKIE);
+    cookieStore.delete(AUTH_COOKIES.GOOGLE_CODE_VERIFIER_COOKIE);
+    cookieStore.delete(AUTH_COOKIES.GOOGLE_LOCALE_COOKIE);
+    cookieStore.delete(AUTH_COOKIES.GOOGLE_TIMEZONE_COOKIE);
+  }
 
   if (!code || !state || !storedState || state !== storedState || !codeVerifier) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   try {
-    const user = await authenticateWithGoogle(code, codeVerifier);
+    const user = await authenticateWithGoogle(code, codeVerifier, { locale, timezone });
 
     const ipAddress = getClientIp(request.headers);
     const userAgent = request.headers.get('user-agent') ?? 'unknown';
@@ -34,13 +43,11 @@ export async function GET(request: Request) {
     await setAccessTokenCookie(tokens.accessToken);
     await setRefreshTokenCookie(tokens.refreshToken);
 
-    cookieStore.delete(AUTH_COOKIES.GOOGLE_STATE_COOKIE);
-    cookieStore.delete(AUTH_COOKIES.GOOGLE_CODE_VERIFIER_COOKIE);
+    clearOauthCookies();
 
     return NextResponse.redirect(new URL('/dashboard', request.url));
   } catch {
-    cookieStore.delete(AUTH_COOKIES.GOOGLE_STATE_COOKIE);
-    cookieStore.delete(AUTH_COOKIES.GOOGLE_CODE_VERIFIER_COOKIE);
+    clearOauthCookies();
 
     return NextResponse.redirect(new URL('/login?error=google-auth', request.url));
   }

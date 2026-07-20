@@ -12,9 +12,15 @@ import { google } from '@/server/auth/lib/google';
 import { userRepository } from '@/server/auth/repositories/user.repository';
 import type { ServiceGoogleAuthResult } from '@/server/auth/types/service-results';
 
+type GoogleAuthLocale = {
+  locale?: string;
+  timezone?: string;
+};
+
 export async function authenticateWithGoogle(
   code: string,
   codeVerifier: string,
+  { locale, timezone }: GoogleAuthLocale = {},
 ): Promise<ServiceGoogleAuthResult> {
   let tokens;
 
@@ -61,6 +67,8 @@ export async function authenticateWithGoogle(
       providerId: profile.sub,
       emailVerifiedAt: new Date(),
       status: 'ACTIVE',
+      locale,
+      timezone,
       roles: {
         connect: {
           id: adminRole.id,

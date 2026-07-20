@@ -5,4 +5,6 @@ export const AUTH_COOKIES = {
   PENDING_PASSWORD_RESET: 'pending_password_reset',
   GOOGLE_CODE_VERIFIER_COOKIE: 'google_code_verifier',
   GOOGLE_STATE_COOKIE: 'google_oauth_state',
+  GOOGLE_LOCALE_COOKIE: 'google_oauth_locale',
+  GOOGLE_TIMEZONE_COOKIE: 'google_oauth_timezone',
 } as const;
