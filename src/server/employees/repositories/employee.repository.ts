@@ -1,4 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
+import { EmploymentStatus } from '@/generated/prisma/enums';
 import type {
   EmployeeUncheckedCreateInput,
   EmployeeUncheckedUpdateInput,
@@ -60,5 +61,22 @@ export const employeeRepository = {
 
   count(where?: Prisma.EmployeeWhereInput) {
     return prisma.employee.count({ where });
+  },
+
+  // Cursor-based (not skip/take): offset pagination can silently skip rows if the active-employee
+  // set changes mid-scan (e.g. someone is hired between pages), since inserts/updates shift row
+  // positions in the ordering out from under a numeric offset. `id > cursor` never depends on how
+  // many rows exist before the cursor, so it can't be shifted by concurrent writes.
+  async findActiveEmployeeIds({ cursor, take }: { cursor?: string; take: number }) {
+    const rows = await prisma.employee.findMany({
+      where: {
+        employmentStatus: EmploymentStatus.ACTIVE,
+        ...(cursor && { id: { gt: cursor } }),
+      },
+      select: { id: true },
+      orderBy: { id: 'asc' },
+      take,
+    });
+    return rows.map((row) => row.id);
   },
 };

@@ -71,4 +71,16 @@ export const attendanceRepository = {
   count(where?: Prisma.AttendanceWhereInput) {
     return prisma.attendance.count({ where });
   },
+
+  async findExistingEmployeeIdsForDate(date: Date, employeeIds: string[]) {
+    const rows = await prisma.attendance.findMany({
+      where: { date, employeeId: { in: employeeIds } },
+      select: { employeeId: true },
+    });
+    return rows.map((row) => row.employeeId);
+  },
+
+  createMany(data: AttendanceUncheckedCreateInput[]) {
+    return prisma.attendance.createMany({ data, skipDuplicates: true });
+  },
 };
