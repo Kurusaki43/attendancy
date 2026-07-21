@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { formatWorkedMinutes } from '@/features/attendance/lib/attendance-status';
 import { cn } from '@/lib/utils';
 import type { ScanAttendanceActionResult } from '@/server/attendance/types';
-import { formatDate } from '@/shared/utils/format-date';
+import { formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
 
 type AttendanceScanResultProps =
   | {
@@ -79,7 +79,7 @@ export function AttendanceScanResult(props: AttendanceScanResultProps) {
 
         <div className="mt-5 flex items-center gap-2 text-3xl font-bold" suppressHydrationWarning>
           <Clock3 className="text-muted-foreground h-5 w-5" />
-          {formatDate(occurredAt, { locale, timezone, hour: 'numeric', minute: '2-digit' })}
+          {formatDate(occurredAt, { locale, timezone, ...TIME_FORMAT })}
         </div>
 
         <p className="text-muted-foreground mt-2 text-sm" suppressHydrationWarning>
