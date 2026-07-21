@@ -1,3 +1,4 @@
+import type { GenerateDailyAttendancePayload } from '@/server/attendance/services/generate-daily-attendance.service';
 import type {
   SendEmployeeInvite,
   SendResetPassword,
@@ -11,5 +12,8 @@ export interface JobMap {
     'send-welcome': SendWelcome;
     'send-reset-password': SendResetPassword;
     'send-employee-invite': SendEmployeeInvite;
+  };
+  attendance: {
+    'generate-daily-attendance': GenerateDailyAttendancePayload;
   };
 }
