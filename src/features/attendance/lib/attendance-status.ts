@@ -23,6 +23,13 @@ export const ATTENDANCE_STATUS_DOT_CLASSES: Record<AttendanceStatus, string> = {
   HOLIDAY: 'bg-blue-500',
 };
 
+export const ATTENDANCE_STATUS_PANEL_CLASSES: Record<AttendanceStatus, string> = {
+  PRESENT: 'border-green-500/20 bg-green-500/10',
+  ABSENT: 'border-red-500/20 bg-red-500/10',
+  ON_LEAVE: 'border-amber-500/20 bg-amber-500/10',
+  HOLIDAY: 'border-blue-500/20 bg-blue-500/10',
+};
+
 export function formatWorkedMinutes(workedMinutes: number) {
   const hours = Math.floor(workedMinutes / 60);
   const minutes = workedMinutes % 60;

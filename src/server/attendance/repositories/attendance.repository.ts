@@ -6,20 +6,21 @@ import type {
 import { prisma } from '@/lib/prisma';
 import type { PrismaQueryOptions } from '@/shared/types/api-feature';
 
+const ATTENDANCE_EMPLOYEE_SELECT = {
+  id: true,
+  employeeCode: true,
+  user: { select: { firstName: true, lastName: true, avatar: true } },
+  department: { select: { id: true, name: true, code: true, icon: true, color: true } },
+  position: { select: { id: true, title: true } },
+} satisfies Prisma.EmployeeSelect;
+
 export const ATTENDANCE_INCLUDE = {
   events: { orderBy: { occurredAt: 'asc' } },
+  employee: { select: ATTENDANCE_EMPLOYEE_SELECT },
 } satisfies Prisma.AttendanceInclude;
 
 export const ATTENDANCE_LIST_INCLUDE = {
-  employee: {
-    select: {
-      id: true,
-      employeeCode: true,
-      user: { select: { firstName: true, lastName: true, avatar: true } },
-      department: { select: { id: true, name: true, code: true, icon: true, color: true } },
-      position: { select: { id: true, title: true } },
-    },
-  },
+  employee: { select: ATTENDANCE_EMPLOYEE_SELECT },
 } satisfies Prisma.AttendanceInclude;
 
 export type AttendanceFindManyQuery = PrismaQueryOptions<

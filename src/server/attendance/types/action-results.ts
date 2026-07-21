@@ -39,6 +39,13 @@ export type AttendanceEmployeeResult = {
   } | null;
 };
 
+export type AttendanceEventResult = {
+  id: string;
+  type: AttendanceEventType;
+  occurredAt: Date;
+  reason: string | null;
+};
+
 export type AttendanceResult = {
   id: string;
   date: Date;
@@ -47,9 +54,14 @@ export type AttendanceResult = {
   workedMinutes: number;
   status: AttendanceStatus;
   employee: AttendanceEmployeeResult;
+  events?: AttendanceEventResult[];
 };
 
 export type GetAllAttendanceActionResult = {
   attendance: AttendanceResult[];
   pagination: PaginationMeta;
 };
+
+export type CreateAttendanceActionResult = AttendanceResult;
+export type UpdateAttendanceActionResult = AttendanceResult;
+export type GetAttendanceActionResult = AttendanceResult;

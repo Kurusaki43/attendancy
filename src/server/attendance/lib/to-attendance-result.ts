@@ -1,7 +1,9 @@
-import type { AttendanceWithEmployee } from '@/server/attendance/types';
+import type { AttendanceWithEmployee, AttendanceWithEvents } from '@/server/attendance/types';
 import type { AttendanceResult } from '@/server/attendance/types/action-results';
 
-export function toAttendanceResult(attendance: AttendanceWithEmployee): AttendanceResult {
+export function toAttendanceResult(
+  attendance: AttendanceWithEmployee | AttendanceWithEvents,
+): AttendanceResult {
   return {
     id: attendance.id,
     date: attendance.date,
@@ -16,5 +18,13 @@ export function toAttendanceResult(attendance: AttendanceWithEmployee): Attendan
       department: attendance.employee.department,
       position: attendance.employee.position,
     },
+    ...('events' in attendance && {
+      events: attendance.events.map((event) => ({
+        id: event.id,
+        type: event.type,
+        occurredAt: event.occurredAt,
+        reason: event.reason,
+      })),
+    }),
   };
 }

@@ -63,7 +63,7 @@ export function AddAttendanceDialog({ variant, className }: AddAttendanceDialogP
       router.push(
         result.data
           ? `/dashboard/attendance/${result.data.id}/edit`
-          : '/dashboard/attendance/create',
+          : `/dashboard/attendance/create?employeeId=${selectedEmployee.id}&date=${format(date, 'yyyy-MM-dd')}`,
       );
     } catch {
       toast.error('An unexpected error occurred.');

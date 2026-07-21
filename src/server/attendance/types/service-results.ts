@@ -4,7 +4,7 @@ import type {
   AttendanceWithEvents,
 } from '@/server/attendance/repositories/attendance.repository';
 
-export type { AttendanceWithEmployee };
+export type { AttendanceWithEmployee, AttendanceWithEvents };
 
 export type ServiceRotateAttendanceQrResult = {
   token: string;
