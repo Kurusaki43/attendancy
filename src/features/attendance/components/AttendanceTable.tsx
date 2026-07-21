@@ -1,10 +1,13 @@
 'use client';
 
-import { Building2, SearchX } from 'lucide-react';
+import { Building2, PencilIcon, SearchX } from 'lucide-react';
+import Link from 'next/link';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
+import { TableRowActions } from '@/components/shared/data-table/TableRowActions';
 import { Badge } from '@/components/ui/badge';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import {
   ATTENDANCE_STATUS_BADGE_CLASSES,
   ATTENDANCE_STATUS_DOT_CLASSES,
@@ -63,6 +66,31 @@ function StatusBadge({
       />
       {ATTENDANCE_STATUS_LABELS[displayStatus]}
     </Badge>
+  );
+}
+
+function RowActions({ attendance }: { attendance: AttendanceResult }) {
+  const isEditable = attendance.status !== 'ON_LEAVE' && attendance.status !== 'HOLIDAY';
+
+  return (
+    <TableRowActions
+      label={`Actions for ${attendance.employee.user.firstName} ${attendance.employee.user.lastName}`}
+    >
+      {isEditable ? (
+        <DropdownMenuItem
+          className="cursor-pointer"
+          render={<Link href={`/dashboard/attendance/${attendance.id}/edit`} />}
+        >
+          <PencilIcon />
+          Edit
+        </DropdownMenuItem>
+      ) : (
+        <DropdownMenuItem disabled>
+          <PencilIcon />
+          Edit
+        </DropdownMenuItem>
+      )}
+    </TableRowActions>
   );
 }
 
@@ -163,6 +191,13 @@ function buildColumns(userLocale: UserLocale): ColumnDef<AttendanceResult>[] {
           lastClockOut={row.lastClockOut}
         />
       ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      cell: (row) => <RowActions attendance={row} />,
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
     },
   ];
 }
