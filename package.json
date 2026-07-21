@@ -29,8 +29,10 @@
     "docker:logs": "docker compose -f docker/dev/compose.yml --env-file .env.development logs -f",
     "docker:restart": "pnpm run docker:down && pnpm run docker:up",
     "prepare": "husky",
+    "worker": "dotenv -e .env.development -- tsx src/workers/index.ts",
     "worker:email": "dotenv -e .env.development -- tsx src/server/mail/workers/mail.worker.ts",
-    "start:worker": "tsx src/server/mail/workers/mail.worker.ts"
+    "worker:attendance": "dotenv -e .env.development -- tsx src/server/attendance/workers/attendance.worker.ts",
+    "start:worker": "tsx src/workers/index.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

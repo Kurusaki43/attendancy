@@ -119,7 +119,7 @@ services:
 
     container_name: attendance-worker
     restart: unless-stopped
-    command: pnpm worker:email
+    command: pnpm worker
 
     env_file:
       - ../../.env.development
