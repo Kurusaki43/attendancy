@@ -4,6 +4,7 @@ import { BaseQuerySchema } from '@/shared/types/base-query-schema';
 
 export const attendanceQuerySchema = BaseQuerySchema.extend({
   status: z.enum(['PRESENT', 'ABSENT', 'ON_LEAVE', 'HOLIDAY']).optional(),
+  completionStatus: z.enum(['COMPLETE', 'INCOMPLETE']).optional(),
   employeeId: z.string().optional(),
   departmentId: z.string().optional(),
   dateFrom: z.iso.date().optional(),

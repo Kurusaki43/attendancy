@@ -9,7 +9,7 @@ import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 import { parseUtcDate } from '@/shared/utils/date';
 
-const ATTENDANCE_FILTERABLE_FIELDS = ['status', 'employeeId'];
+const ATTENDANCE_FILTERABLE_FIELDS = ['status', 'completionStatus', 'employeeId'];
 
 export interface GetAllAttendanceResult {
   attendance: AttendanceWithEmployee[];

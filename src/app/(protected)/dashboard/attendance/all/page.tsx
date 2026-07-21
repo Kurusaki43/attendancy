@@ -9,6 +9,8 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { AddAttendanceDialog } from '@/features/attendance/components/AddAttendanceDialog';
 import { AttendanceTable } from '@/features/attendance/components/AttendanceTable';
 import {
+  ATTENDANCE_COMPLETION_STATUS_LABELS,
+  ATTENDANCE_COMPLETION_STATUSES,
   ATTENDANCE_STATUS_LABELS,
   ATTENDANCE_STATUSES,
 } from '@/features/attendance/lib/attendance-status';
@@ -39,6 +41,7 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
   const hasActiveFilters =
     Boolean(params.search) ||
     Boolean(params.status) ||
+    Boolean(params.completionStatus) ||
     Boolean(params.departmentId) ||
     Boolean(params.dateFrom) ||
     Boolean(params.dateTo);
@@ -93,6 +96,14 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
                     options: departments.map((department) => ({
                       label: department.label,
                       value: department.id,
+                    })),
+                  },
+                  {
+                    queryKey: 'completionStatus',
+                    label: 'Completion',
+                    options: ATTENDANCE_COMPLETION_STATUSES.map((completionStatus) => ({
+                      label: ATTENDANCE_COMPLETION_STATUS_LABELS[completionStatus],
+                      value: completionStatus,
                     })),
                   },
                 ]}
