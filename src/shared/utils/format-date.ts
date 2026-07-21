@@ -19,6 +19,7 @@ export const DATE_FORMAT: Intl.DateTimeFormatOptions = {
 export const TIME_FORMAT: Intl.DateTimeFormatOptions = {
   hour: 'numeric',
   minute: '2-digit',
+  hour12: true,
 };
 
 export const DATE_TIME_FORMAT: Intl.DateTimeFormatOptions = {

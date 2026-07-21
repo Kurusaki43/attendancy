@@ -13,7 +13,7 @@ import {
 } from '@/features/attendance/lib/attendance-form';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { cn } from '@/lib/utils';
-import { formatDate } from '@/shared/utils/format-date';
+import { formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
 
 const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -75,18 +75,18 @@ export function AttendanceSidebar({ control, date }: AttendanceSidebarProps) {
                         <p className="text-sm font-medium">
                           {isClockIn ? 'Clock In' : 'Clock Out'}
                         </p>
+                        <span className="border-border ml-auto hidden h-px w-12 border xl:block" />
                         {event.reason && (
-                          <Badge variant="secondary" className="max-w-32 truncate">
+                          <Badge
+                            variant="secondary"
+                            className="inline max-w-32 truncate text-xs font-light"
+                          >
                             {event.reason}
                           </Badge>
                         )}
                       </div>
                       <p className="text-muted-foreground text-xs">
-                        {formatDate(event.occurredAt, {
-                          ...userLocale,
-                          hour: 'numeric',
-                          minute: '2-digit',
-                        })}
+                        {formatDate(event.occurredAt, { ...userLocale, ...TIME_FORMAT })}
                       </p>
                     </div>
                   </li>

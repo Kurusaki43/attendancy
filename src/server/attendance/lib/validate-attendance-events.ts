@@ -25,9 +25,7 @@ export function validateAttendanceEvents(events: AttendanceEventInput[], date: D
     );
   }
 
-  const sorted = [...events].sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
-
-  sorted.forEach((event, index) => {
+  events.forEach((event, index) => {
     if (startOfUtcDay(event.occurredAt).getTime() !== date.getTime()) {
       throw new BadRequestError(
         ERROR_CODES.ATTENDANCE_EVENT_OUTSIDE_DATE,
@@ -35,11 +33,22 @@ export function validateAttendanceEvents(events: AttendanceEventInput[], date: D
       );
     }
 
-    if (index > 0 && sorted[index - 1].occurredAt.getTime() === event.occurredAt.getTime()) {
-      throw new BadRequestError(
-        ERROR_CODES.ATTENDANCE_DUPLICATE_EVENT_TIME,
-        'Attendance events cannot share the same timestamp.',
-      );
+    const previous = events[index - 1];
+
+    if (previous) {
+      if (event.occurredAt.getTime() < previous.occurredAt.getTime()) {
+        throw new BadRequestError(
+          ERROR_CODES.ATTENDANCE_EVENTS_NOT_CHRONOLOGICAL,
+          'Attendance events must be submitted in chronological order.',
+        );
+      }
+
+      if (event.occurredAt.getTime() === previous.occurredAt.getTime()) {
+        throw new BadRequestError(
+          ERROR_CODES.ATTENDANCE_DUPLICATE_EVENT_TIME,
+          'Attendance events cannot share the same timestamp.',
+        );
+      }
     }
 
     const expectedType =

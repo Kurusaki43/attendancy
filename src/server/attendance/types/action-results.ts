@@ -63,5 +63,7 @@ export type GetAllAttendanceActionResult = {
 };
 
 export type CreateAttendanceActionResult = AttendanceResult;
-export type UpdateAttendanceActionResult = AttendanceResult;
+export type UpdateAttendanceActionResult =
+  | { deleted: true }
+  | { deleted: false; attendance: AttendanceResult };
 export type GetAttendanceActionResult = AttendanceResult;

@@ -8,6 +8,9 @@ export type AttendanceEmployeeOption = {
   position: string | null;
   department: string | null;
   employeeCode: string;
+  employmentStatus: EmployeeResult['employmentStatus'];
+  userStatus: EmployeeResult['user']['status'];
+  hireDate: EmployeeResult['hireDate'];
 };
 
 export function toEmployeeOption(employee: EmployeeResult): AttendanceEmployeeOption {
@@ -19,5 +22,8 @@ export function toEmployeeOption(employee: EmployeeResult): AttendanceEmployeeOp
     position: employee.position?.title ?? null,
     department: employee.department?.name ?? null,
     employeeCode: employee.employeeCode,
+    employmentStatus: employee.employmentStatus,
+    userStatus: employee.user.status,
+    hireDate: employee.hireDate,
   };
 }

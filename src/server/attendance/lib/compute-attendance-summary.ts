@@ -13,12 +13,6 @@ export type AttendanceSummary = {
   workedMinutes: number;
 };
 
-/**
- * Derives the Attendance row's summary fields from its event list: the earliest CLOCK_IN, the
- * latest CLOCK_OUT, and the total worked minutes across every matched CLOCK_IN → CLOCK_OUT pair
- * (walked in chronological order; an unmatched trailing CLOCK_IN contributes nothing, and a new
- * CLOCK_IN before a matching CLOCK_OUT replaces the open session rather than stacking).
- */
 export function computeAttendanceSummary(events: AttendanceSummaryEvent[]): AttendanceSummary {
   const sorted = [...events].sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 

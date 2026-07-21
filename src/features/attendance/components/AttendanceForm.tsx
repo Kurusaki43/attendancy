@@ -6,7 +6,7 @@ import { CalendarDays } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import type { Control, FieldErrors } from 'react-hook-form';
+import type { FieldErrors } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -61,7 +61,6 @@ export function AttendanceForm({
     resolver: zodResolver(isUpdateMode ? updateAttendanceFormSchema : createAttendanceFormSchema),
     defaultValues: isUpdateMode
       ? {
-          status: attendance.status,
           events: (attendance.events ?? []).map((event) => ({
             id: event.id,
             type: event.type,
@@ -91,17 +90,18 @@ export function AttendanceForm({
     setIsPending(true);
 
     const buildEvents = (date: Date) =>
-      data.events.map((event) => ({
-        ...(event.id && { id: event.id }),
-        type: event.type,
-        occurredAt: combineDateAndTime(date, event.time),
-        reason: event.reason,
-      }));
+      data.events
+        .map((event) => ({
+          ...(event.id && { id: event.id }),
+          type: event.type,
+          occurredAt: combineDateAndTime(date, event.time),
+          reason: event.reason,
+        }))
+        .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 
     try {
       const result = isUpdateMode
         ? await updateAttendanceAction(attendance.id, {
-            status: (data as UpdateAttendanceFormValues).status,
             events: buildEvents(attendance.date),
           })
         : await createAttendanceAction({
@@ -161,21 +161,17 @@ export function AttendanceForm({
                 date={initialDate}
               />
             )}
-            {isUpdateMode ? (
-              <AttendanceAdditionalInfoSection
-                mode="update"
-                control={form.control as Control<UpdateAttendanceFormValues>}
-                isPending={isPending}
-              />
-            ) : (
-              <AttendanceAdditionalInfoSection mode="create" isPending={isPending} />
-            )}
+            <AttendanceAdditionalInfoSection
+              mode={isUpdateMode ? 'update' : 'create'}
+              control={form.control}
+            />
           </div>
 
           <AttendanceEventsSection
             control={form.control}
             isPending={isPending}
             date={resolvedDate}
+            mode={isUpdateMode ? 'update' : 'create'}
           />
         </div>
 

@@ -31,18 +31,20 @@ import {
 } from '@/features/attendance/lib/attendance-form';
 import { formatWorkedMinutes } from '@/features/attendance/lib/attendance-status';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
-import { formatDate } from '@/shared/utils/format-date';
+import { formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
 
 type AttendanceEventsSectionProps = {
   control: Control<CreateAttendanceFormValues | UpdateAttendanceFormValues>;
   isPending: boolean;
   date: Date | undefined;
+  mode: 'create' | 'update';
 };
 
 export function AttendanceEventsSection({
   control,
   isPending,
   date,
+  mode,
 }: AttendanceEventsSectionProps) {
   const userLocale = useUserLocale();
 
@@ -76,6 +78,12 @@ export function AttendanceEventsSection({
         </p>
 
         {eventsError && <p className="text-destructive text-sm">{eventsError}</p>}
+
+        {mode === 'update' && fields.length === 0 && (
+          <p className="text-sm text-amber-600 dark:text-amber-400">
+            Removing all events will delete this attendance record when you save.
+          </p>
+        )}
 
         {fields.length > 0 && (
           <div className="overflow-x-auto rounded-md border">
@@ -194,11 +202,7 @@ export function AttendanceEventsSection({
             <p className="text-muted-foreground text-xs">First Clock In</p>
             <p className="font-semibold">
               {summary.firstClockIn
-                ? formatDate(summary.firstClockIn, {
-                    ...userLocale,
-                    hour: 'numeric',
-                    minute: '2-digit',
-                  })
+                ? formatDate(summary.firstClockIn, { ...userLocale, ...TIME_FORMAT })
                 : '—'}
             </p>
           </div>
@@ -206,11 +210,7 @@ export function AttendanceEventsSection({
             <p className="text-muted-foreground text-xs">Last Clock Out</p>
             <p className="font-semibold">
               {summary.lastClockOut
-                ? formatDate(summary.lastClockOut, {
-                    ...userLocale,
-                    hour: 'numeric',
-                    minute: '2-digit',
-                  })
+                ? formatDate(summary.lastClockOut, { ...userLocale, ...TIME_FORMAT })
                 : '—'}
             </p>
           </div>

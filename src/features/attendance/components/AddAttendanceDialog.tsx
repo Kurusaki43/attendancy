@@ -19,6 +19,11 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { EmployeeCombobox } from '@/features/attendance/components/EmployeeCombobox';
+import {
+  getEmployeeStatusError,
+  isBeforeHireDate,
+  isFutureDate,
+} from '@/features/attendance/lib/add-attendance-dialog-check';
 import type { AttendanceEmployeeOption } from '@/features/attendance/lib/attendance-employee-option';
 import { cn } from '@/lib/utils';
 import { findAttendanceByEmployeeDateAction } from '@/server/attendance/actions/find-attendance-by-employee-date.action';
@@ -35,6 +40,15 @@ export function AddAttendanceDialog({ variant, className }: AddAttendanceDialogP
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
+  const dateError =
+    date && isFutureDate(date)
+      ? 'Attendance date cannot be in the future.'
+      : date && selectedEmployee && isBeforeHireDate(date, selectedEmployee.hireDate)
+        ? "Attendance date cannot be before the employee's hire date."
+        : null;
+
+  const employeeError = selectedEmployee ? getEmployeeStatusError(selectedEmployee) : null;
+
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
     if (!nextOpen) {
@@ -44,7 +58,7 @@ export function AddAttendanceDialog({ variant, className }: AddAttendanceDialogP
   };
 
   const handleNext = async () => {
-    if (!selectedEmployee || !date) return;
+    if (!selectedEmployee || !date || dateError || employeeError) return;
 
     setIsPending(true);
 
@@ -109,6 +123,7 @@ export function AddAttendanceDialog({ variant, className }: AddAttendanceDialogP
               onChange={setSelectedEmployee}
               disabled={isPending}
             />
+            {employeeError && <p className="text-destructive text-xs">{employeeError}</p>}
           </div>
 
           <div className="space-y-2">
@@ -116,6 +131,7 @@ export function AddAttendanceDialog({ variant, className }: AddAttendanceDialogP
               Attendance Date <span className="text-destructive">*</span>
             </Label>
             <DatePicker value={date} onChange={setDate} disabled={isPending} />
+            {dateError && <p className="text-destructive text-xs">{dateError}</p>}
           </div>
 
           <div className="bg-primary/5 border-primary/20 flex items-start gap-2 rounded-md border p-2.5 text-xs">
@@ -138,7 +154,7 @@ export function AddAttendanceDialog({ variant, className }: AddAttendanceDialogP
           </Button>
           <Button
             onClick={handleNext}
-            disabled={isPending || !selectedEmployee || !date}
+            disabled={isPending || !selectedEmployee || !date || !!dateError || !!employeeError}
             size="lg"
             className="font-semibold"
           >

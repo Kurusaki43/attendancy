@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-import { ATTENDANCE_STATUSES } from '@/features/attendance/lib/attendance-status';
-
 const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 export const eventFormSchema = z.object({
@@ -18,7 +16,6 @@ export const createAttendanceFormSchema = z.object({
 });
 
 export const updateAttendanceFormSchema = z.object({
-  status: z.enum(ATTENDANCE_STATUSES),
   events: z.array(eventFormSchema),
 });
 

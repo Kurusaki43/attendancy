@@ -1,4 +1,10 @@
-import { AttendanceMethod, AttendanceStatus, EmploymentStatus } from '@/generated/prisma/enums';
+import { Prisma } from '@/generated/prisma/client';
+import {
+  AttendanceMethod,
+  AttendanceStatus,
+  EmploymentStatus,
+  UserStatus,
+} from '@/generated/prisma/enums';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
@@ -22,14 +28,28 @@ export async function createAttendance(
     throw new NotFoundError(ERROR_CODES.EMPLOYEE_NOT_FOUND, 'Employee not found!');
   }
 
-  if (employee.employmentStatus !== EmploymentStatus.ACTIVE) {
+  if (employee.employmentStatus === EmploymentStatus.TERMINATED) {
     throw new BadRequestError(
       ERROR_CODES.EMPLOYEE_NOT_ACTIVE,
-      'Attendance can only be recorded for active employees.',
+      'Attendance can only be recorded for active or on-leave employees.',
+    );
+  }
+
+  if (employee.user.status !== UserStatus.ACTIVE) {
+    throw new BadRequestError(
+      ERROR_CODES.EMPLOYEE_USER_INACTIVE,
+      "This employee's user account is not active.",
     );
   }
 
   const date = parseUtcDate(input.date);
+
+  if (date.getTime() > startOfUtcDay(new Date()).getTime()) {
+    throw new BadRequestError(
+      ERROR_CODES.ATTENDANCE_DATE_IN_FUTURE,
+      'Attendance date cannot be in the future.',
+    );
+  }
 
   if (date.getTime() < startOfUtcDay(employee.hireDate).getTime()) {
     throw new BadRequestError(
@@ -51,33 +71,46 @@ export async function createAttendance(
 
   const summary = computeAttendanceSummary(input.events);
 
-  const attendance = await prisma.$transaction(async (tx) => {
-    const created = await tx.attendance.create({
-      data: {
-        employeeId: input.employeeId,
-        date,
-        status: AttendanceStatus.PRESENT,
-        firstClockIn: summary.firstClockIn,
-        lastClockOut: summary.lastClockOut,
-        workedMinutes: summary.workedMinutes,
-        hasManualChanges: true,
-      },
-    });
+  let attendance;
 
-    if (input.events.length > 0) {
-      await tx.attendanceEvent.createMany({
-        data: input.events.map((event) => ({
-          attendanceId: created.id,
-          type: event.type,
-          occurredAt: event.occurredAt,
-          method: AttendanceMethod.MANUAL,
-          reason: event.reason,
-        })),
+  try {
+    attendance = await prisma.$transaction(async (tx) => {
+      const created = await tx.attendance.create({
+        data: {
+          employeeId: input.employeeId,
+          date,
+          status: AttendanceStatus.PRESENT,
+          firstClockIn: summary.firstClockIn,
+          lastClockOut: summary.lastClockOut,
+          workedMinutes: summary.workedMinutes,
+          hasManualChanges: true,
+        },
       });
+
+      if (input.events.length > 0) {
+        await tx.attendanceEvent.createMany({
+          data: input.events.map((event) => ({
+            attendanceId: created.id,
+            type: event.type,
+            occurredAt: event.occurredAt,
+            method: AttendanceMethod.MANUAL,
+            reason: event.reason,
+          })),
+        });
+      }
+
+      return created;
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      throw new ConflictError(
+        ERROR_CODES.ATTENDANCE_ALREADY_EXISTS_FOR_DATE,
+        'An attendance record already exists for this employee on this date.',
+      );
     }
 
-    return created;
-  });
+    throw error;
+  }
 
   const created = await attendanceRepository.findById(attendance.id);
 
