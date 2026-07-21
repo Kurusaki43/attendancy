@@ -65,6 +65,7 @@ export async function updateAttendance(
         where: { id: attendanceId },
         data: {
           status: AttendanceStatus.ABSENT,
+          completionStatus: null,
           firstClockIn: null,
           lastClockOut: null,
           workedMinutes: 0,
@@ -124,6 +125,7 @@ export async function updateAttendance(
       where: { id: attendanceId },
       data: {
         status: AttendanceStatus.PRESENT,
+        completionStatus: summary.completionStatus,
         firstClockIn: summary.firstClockIn,
         lastClockOut: summary.lastClockOut,
         workedMinutes: summary.workedMinutes,

@@ -80,6 +80,7 @@ export async function createAttendance(
           employeeId: input.employeeId,
           date,
           status: AttendanceStatus.PRESENT,
+          completionStatus: summary.completionStatus,
           firstClockIn: summary.firstClockIn,
           lastClockOut: summary.lastClockOut,
           workedMinutes: summary.workedMinutes,

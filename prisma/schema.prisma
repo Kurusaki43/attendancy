@@ -189,6 +189,11 @@ enum AttendanceStatus {
   HOLIDAY
 }
 
+enum AttendanceCompletionStatus {
+  COMPLETE
+  INCOMPLETE
+}
+
 enum AttendanceEventType {
   CLOCK_IN
   CLOCK_OUT
@@ -207,12 +212,14 @@ model Attendance {
   employeeId String
   employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
-  date          DateTime          @db.Timestamptz(3)
-  firstClockIn  DateTime?         @db.Timestamptz(3)
-  lastClockOut  DateTime?         @db.Timestamptz(3)
-  workedMinutes Int               @default(0)
-  status        AttendanceStatus
-  events        AttendanceEvent[]
+  date             DateTime                    @db.Timestamptz(3)
+  firstClockIn     DateTime?                   @db.Timestamptz(3)
+  lastClockOut     DateTime?                   @db.Timestamptz(3)
+  workedMinutes    Int                         @default(0)
+  status           AttendanceStatus
+  // Only meaningful when status == PRESENT; ABSENT/ON_LEAVE/HOLIDAY have no events so this is null
+  completionStatus AttendanceCompletionStatus?
+  events           AttendanceEvent[]
 
   // True if at least one event was manually added or edited
   hasManualChanges Boolean @default(false)

@@ -334,6 +334,7 @@ describe('createAttendance', () => {
       expect.objectContaining({
         data: expect.objectContaining({
           status: 'PRESENT',
+          completionStatus: 'COMPLETE',
           firstClockIn: clockIn,
           lastClockOut: clockOut,
           workedMinutes: 540,
@@ -358,5 +359,24 @@ describe('createAttendance', () => {
         },
       ],
     });
+  });
+
+  it('marks a lone Clock In as INCOMPLETE', async () => {
+    await createAttendance({
+      employeeId: 'employee-1',
+      date: '2026-07-19',
+      events: [
+        { type: 'CLOCK_IN', occurredAt: new Date('2026-07-19T08:00:00.000Z'), reason: 'Start' },
+      ],
+    });
+
+    expect(fakeTx.attendance.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          status: 'PRESENT',
+          completionStatus: 'INCOMPLETE',
+        }),
+      }),
+    );
   });
 });

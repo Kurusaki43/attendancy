@@ -192,6 +192,7 @@ describe('updateAttendance', () => {
       where: { id: 'attendance-1' },
       data: {
         status: 'ABSENT',
+        completionStatus: null,
         firstClockIn: null,
         lastClockOut: null,
         workedMinutes: 0,
@@ -345,6 +346,7 @@ describe('updateAttendance', () => {
       where: { id: 'attendance-1' },
       data: {
         status: 'PRESENT',
+        completionStatus: 'COMPLETE',
         firstClockIn: existingClockIn.occurredAt,
         lastClockOut: newClockOut,
         workedMinutes: 540,

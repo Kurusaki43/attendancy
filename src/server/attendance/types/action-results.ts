@@ -1,4 +1,8 @@
-import type { AttendanceEventType, AttendanceStatus } from '@/generated/prisma/enums';
+import type {
+  AttendanceCompletionStatus,
+  AttendanceEventType,
+  AttendanceStatus,
+} from '@/generated/prisma/enums';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
 export type GetAttendanceQrActionResult = {
@@ -53,6 +57,7 @@ export type AttendanceResult = {
   lastClockOut: Date | null;
   workedMinutes: number;
   status: AttendanceStatus;
+  completionStatus: AttendanceCompletionStatus | null;
   employee: AttendanceEmployeeResult;
   events?: AttendanceEventResult[];
 };

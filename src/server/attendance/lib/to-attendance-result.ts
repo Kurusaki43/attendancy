@@ -11,6 +11,7 @@ export function toAttendanceResult(
     lastClockOut: attendance.lastClockOut,
     workedMinutes: attendance.workedMinutes,
     status: attendance.status,
+    completionStatus: attendance.completionStatus,
     employee: {
       id: attendance.employee.id,
       employeeCode: attendance.employee.employeeCode,

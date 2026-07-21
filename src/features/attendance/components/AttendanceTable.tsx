@@ -9,11 +9,13 @@ import { TableRowActions } from '@/components/shared/data-table/TableRowActions'
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import {
+  ATTENDANCE_COMPLETION_STATUS_BADGE_CLASSES,
+  ATTENDANCE_COMPLETION_STATUS_DOT_CLASSES,
+  ATTENDANCE_COMPLETION_STATUS_LABELS,
   ATTENDANCE_STATUS_BADGE_CLASSES,
   ATTENDANCE_STATUS_DOT_CLASSES,
   ATTENDANCE_STATUS_LABELS,
   formatWorkedMinutes,
-  getAttendanceDisplayStatus,
 } from '@/features/attendance/lib/attendance-status';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
@@ -45,26 +47,37 @@ function DepartmentCell({ department }: { department: AttendanceEmployeeResult['
   );
 }
 
-function StatusBadge({
-  status,
-  firstClockIn,
-  lastClockOut,
+function StatusBadge({ status }: { status: AttendanceResult['status'] }) {
+  return (
+    <Badge className={cn('rounded-sm', ATTENDANCE_STATUS_BADGE_CLASSES[status])}>
+      <span
+        className={cn('size-1.5 shrink-0 rounded-full', ATTENDANCE_STATUS_DOT_CLASSES[status])}
+      />
+      {ATTENDANCE_STATUS_LABELS[status]}
+    </Badge>
+  );
+}
+
+function CompletionBadge({
+  completionStatus,
 }: {
-  status: AttendanceResult['status'];
-  firstClockIn: AttendanceResult['firstClockIn'];
-  lastClockOut: AttendanceResult['lastClockOut'];
+  completionStatus: AttendanceResult['completionStatus'];
 }) {
-  const displayStatus = getAttendanceDisplayStatus(status, firstClockIn, lastClockOut);
+  if (!completionStatus) {
+    return <span className="text-muted-foreground italic opacity-50">—</span>;
+  }
 
   return (
-    <Badge className={cn('rounded-sm', ATTENDANCE_STATUS_BADGE_CLASSES[displayStatus])}>
+    <Badge
+      className={cn('rounded-sm', ATTENDANCE_COMPLETION_STATUS_BADGE_CLASSES[completionStatus])}
+    >
       <span
         className={cn(
           'size-1.5 shrink-0 rounded-full',
-          ATTENDANCE_STATUS_DOT_CLASSES[displayStatus],
+          ATTENDANCE_COMPLETION_STATUS_DOT_CLASSES[completionStatus],
         )}
       />
-      {ATTENDANCE_STATUS_LABELS[displayStatus]}
+      {ATTENDANCE_COMPLETION_STATUS_LABELS[completionStatus]}
     </Badge>
   );
 }
@@ -184,13 +197,14 @@ function buildColumns(userLocale: UserLocale): ColumnDef<AttendanceResult>[] {
     {
       key: 'status',
       header: 'Status',
-      cell: (row) => (
-        <StatusBadge
-          status={row.status}
-          firstClockIn={row.firstClockIn}
-          lastClockOut={row.lastClockOut}
-        />
-      ),
+      cell: (row) => <StatusBadge status={row.status} />,
+    },
+    {
+      key: 'completion',
+      header: 'Completion',
+      cell: (row) => <CompletionBadge completionStatus={row.completionStatus} />,
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
     },
     {
       key: 'actions',
