@@ -36,7 +36,11 @@ describe('findOrCreateTodayAttendance', () => {
     const result = await findOrCreateTodayAttendance('employee-1');
 
     expect(attendanceRepository.create).toHaveBeenCalledWith(
-      expect.objectContaining({ employeeId: 'employee-1', status: 'PRESENT' }),
+      expect.objectContaining({
+        employeeId: 'employee-1',
+        status: 'PRESENT',
+        completionStatus: null,
+      }),
     );
     expect(result).toBe(attendance);
   });

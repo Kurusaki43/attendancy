@@ -47,15 +47,28 @@ describe('clockIn', () => {
     );
   });
 
-  it('sets status to PRESENT and firstClockIn when this is the first clock-in of the day', async () => {
+  it('sets status to PRESENT, completionStatus to INCOMPLETE, and firstClockIn when this is the first clock-in of the day', async () => {
     await clockIn(baseAttendance, 'QR');
 
     expect(attendanceRepository.update).toHaveBeenCalledWith(
       'attendance-1',
       expect.objectContaining({
         status: 'PRESENT',
+        completionStatus: 'INCOMPLETE',
         firstClockIn: expect.any(Date),
       }),
+    );
+  });
+
+  it('flips completionStatus back to INCOMPLETE when clocking in again after a completed session', async () => {
+    await clockIn(
+      { ...baseAttendance, status: 'PRESENT', completionStatus: 'COMPLETE' } as never,
+      'QR',
+    );
+
+    expect(attendanceRepository.update).toHaveBeenCalledWith(
+      'attendance-1',
+      expect.objectContaining({ completionStatus: 'INCOMPLETE' }),
     );
   });
 

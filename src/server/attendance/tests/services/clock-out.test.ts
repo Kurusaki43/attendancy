@@ -62,7 +62,7 @@ describe('clockOut', () => {
     );
   });
 
-  it('adds the minutes since the last clock-in to workedMinutes and sets lastClockOut', async () => {
+  it('adds the minutes since the last clock-in to workedMinutes, sets lastClockOut, and marks completionStatus COMPLETE', async () => {
     await clockOut(baseAttendance, lastClockInEvent, 'QR');
 
     expect(attendanceRepository.update).toHaveBeenCalledWith(
@@ -70,6 +70,7 @@ describe('clockOut', () => {
       expect.objectContaining({
         lastClockOut: new Date('2026-07-19T12:45:00.000Z'),
         workedMinutes: 30 + 45,
+        completionStatus: 'COMPLETE',
       }),
     );
   });

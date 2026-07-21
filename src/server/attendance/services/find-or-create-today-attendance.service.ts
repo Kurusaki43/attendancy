@@ -16,5 +16,10 @@ export async function findOrCreateTodayAttendance(
     return existing;
   }
 
-  return attendanceRepository.create({ employeeId, date, status: AttendanceStatus.PRESENT });
+  return attendanceRepository.create({
+    employeeId,
+    date,
+    status: AttendanceStatus.PRESENT,
+    completionStatus: null,
+  });
 }

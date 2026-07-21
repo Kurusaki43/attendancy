@@ -1,5 +1,5 @@
 import type { AttendanceMethod } from '@/generated/prisma/enums';
-import { AttendanceEventType } from '@/generated/prisma/enums';
+import { AttendanceCompletionStatus, AttendanceEventType } from '@/generated/prisma/enums';
 import type { AttendanceEventModel } from '@/generated/prisma/models';
 import {
   attendanceRepository,
@@ -30,5 +30,6 @@ export async function clockOut(
   return attendanceRepository.update(attendance.id, {
     lastClockOut: occurredAt,
     workedMinutes: attendance.workedMinutes + sessionMinutes,
+    completionStatus: AttendanceCompletionStatus.COMPLETE,
   });
 }

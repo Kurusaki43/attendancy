@@ -1,5 +1,9 @@
 import type { AttendanceMethod } from '@/generated/prisma/enums';
-import { AttendanceEventType, AttendanceStatus } from '@/generated/prisma/enums';
+import {
+  AttendanceCompletionStatus,
+  AttendanceEventType,
+  AttendanceStatus,
+} from '@/generated/prisma/enums';
 import {
   attendanceRepository,
   type AttendanceWithEvents,
@@ -21,6 +25,7 @@ export async function clockIn(
 
   return attendanceRepository.update(attendance.id, {
     status: AttendanceStatus.PRESENT,
+    completionStatus: AttendanceCompletionStatus.INCOMPLETE,
     firstClockIn: attendance.firstClockIn ?? occurredAt,
   });
 }
