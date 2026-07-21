@@ -1,5 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
-import { EmploymentStatus } from '@/generated/prisma/enums';
+import { EmploymentStatus, UserStatus } from '@/generated/prisma/enums';
 import type {
   EmployeeUncheckedCreateInput,
   EmployeeUncheckedUpdateInput,
@@ -67,10 +67,15 @@ export const employeeRepository = {
   // set changes mid-scan (e.g. someone is hired between pages), since inserts/updates shift row
   // positions in the ordering out from under a numeric offset. `id > cursor` never depends on how
   // many rows exist before the cursor, so it can't be shifted by concurrent writes.
+  //
+  // "Active" here means still employed (not TERMINATED — ON_LEAVE still counts, they're still
+  // owed an attendance record) and able to log in (their User account is ACTIVE, not
+  // INVITED/SUSPENDED/INACTIVE).
   async findActiveEmployeeIds({ cursor, take }: { cursor?: string; take: number }) {
     const rows = await prisma.employee.findMany({
       where: {
-        employmentStatus: EmploymentStatus.ACTIVE,
+        employmentStatus: { not: EmploymentStatus.TERMINATED },
+        user: { status: UserStatus.ACTIVE },
         ...(cursor && { id: { gt: cursor } }),
       },
       select: { id: true },
