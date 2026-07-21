@@ -81,7 +81,7 @@ export function AttendanceEventsSection({
 
         {mode === 'update' && fields.length === 0 && (
           <p className="text-sm text-amber-600 dark:text-amber-400">
-            Removing all events will delete this attendance record when you save.
+            Removing all events will mark this attendance as Absent when you save.
           </p>
         )}
 

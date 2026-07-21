@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Clock3, XCircle } from 'lucide-react';
 import type { Control } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 
@@ -8,9 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { AttendanceSectionNumber } from '@/features/attendance/components/AttendanceSectionNumber';
-import type {
-  CreateAttendanceFormValues,
-  UpdateAttendanceFormValues,
+import {
+  computeFormSummary,
+  type CreateAttendanceFormValues,
+  type UpdateAttendanceFormValues,
 } from '@/features/attendance/lib/attendance-form';
 import {
   ATTENDANCE_STATUS_DOT_CLASSES,
@@ -22,14 +23,18 @@ import { cn } from '@/lib/utils';
 type AttendanceAdditionalInfoSectionProps = {
   mode: 'create' | 'update';
   control: Control<CreateAttendanceFormValues | UpdateAttendanceFormValues>;
+  date: Date | undefined;
 };
 
 export function AttendanceAdditionalInfoSection({
   mode,
   control,
+  date,
 }: AttendanceAdditionalInfoSectionProps) {
   const events = useWatch({ control, name: 'events' }) ?? [];
   const hasEvents = events.length > 0;
+  const summary = computeFormSummary(date, events);
+  const displayStatus = summary.firstClockIn && !summary.lastClockOut ? 'INCOMPLETE' : 'PRESENT';
 
   return (
     <Card className="card-shadow">
@@ -41,9 +46,9 @@ export function AttendanceAdditionalInfoSection({
         <div className="space-y-2">
           <Label className="pb-2 font-medium tracking-wide">Status</Label>
           {hasEvents ? (
-            <MarkedAsPresent />
+            <StatusPreview status={displayStatus} />
           ) : mode === 'update' ? (
-            <WillBeDeletedNotice />
+            <StatusPreview status="ABSENT" />
           ) : (
             <NoEventsYetNotice />
           )}
@@ -65,39 +70,35 @@ export function AttendanceAdditionalInfoSection({
   );
 }
 
-const MarkedAsPresent = () => {
+type PreviewStatus = 'PRESENT' | 'ABSENT' | 'INCOMPLETE';
+
+const STATUS_PREVIEW_ICONS: Record<PreviewStatus, typeof CheckCircle2> = {
+  PRESENT: CheckCircle2,
+  ABSENT: XCircle,
+  INCOMPLETE: Clock3,
+};
+
+const StatusPreview = ({ status }: { status: PreviewStatus }) => {
+  const Icon = STATUS_PREVIEW_ICONS[status];
+
   return (
     <div
       className={cn(
         'flex items-center gap-3 rounded-md border p-3',
-        ATTENDANCE_STATUS_PANEL_CLASSES.PRESENT,
+        ATTENDANCE_STATUS_PANEL_CLASSES[status],
       )}
     >
       <span
         className={cn(
           'flex size-8 shrink-0 items-center justify-center rounded-full text-white',
-          ATTENDANCE_STATUS_DOT_CLASSES.PRESENT,
+          ATTENDANCE_STATUS_DOT_CLASSES[status],
         )}
       >
-        <CheckCircle2 className="size-5" />
+        <Icon className="size-5" />
       </span>
       <div>
         <p className="text-muted-foreground text-xs">This attendance will be marked as:</p>
-        <p className="text-sm font-semibold">{ATTENDANCE_STATUS_LABELS['PRESENT']}</p>
-      </div>
-    </div>
-  );
-};
-
-const WillBeDeletedNotice = () => {
-  return (
-    <div className="flex items-center gap-3 rounded-md border border-amber-500/20 bg-amber-500/10 p-3">
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white">
-        <AlertTriangle className="size-5" />
-      </span>
-      <div>
-        <p className="text-muted-foreground text-xs">No events remain on this record.</p>
-        <p className="text-sm font-semibold">Saving will delete this attendance record.</p>
+        <p className="text-sm font-semibold">{ATTENDANCE_STATUS_LABELS[status]}</p>
       </div>
     </div>
   );

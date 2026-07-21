@@ -164,6 +164,7 @@ export function AttendanceForm({
             <AttendanceAdditionalInfoSection
               mode={isUpdateMode ? 'update' : 'create'}
               control={form.control}
+              date={resolvedDate}
             />
           </div>
 

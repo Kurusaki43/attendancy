@@ -10,6 +10,7 @@ import {
   ATTENDANCE_STATUS_DOT_CLASSES,
   ATTENDANCE_STATUS_LABELS,
   formatWorkedMinutes,
+  getAttendanceDisplayStatus,
 } from '@/features/attendance/lib/attendance-status';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
@@ -41,13 +42,26 @@ function DepartmentCell({ department }: { department: AttendanceEmployeeResult['
   );
 }
 
-function StatusBadge({ status }: { status: AttendanceResult['status'] }) {
+function StatusBadge({
+  status,
+  firstClockIn,
+  lastClockOut,
+}: {
+  status: AttendanceResult['status'];
+  firstClockIn: AttendanceResult['firstClockIn'];
+  lastClockOut: AttendanceResult['lastClockOut'];
+}) {
+  const displayStatus = getAttendanceDisplayStatus(status, firstClockIn, lastClockOut);
+
   return (
-    <Badge className={cn('rounded-sm', ATTENDANCE_STATUS_BADGE_CLASSES[status])}>
+    <Badge className={cn('rounded-sm', ATTENDANCE_STATUS_BADGE_CLASSES[displayStatus])}>
       <span
-        className={cn('size-1.5 shrink-0 rounded-full', ATTENDANCE_STATUS_DOT_CLASSES[status])}
+        className={cn(
+          'size-1.5 shrink-0 rounded-full',
+          ATTENDANCE_STATUS_DOT_CLASSES[displayStatus],
+        )}
       />
-      {ATTENDANCE_STATUS_LABELS[status]}
+      {ATTENDANCE_STATUS_LABELS[displayStatus]}
     </Badge>
   );
 }
@@ -142,7 +156,13 @@ function buildColumns(userLocale: UserLocale): ColumnDef<AttendanceResult>[] {
     {
       key: 'status',
       header: 'Status',
-      cell: (row) => <StatusBadge status={row.status} />,
+      cell: (row) => (
+        <StatusBadge
+          status={row.status}
+          firstClockIn={row.firstClockIn}
+          lastClockOut={row.lastClockOut}
+        />
+      ),
     },
   ];
 }
