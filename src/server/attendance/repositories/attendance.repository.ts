@@ -64,10 +64,6 @@ export const attendanceRepository = {
     });
   },
 
-  delete(attendanceId: string) {
-    return prisma.attendance.delete({ where: { id: attendanceId } });
-  },
-
   findMany(query: AttendanceFindManyQuery) {
     return prisma.attendance.findMany({ ...query, include: ATTENDANCE_LIST_INCLUDE });
   },

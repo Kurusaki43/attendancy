@@ -5,7 +5,6 @@ import { ERROR_CODES } from '@/lib/errors/error-codes';
 vi.mock('../../repositories/attendance.repository', () => ({
   attendanceRepository: {
     findById: vi.fn(),
-    delete: vi.fn(),
   },
 }));
 
@@ -63,7 +62,6 @@ beforeEach(() => {
   vi.clearAllMocks();
 
   vi.mocked(attendanceRepository.findById).mockResolvedValue(presentAttendance as never);
-  vi.mocked(attendanceRepository.delete).mockResolvedValue(undefined as never);
   vi.mocked(employeeRepository.findById).mockResolvedValue(activeEmployee as never);
 
   vi.mocked(prisma.attendanceEvent.delete).mockResolvedValue({} as never);
@@ -200,7 +198,6 @@ describe('updateAttendance', () => {
         hasManualChanges: true,
       },
     });
-    expect(attendanceRepository.delete).not.toHaveBeenCalled();
     expect(result.id).toBe('attendance-1');
   });
 
