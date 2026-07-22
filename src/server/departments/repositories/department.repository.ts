@@ -47,6 +47,16 @@ export const departmentRepository = {
   findByCode(code: string) {
     return prisma.department.findUnique({ where: { code } });
   },
+  findByCodeWithRelations(code: string) {
+    return prisma.department.findUnique({
+      where: { code },
+      include: {
+        parent: { select: DEPARTMENT_PARENT_SELECT },
+        children: { select: DEPARTMENT_CHILD_SELECT },
+        _count: { select: { employees: true } },
+      },
+    });
+  },
   update(departmentID: string, newDate: DepartmentUncheckedUpdateInput) {
     return prisma.department.update({ where: { id: departmentID }, data: newDate });
   },
