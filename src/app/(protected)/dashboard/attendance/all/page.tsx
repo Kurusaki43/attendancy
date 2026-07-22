@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AddAttendanceDialog } from '@/features/attendance/components/AddAttendanceDialog';
-import { AttendanceTable } from '@/features/attendance/components/AttendanceTable';
+import { AttendanceTable } from '@/features/attendance/components/table/AttendanceTable';
 import {
   ATTENDANCE_COMPLETION_STATUS_LABELS,
   ATTENDANCE_COMPLETION_STATUSES,
