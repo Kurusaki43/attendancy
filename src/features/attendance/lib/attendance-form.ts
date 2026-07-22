@@ -6,7 +6,7 @@ export const eventFormSchema = z.object({
   id: z.string().optional(),
   type: z.enum(['CLOCK_IN', 'CLOCK_OUT']),
   time: z.string().regex(TIME_REGEX, 'Enter a valid time.'),
-  reason: z.string().trim().min(1, 'Notes are required.').max(500),
+  reason: z.string().trim().max(500).optional(),
 });
 
 export const createAttendanceFormSchema = z.object({
@@ -46,12 +46,6 @@ export type FormAttendanceSummary = {
   completionStatus: 'COMPLETE' | 'INCOMPLETE' | null;
 };
 
-/**
- * Live preview mirroring the server's computeAttendanceSummary — including completionStatus,
- * which is derived from the chronologically last event (ending on Clock Out means every session
- * closed; ending on Clock In means the last one didn't), not from whether lastClockOut is null
- * (a later completed pair can still leave an earlier orphaned Clock In at the very end).
- */
 export function computeFormSummary(
   date: Date | undefined,
   events: EventFormValues[],

@@ -4,7 +4,7 @@ const eventSchema = z.object({
   id: z.string().trim().min(1).optional(),
   type: z.enum(['CLOCK_IN', 'CLOCK_OUT']),
   occurredAt: z.coerce.date(),
-  reason: z.string().trim().min(1, 'Notes are required for manual events.').max(500),
+  reason: z.string().trim().max(500).optional(),
 });
 
 export const updateAttendanceSchema = z.object({
