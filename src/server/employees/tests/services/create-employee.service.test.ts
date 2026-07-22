@@ -28,14 +28,8 @@ vi.mock('@/server/positions/repositories/position.repository', () => ({
   },
 }));
 
-vi.mock('@/server/mail/services/email-queue.service', () => ({
-  emailQueueService: {
-    sendEmployeeInviteEmail: vi.fn(),
-  },
-}));
-
-vi.mock('@/server/auth/lib/otp', () => ({
-  hashOtp: vi.fn().mockResolvedValue('hashed-token'),
+vi.mock('../../services/send-employee-invite.service', () => ({
+  sendEmployeeInvite: vi.fn(),
 }));
 
 vi.mock('@/lib/prisma', () => ({
@@ -50,7 +44,7 @@ const { userRepository } = await import('@/server/auth/repositories/user.reposit
 const { departmentRepository } =
   await import('@/server/departments/repositories/department.repository');
 const { positionRepository } = await import('@/server/positions/repositories/position.repository');
-const { emailQueueService } = await import('@/server/mail/services/email-queue.service');
+const { sendEmployeeInvite } = await import('../../services/send-employee-invite.service');
 const { prisma } = await import('@/lib/prisma');
 const { BadRequestError } = await import('@/lib/errors/bad-request.error');
 const { ConflictError } = await import('@/lib/errors/conflict.error');
@@ -70,7 +64,6 @@ const input = {
 const fakeTx = {
   user: { create: vi.fn() },
   employee: { create: vi.fn() },
-  otp: { create: vi.fn() },
 };
 
 beforeEach(() => {
@@ -82,7 +75,6 @@ beforeEach(() => {
 
   fakeTx.user.create.mockResolvedValue({ id: 'user-1', email: input.email, firstName: 'Ada' });
   fakeTx.employee.create.mockResolvedValue({ id: 'employee-1' });
-  fakeTx.otp.create.mockResolvedValue({ id: 'otp-1' });
 
   vi.mocked(prisma.$transaction).mockImplementation(((callback: (tx: typeof fakeTx) => unknown) =>
     callback(fakeTx)) as never);
@@ -91,7 +83,7 @@ beforeEach(() => {
 });
 
 describe('createEmployee', () => {
-  it('creates the user, employee, and invite otp, then enqueues the invite email', async () => {
+  it('creates the user and employee, then sends the invite', async () => {
     const result = await createEmployee(input);
 
     expect(fakeTx.user.create).toHaveBeenCalledWith(
@@ -104,14 +96,11 @@ describe('createEmployee', () => {
         data: expect.objectContaining({ employeeCode: input.employeeCode, userId: 'user-1' }),
       }),
     );
-    expect(fakeTx.otp.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({ userId: 'user-1', type: 'EMPLOYEE_INVITE' }),
-      }),
-    );
-    expect(emailQueueService.sendEmployeeInviteEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ to: input.email, inviteUrl: expect.stringContaining('otp-1') }),
-    );
+    expect(sendEmployeeInvite).toHaveBeenCalledWith({
+      userId: 'user-1',
+      firstName: 'Ada',
+      email: input.email,
+    });
     expect(result).toEqual({ id: 'employee-1' });
   });
 

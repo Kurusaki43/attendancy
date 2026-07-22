@@ -1,7 +1,3 @@
-import { randomBytes } from 'crypto';
-import ms from 'ms';
-
-import { env } from '@/lib/env/env';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
@@ -9,15 +5,13 @@ import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { prisma } from '@/lib/prisma';
 import { ROLE_NAMES } from '@/server/auth/constants/roles';
-import { hashOtp } from '@/server/auth/lib/otp';
 import { userRepository } from '@/server/auth/repositories/user.repository';
 import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import { employeeRepository } from '@/server/employees/repositories/employee.repository';
 import type { CreateEmployeeInput } from '@/server/employees/schemas/create-employee.schema';
+import { sendEmployeeInvite } from '@/server/employees/services/send-employee-invite.service';
 import type { CreateEmployeeServiceResult } from '@/server/employees/types';
-import { emailQueueService } from '@/server/mail/services/email-queue.service';
 import { positionRepository } from '@/server/positions/repositories/position.repository';
-import { humanizeDuration } from '@/shared/utils/humanize-duration';
 
 export async function createEmployee(
   input: CreateEmployeeInput,
@@ -92,10 +86,7 @@ export async function createEmployee(
     );
   }
 
-  const token = randomBytes(32).toString('hex');
-  const codeHash = await hashOtp(token);
-
-  const { user, employee, otp } = await prisma.$transaction(async (tx) => {
+  const { user, employee } = await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: {
         firstName: input.firstName,
@@ -126,26 +117,10 @@ export async function createEmployee(
       },
     });
 
-    const otp = await tx.otp.create({
-      data: {
-        userId: user.id,
-        type: 'EMPLOYEE_INVITE',
-        codeHash,
-        expiresAt: new Date(Date.now() + ms(env.INVITATION_LINK_EXPIRED_IN)),
-      },
-    });
-
-    return { user, employee, otp };
+    return { user, employee };
   });
 
-  const inviteUrl = `${env.APP_URL}/accept-invite?id=${otp.id}&token=${token}`;
-
-  await emailQueueService.sendEmployeeInviteEmail({
-    to: user.email,
-    firstName: user.firstName,
-    inviteUrl,
-    expiresIn: humanizeDuration(env.INVITATION_LINK_EXPIRED_IN),
-  });
+  await sendEmployeeInvite({ userId: user.id, firstName: user.firstName, email: user.email });
 
   const created = await employeeRepository.findById(employee.id);
 

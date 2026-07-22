@@ -1,8 +1,9 @@
 'use client';
 
-import { Building2, PencilIcon, SearchX, Trash } from 'lucide-react';
+import { Building2, MailIcon, PencilIcon, SearchX, Trash } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
@@ -25,6 +26,7 @@ import {
   type UserStatus,
 } from '@/features/employees/lib/user-status';
 import { cn } from '@/lib/utils';
+import { resendEmployeeInviteAction } from '@/server/employees/actions/resend-employee-invite.action';
 import type { EmployeeResult } from '@/server/employees/types/action-results';
 import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
@@ -75,21 +77,45 @@ function AccountStatusBadge({ status }: { status: UserStatus }) {
 
 function RowActions({ employee }: { employee: EmployeeResult }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isResending, startResendTransition] = useTransition();
   const employeeName = `${employee.user.firstName} ${employee.user.lastName}`;
+
+  const handleResendInvite = () => {
+    startResendTransition(async () => {
+      const result = await resendEmployeeInviteAction(employee.id);
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      toast.success(result.message);
+    });
+  };
 
   return (
     <>
       <TableRowActions label={`Actions for ${employeeName}`}>
         <DropdownMenuItem
-          className="cursor-pointer"
+          className="cursor-pointer px-1"
           render={<Link href={`/dashboard/employees/${employee.id}/edit`} />}
         >
           <PencilIcon />
           Edit
         </DropdownMenuItem>
+        {employee.user.status === 'INVITED' && (
+          <DropdownMenuItem
+            className="cursor-pointer px-1 whitespace-nowrap"
+            disabled={isResending}
+            onClick={handleResendInvite}
+          >
+            <MailIcon />
+            {isResending ? 'Resending...' : 'Resend Invite'}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           variant="destructive"
-          className="cursor-pointer"
+          className="cursor-pointer px-1"
           onClick={() => setDeleteOpen(true)}
         >
           <Trash />

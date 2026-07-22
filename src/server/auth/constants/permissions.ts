@@ -34,6 +34,12 @@ export const PERMISSIONS = {
 
   EMPLOYEE_DELETE: permission('employee', 'delete', 'Delete employees'),
 
+  EMPLOYEE_INVITE_RESEND: permission(
+    'employee',
+    'invite:resend',
+    'Resend employee invitation emails',
+  ),
+
   // Attendance
   ATTENDANCE_READ_ALL: permission('attendance', 'read:all', 'View all attendance records'),
 
