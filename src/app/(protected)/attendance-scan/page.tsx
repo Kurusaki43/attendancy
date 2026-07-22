@@ -32,8 +32,6 @@ function errorProps(code: string | undefined, message: string | undefined) {
   }
 }
 
-// Deliberately outside the dashboard layout — this is meant to be opened by scanning the kiosk
-// QR with a phone camera, not navigated to from within the app shell.
 export default async function AttendanceScanPage({ searchParams }: Props) {
   const { token } = await searchParams;
 

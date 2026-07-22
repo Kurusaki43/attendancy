@@ -1,7 +1,7 @@
-import { Camera, Info, QrCode } from 'lucide-react';
+import { Info, QrCode } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AttendanceScanQrButton } from '@/features/attendance/components/AttendanceScanQrButton';
 
 export function AttendanceCheckInCard() {
   return (
@@ -26,10 +26,7 @@ export function AttendanceCheckInCard() {
             <p className="text-muted-foreground text-xs">to check in and start your day.</p>
           </div>
 
-          <Button type="button" className="w-full font-semibold sm:w-auto">
-            <Camera data-icon="inline-start" />
-            Scan QR
-          </Button>
+          <AttendanceScanQrButton />
         </div>
 
         <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
