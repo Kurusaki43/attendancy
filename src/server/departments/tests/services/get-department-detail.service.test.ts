@@ -43,8 +43,8 @@ beforeEach(() => {
 
   vi.mocked(departmentRepository.findByCodeWithRelations).mockResolvedValue(DEPARTMENT as never);
   vi.mocked(employeeRepository.findMany).mockResolvedValue([
-    { positionId: 'pos-1', managerId: null },
-    { positionId: 'pos-2', managerId: 'emp-1' },
+    { employmentStatus: 'ACTIVE', positionId: 'pos-1', managerId: null },
+    { employmentStatus: 'ON_LEAVE', positionId: 'pos-2', managerId: 'emp-1' },
   ] as never);
 });
 
@@ -71,6 +71,7 @@ describe('getDepartmentDetail', () => {
     expect(result.id).toBe('dept-1');
     expect(result.overview).toEqual({
       totalEmployees: 2,
+      activeEmployees: 1,
       childrenCount: 2,
       positionCount: 2,
       managerCount: 1,

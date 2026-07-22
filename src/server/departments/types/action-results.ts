@@ -38,6 +38,7 @@ export type GetDepartmentActionResult = DepartmentResult;
 
 export type DepartmentOverview = {
   totalEmployees: number;
+  activeEmployees: number;
   childrenCount: number;
   positionCount: number;
   managerCount: number;

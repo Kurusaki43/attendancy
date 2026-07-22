@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Briefcase, Network, Users, Users2 } from 'lucide-react';
+import { Briefcase, CheckCircle2, Network, Users, Users2 } from 'lucide-react';
 
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -25,6 +25,13 @@ export function DepartmentOverviewCard({ overview }: DepartmentOverviewCardProps
       iconClassName: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
       label: 'Total Employees',
       value: String(overview.totalEmployees),
+    },
+    {
+      key: 'active',
+      icon: CheckCircle2,
+      iconClassName: 'bg-green-500/15 text-green-600 dark:text-green-400',
+      label: 'Active Employees',
+      value: String(overview.activeEmployees),
     },
     {
       key: 'children',

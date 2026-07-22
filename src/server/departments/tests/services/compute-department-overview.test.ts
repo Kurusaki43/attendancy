@@ -8,23 +8,26 @@ describe('computeDepartmentOverview', () => {
 
     expect(overview).toEqual({
       totalEmployees: 0,
+      activeEmployees: 0,
       childrenCount: 0,
       positionCount: 0,
       managerCount: 0,
     });
   });
 
-  it('counts total employees', () => {
+  it('counts total and active employees', () => {
     const overview = computeDepartmentOverview(
       [
-        { positionId: null, managerId: null },
-        { positionId: null, managerId: null },
-        { positionId: null, managerId: null },
+        { employmentStatus: 'ACTIVE', positionId: null, managerId: null },
+        { employmentStatus: 'ACTIVE', positionId: null, managerId: null },
+        { employmentStatus: 'ON_LEAVE', positionId: null, managerId: null },
+        { employmentStatus: 'TERMINATED', positionId: null, managerId: null },
       ],
       0,
     );
 
-    expect(overview.totalEmployees).toBe(3);
+    expect(overview.totalEmployees).toBe(4);
+    expect(overview.activeEmployees).toBe(2);
   });
 
   it('passes through the given sub-department count', () => {
@@ -36,10 +39,10 @@ describe('computeDepartmentOverview', () => {
   it('counts distinct positions and managers, ignoring nulls', () => {
     const overview = computeDepartmentOverview(
       [
-        { positionId: 'pos-1', managerId: 'mgr-1' },
-        { positionId: 'pos-1', managerId: 'mgr-2' },
-        { positionId: 'pos-2', managerId: null },
-        { positionId: null, managerId: null },
+        { employmentStatus: 'ACTIVE', positionId: 'pos-1', managerId: 'mgr-1' },
+        { employmentStatus: 'ACTIVE', positionId: 'pos-1', managerId: 'mgr-2' },
+        { employmentStatus: 'ACTIVE', positionId: 'pos-2', managerId: null },
+        { employmentStatus: 'ACTIVE', positionId: null, managerId: null },
       ],
       0,
     );

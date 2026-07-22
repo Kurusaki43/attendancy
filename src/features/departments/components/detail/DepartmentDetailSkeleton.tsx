@@ -35,7 +35,7 @@ export function DepartmentDetailSkeleton() {
         <Card className="bg-card border-border card-shadow w-full sm:w-80">
           <CardContent className="flex flex-col gap-4">
             <Skeleton className="h-5 w-40" />
-            {Array.from({ length: 4 }).map((_, index) => (
+            {Array.from({ length: 5 }).map((_, index) => (
               <div key={index} className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <Skeleton className="size-8 shrink-0 rounded-md" />
