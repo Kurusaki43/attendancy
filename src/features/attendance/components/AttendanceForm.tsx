@@ -12,9 +12,7 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { AttendanceAdditionalInfoSection } from '@/features/attendance/components/AttendanceAdditionalInfoSection';
-import { AttendanceEmployeeDateSection } from '@/features/attendance/components/AttendanceEmployeeDateSection';
-import { AttendanceEventsSection } from '@/features/attendance/components/AttendanceEventsSection';
+import { AttendanceDetailsCard } from '@/features/attendance/components/AttendanceDetailsCard';
 import { AttendanceSidebar } from '@/features/attendance/components/AttendanceSidebar';
 import type { AttendanceEmployeeOption } from '@/features/attendance/lib/attendance-employee-option';
 import {
@@ -55,7 +53,6 @@ export function AttendanceForm({
   const router = useRouter();
 
   const isUpdateMode = mode === 'update';
-  const resolvedDate = isUpdateMode ? attendance.date : initialDate;
 
   const form = useForm<CreateAttendanceFormValues | UpdateAttendanceFormValues>({
     resolver: zodResolver(isUpdateMode ? updateAttendanceFormSchema : createAttendanceFormSchema),
@@ -79,8 +76,10 @@ export function AttendanceForm({
     errors: FieldErrors<CreateAttendanceFormValues | UpdateAttendanceFormValues>,
   ) => {
     const firstError = Object.values(errors)[0];
+
     const message =
       (typeof firstError?.message === 'string' && firstError.message) ||
+      (typeof firstError === 'object' && Object.values(firstError)[0].message) ||
       'Please fix the highlighted errors before saving.';
 
     toast.error(message);
@@ -144,56 +143,62 @@ export function AttendanceForm({
     }
   };
 
+  const footerButtons = (
+    <>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={isPending}
+        nativeButton={false}
+        render={<Link href="/dashboard/attendance/all" />}
+      >
+        Cancel
+      </Button>
+      <Button type="submit" disabled={isPending} className="font-semibold">
+        <CalendarDays data-icon="inline-start" />
+        {isPending ? 'Saving...' : isUpdateMode ? 'Save Changes' : 'Save Attendance'}
+      </Button>
+    </>
+  );
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, onInvalid)}
         className="grid grid-cols-1 gap-4 lg:grid-cols-3"
       >
-        <div className="col-span-1 space-y-4 lg:col-span-2">
-          <div className="flex flex-col gap-4 sm:flex-row [&>*]:flex-1">
-            {isUpdateMode ? (
-              <AttendanceEmployeeDateSection mode="update" attendance={attendance} />
-            ) : (
-              <AttendanceEmployeeDateSection
-                mode="create"
-                employee={initialEmployee ?? null}
-                date={initialDate}
-              />
-            )}
-            <AttendanceAdditionalInfoSection
-              mode={isUpdateMode ? 'update' : 'create'}
+        <div className="flex lg:col-span-2">
+          {isUpdateMode ? (
+            <AttendanceDetailsCard
+              mode="update"
+              attendance={attendance}
               control={form.control}
-              date={resolvedDate}
+              isPending={isPending}
+              footer={footerButtons}
             />
-          </div>
-
-          <AttendanceEventsSection
-            control={form.control}
-            isPending={isPending}
-            date={resolvedDate}
-            mode={isUpdateMode ? 'update' : 'create'}
-          />
+          ) : (
+            <AttendanceDetailsCard
+              mode="create"
+              employee={initialEmployee ?? null}
+              date={initialDate}
+              control={form.control}
+              isPending={isPending}
+              footer={footerButtons}
+            />
+          )}
         </div>
 
-        <div className="space-y-4">
-          <AttendanceSidebar control={form.control} date={resolvedDate} />
-          <div className="flex justify-end gap-2 sm:justify-end">
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              disabled={isPending}
-              nativeButton={false}
-              render={<Link href="/dashboard/attendance/all" />}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending} size="lg" className="font-semibold">
-              <CalendarDays data-icon="inline-start" />
-              {isPending ? 'Saving...' : isUpdateMode ? 'Save Changes' : 'Save Attendance'}
-            </Button>
-          </div>
+        <div className="flex">
+          {isUpdateMode ? (
+            <AttendanceSidebar mode="update" attendance={attendance} control={form.control} />
+          ) : (
+            <AttendanceSidebar
+              mode="create"
+              employee={initialEmployee ?? null}
+              date={initialDate}
+              control={form.control}
+            />
+          )}
         </div>
       </form>
     </Form>

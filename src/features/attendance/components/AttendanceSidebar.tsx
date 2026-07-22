@@ -1,112 +1,163 @@
 'use client';
 
-import { Clock2Icon, Info, LogIn, LogOut } from 'lucide-react';
+import { Calendar, Clock3, Info } from 'lucide-react';
 import type { Control } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AttendanceTimeline } from '@/features/attendance/components/AttendanceTimeline';
+import { AttendanceUserPreview } from '@/features/attendance/components/AttendanceUserPreview';
+import type { AttendanceEmployeeOption } from '@/features/attendance/lib/attendance-employee-option';
 import {
   combineDateAndTime,
+  computeFormSummary,
   type CreateAttendanceFormValues,
   type UpdateAttendanceFormValues,
 } from '@/features/attendance/lib/attendance-form';
+import {
+  ATTENDANCE_COMPLETION_STATUS_BADGE_CLASSES,
+  ATTENDANCE_COMPLETION_STATUS_LABELS,
+  formatWorkedMinutes,
+} from '@/features/attendance/lib/attendance-status';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { cn } from '@/lib/utils';
-import { formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
+import type { AttendanceResult } from '@/server/attendance/types/action-results';
+import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
 const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 type AttendanceSidebarProps = {
   control: Control<CreateAttendanceFormValues | UpdateAttendanceFormValues>;
-  date: Date | undefined;
-};
+} & (
+  | { mode: 'create'; employee: AttendanceEmployeeOption | null; date: Date | undefined }
+  | { mode: 'update'; attendance: AttendanceResult }
+);
 
-export function AttendanceSidebar({ control, date }: AttendanceSidebarProps) {
+export function AttendanceSidebar(props: AttendanceSidebarProps) {
+  const { control, mode } = props;
   const userLocale = useUserLocale();
-  const events = useWatch({ control, name: 'events' }) ?? [];
+  const isUpdateMode = mode === 'update';
 
-  const timelineEvents = date
+  const resolvedDate = isUpdateMode ? props.attendance.date : props.date;
+  const employee = isUpdateMode
+    ? {
+        firstName: props.attendance.employee.user.firstName,
+        lastName: props.attendance.employee.user.lastName,
+        avatar: props.attendance.employee.user.avatar,
+        employeeCode: props.attendance.employee.employeeCode,
+      }
+    : props.employee;
+
+  const events = useWatch({ control, name: 'events' }) ?? [];
+  const hasEvents = events.length > 0;
+  const summary = computeFormSummary(resolvedDate, events);
+
+  const timelineEvents = resolvedDate
     ? [...events]
         .filter((event) => TIME_REGEX.test(event.time))
-        .map((event) => ({ ...event, occurredAt: combineDateAndTime(date, event.time) }))
+        .map((event) => ({
+          type: event.type,
+          occurredAt: combineDateAndTime(resolvedDate, event.time),
+          reason: event.reason,
+        }))
         .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime())
     : [];
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row lg:flex-col [&>*]:flex-1">
-      <Card className="card-shadow">
-        <CardHeader>
-          <CardTitle>Timeline Preview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {timelineEvents.length === 0 ? (
-            <p className="text-muted-foreground flex items-start justify-center gap-2 text-center text-sm">
-              <Clock2Icon size={16} />
-              No attendance events added yet.
-            </p>
-          ) : (
-            <ol>
-              {timelineEvents.map((event, index) => {
-                const isClockIn = event.type === 'CLOCK_IN';
-                const isLast = index === timelineEvents.length - 1;
-
-                return (
-                  <li key={`${event.type}-${event.time}-${index}`} className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <span
-                        className={cn(
-                          'flex size-7 shrink-0 items-center justify-center rounded-full',
-                          isClockIn
-                            ? 'bg-green-500/15 text-green-600 dark:text-green-400'
-                            : 'bg-red-500/15 text-red-600 dark:text-red-400',
-                        )}
-                      >
-                        {isClockIn ? (
-                          <LogIn className="size-3.5" />
-                        ) : (
-                          <LogOut className="size-3.5" />
-                        )}
-                      </span>
-                      {!isLast && <span className="bg-border w-px flex-1" />}
-                    </div>
-                    <div className={cn('min-w-0 flex-1', !isLast && 'pb-5')}>
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-sm font-medium">
-                          {isClockIn ? 'Clock In' : 'Clock Out'}
-                        </p>
-                        <span className="border-border ml-auto hidden h-px w-12 border xl:block" />
-                        {event.reason && (
-                          <Badge
-                            variant="secondary"
-                            className="inline max-w-32 truncate text-xs font-light"
-                          >
-                            {event.reason}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-muted-foreground text-xs">
-                        {formatDate(event.occurredAt, { ...userLocale, ...TIME_FORMAT })}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="bg-primary/5 border-primary/20 flex items-start gap-3 rounded-md border p-3 text-xs">
-        <Info className="text-primary mt-0.5 size-4 shrink-0" />
-        <div className="text-muted-foreground space-y-1.5">
-          <p className="text-foreground font-medium">About Manual Attendance</p>
-          <p>
-            Use manual attendance only when necessary (e.g. missed clock in/out, system issues).
-          </p>
-          <p>All manual records are logged and can be reviewed later.</p>
+    <Card className="card-shadow flex-1">
+      <CardHeader>
+        <CardTitle>Attendance Summary</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-5">
+        <div className="space-y-1.5">
+          <p className="text-xs font-medium tracking-wide">Employee</p>
+          <AttendanceUserPreview employee={employee} variant="plain" />
         </div>
-      </div>
-    </div>
+
+        <div className="space-y-1.5">
+          <p className="text-muted-foreground text-xs font-medium tracking-wide">Date</p>
+          <p className="flex items-center gap-1.5 text-sm">
+            <Calendar className="text-muted-foreground size-4 shrink-0" />
+            {resolvedDate ? (
+              <span className="text-foreground font-medium">
+                {formatDate(resolvedDate, { ...userLocale, ...DATE_FORMAT })} (
+                <span className="text-muted-foreground capitalize">
+                  {formatDate(resolvedDate, { ...userLocale, weekday: 'long' })})
+                </span>
+              </span>
+            ) : (
+              'No date selected'
+            )}
+          </p>
+        </div>
+
+        <div className="border-border/60 space-y-1.5 border-t pt-4">
+          <p className="text-muted-foreground text-xs font-medium tracking-wide">
+            Completion Status
+          </p>
+          {summary.completionStatus ? (
+            <>
+              <Badge
+                className={cn(
+                  'rounded-sm',
+                  ATTENDANCE_COMPLETION_STATUS_BADGE_CLASSES[summary.completionStatus],
+                )}
+              >
+                {ATTENDANCE_COMPLETION_STATUS_LABELS[summary.completionStatus]}
+              </Badge>
+              <p className="text-muted-foreground text-xs">
+                {summary.completionStatus === 'COMPLETE'
+                  ? 'All events are complete.'
+                  : 'Missing a clock-out — this will need HR follow-up.'}
+              </p>
+            </>
+          ) : (
+            <p className="text-muted-foreground text-xs">No events added yet.</p>
+          )}
+        </div>
+
+        <div className="border-border/60 space-y-3 border-t pt-4">
+          <p className="text-muted-foreground text-xs font-medium tracking-wide">
+            Events ({events.length})
+          </p>
+          <AttendanceTimeline events={timelineEvents} />
+        </div>
+
+        <div className="border-border/60 flex items-center justify-between border-t pt-4">
+          <p className="text-muted-foreground text-xs font-medium tracking-wide">Worked Duration</p>
+          <p className="flex items-center gap-1.5 text-sm font-semibold">
+            <Clock3 className="text-muted-foreground size-4" />
+            {formatWorkedMinutes(summary.workedMinutes)}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between border-t pt-4">
+          <p className="text-muted-foreground text-xs font-medium tracking-wide">Method</p>
+          <Badge variant="ghost" className="bg-primary/10 text-primary rounded-sm">
+            Manual
+          </Badge>
+        </div>
+
+        <div className="bg-primary/5 border-border/60 flex items-start gap-2.5 rounded-md border p-3 text-xs">
+          <Info className="text-primary mt-0.5 size-4 shrink-0" />
+          <p className="text-muted-foreground text-xs">
+            {hasEvents ? (
+              <>
+                The attendance will be marked as{' '}
+                <span className="text-primary font-semibold">Present</span> after saving.
+              </>
+            ) : isUpdateMode ? (
+              <>
+                The attendance will be marked as{' '}
+                <span className="text-primary font-semibold">Absent</span> after saving.
+              </>
+            ) : (
+              'Add at least one clock in/out event to mark this attendance as Present.'
+            )}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
