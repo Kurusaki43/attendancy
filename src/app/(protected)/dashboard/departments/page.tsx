@@ -9,8 +9,8 @@ import { ErrorState } from '@/components/shared/ErrorState';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AddDepartmentButton } from '@/features/departments/components/AddDepartmentButton';
-import { DepartmentsTable } from '@/features/departments/components/DepartmentsTable';
 import { DepartmentStats } from '@/features/departments/components/DepartmentStats';
+import { DepartmentsTable } from '@/features/departments/components/table/DepartmentsTable';
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 import { getDepartmentStatsAction } from '@/server/departments/actions/get-department-stats.action';
 
