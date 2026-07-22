@@ -1,8 +1,10 @@
 'use client';
 
-import { Building2, PencilIcon, SearchX, Trash, Users } from 'lucide-react';
+import { Building2, PencilIcon, Power, PowerOff, SearchX, Trash, Users } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
 import { type ColumnDef, DataTable } from '@/components/shared/data-table/DataTable';
@@ -11,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { cn } from '@/lib/utils';
+import { updateDepartmentAction } from '@/server/departments/actions/update-department.action';
 import type { DepartmentResult } from '@/server/departments/types/action-results';
 import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
 
@@ -75,6 +78,28 @@ function ParentCell({ parent }: { parent: DepartmentResult['parent'] }) {
 
 function RowActions({ department }: { department: DepartmentResult }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isToggling, startToggleTransition] = useTransition();
+  const router = useRouter();
+
+  const handleToggleActive = () => {
+    startToggleTransition(async () => {
+      const result = await updateDepartmentAction(department.id, {
+        isActive: !department.isActive,
+      });
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      toast.success(
+        department.isActive
+          ? `"${department.name}" has been deactivated.`
+          : `"${department.name}" has been activated.`,
+      );
+      router.refresh();
+    });
+  };
 
   return (
     <>
@@ -85,6 +110,14 @@ function RowActions({ department }: { department: DepartmentResult }) {
         >
           <PencilIcon />
           Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          disabled={isToggling}
+          onClick={handleToggleActive}
+        >
+          {department.isActive ? <PowerOff /> : <Power />}
+          {department.isActive ? 'Deactivate' : 'Activate'}
         </DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"
