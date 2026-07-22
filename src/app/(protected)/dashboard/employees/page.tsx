@@ -7,8 +7,8 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { AddEmployeeButton } from '@/features/employees/components/AddEmployeeButton';
-import { EmployeesTable } from '@/features/employees/components/EmployeesTable';
 import { EmployeeStats } from '@/features/employees/components/EmployeeStats';
+import { EmployeesTable } from '@/features/employees/components/table/EmployeesTable';
 import {
   EMPLOYMENT_STATUS_LABELS,
   EMPLOYMENT_STATUSES,
