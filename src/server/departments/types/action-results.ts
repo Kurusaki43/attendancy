@@ -48,6 +48,14 @@ export type GetDepartmentDetailActionResult = DepartmentResult & {
   overview: DepartmentOverview;
 };
 
+export type GetDepartmentAttendanceSummaryActionResult = {
+  presentToday: number;
+  absentToday: number;
+  attendanceRate: number;
+  totalWorkedMinutes: number;
+  averageWorkedMinutes: number;
+};
+
 export type GetAllDepartmentsActionResult = {
   departments: DepartmentResult[];
   pagination: PaginationMeta;
