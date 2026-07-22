@@ -54,7 +54,7 @@ export function AttendanceDetailsCard(props: AttendanceDetailsCardProps) {
   const summary = computeFormSummary(resolvedDate, events);
 
   return (
-    <Card className="card-shadow flex-1">
+    <Card className="card-shadow flex-1 pb-0">
       <CardContent className="flex flex-col gap-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
