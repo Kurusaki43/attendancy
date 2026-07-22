@@ -1,4 +1,5 @@
 import { DataTableSkeleton } from '@/components/shared/data-table/DataTableSkeleton';
+import { StatCardSkeleton } from '@/components/shared/StatCardSkeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -46,6 +47,12 @@ export function DepartmentDetailSkeleton() {
             ))}
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <StatCardSkeleton key={index} />
+        ))}
       </div>
 
       <Card className="bg-card border-border card-shadow">

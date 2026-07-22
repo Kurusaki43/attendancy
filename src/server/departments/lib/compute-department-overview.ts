@@ -1,5 +1,6 @@
 type EmployeeForOverview = {
-  employmentStatus: 'ACTIVE' | 'ON_LEAVE' | 'TERMINATED';
+  employmentStatus: 'ACTIVE' | 'TERMINATED';
+  user: { status: 'ACTIVE' | 'INACTIVE' | 'INVITED' | 'SUSPENDED' };
   positionId: string | null;
   managerId: string | null;
 };
@@ -18,7 +19,9 @@ export function computeDepartmentOverview(
 ): DepartmentOverview {
   return {
     totalEmployees: employees.length,
-    activeEmployees: employees.filter((employee) => employee.employmentStatus === 'ACTIVE').length,
+    activeEmployees: employees.filter(
+      (employee) => employee.employmentStatus === 'ACTIVE' && employee.user.status === 'ACTIVE',
+    ).length,
     childrenCount,
     positionCount: new Set(employees.map((employee) => employee.positionId).filter(Boolean)).size,
     managerCount: new Set(employees.map((employee) => employee.managerId).filter(Boolean)).size,

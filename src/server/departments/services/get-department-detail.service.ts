@@ -1,5 +1,6 @@
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
+import { collectDepartmentAndDescendantIds } from '@/server/departments/lib/collect-department-descendant-ids';
 import type { DepartmentOverview } from '@/server/departments/lib/compute-department-overview';
 import { computeDepartmentOverview } from '@/server/departments/lib/compute-department-overview';
 import type { DepartmentWithRelations } from '@/server/departments/repositories/department.repository';
@@ -17,7 +18,12 @@ export async function getDepartmentDetail(code: string): Promise<GetDepartmentDe
     throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Department not found!');
   }
 
-  const employees = await employeeRepository.findMany({ where: { departmentId: department.id } });
+  const allDepartments = await departmentRepository.findAllForEmployeeRollup();
+  const departmentIds = collectDepartmentAndDescendantIds(department.id, allDepartments);
+
+  const employees = await employeeRepository.findMany({
+    where: { departmentId: { in: departmentIds } },
+  });
 
   return {
     ...department,

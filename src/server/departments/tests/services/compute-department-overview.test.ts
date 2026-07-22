@@ -15,19 +15,67 @@ describe('computeDepartmentOverview', () => {
     });
   });
 
-  it('counts total and active employees', () => {
+  it('counts total employees and active employees (employmentStatus ACTIVE and user.status ACTIVE)', () => {
     const overview = computeDepartmentOverview(
       [
-        { employmentStatus: 'ACTIVE', positionId: null, managerId: null },
-        { employmentStatus: 'ACTIVE', positionId: null, managerId: null },
-        { employmentStatus: 'ON_LEAVE', positionId: null, managerId: null },
-        { employmentStatus: 'TERMINATED', positionId: null, managerId: null },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'ACTIVE' },
+          positionId: null,
+          managerId: null,
+        },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'ACTIVE' },
+          positionId: null,
+          managerId: null,
+        },
+        {
+          employmentStatus: 'TERMINATED',
+          user: { status: 'ACTIVE' },
+          positionId: null,
+          managerId: null,
+        },
+        {
+          employmentStatus: 'TERMINATED',
+          user: { status: 'ACTIVE' },
+          positionId: null,
+          managerId: null,
+        },
       ],
       0,
     );
 
     expect(overview.totalEmployees).toBe(4);
     expect(overview.activeEmployees).toBe(2);
+  });
+
+  it('does not count an employee as active when employmentStatus is ACTIVE but the account is not', () => {
+    const overview = computeDepartmentOverview(
+      [
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'SUSPENDED' },
+          positionId: null,
+          managerId: null,
+        },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'INACTIVE' },
+          positionId: null,
+          managerId: null,
+        },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'INVITED' },
+          positionId: null,
+          managerId: null,
+        },
+      ],
+      0,
+    );
+
+    expect(overview.activeEmployees).toBe(0);
   });
 
   it('passes through the given sub-department count', () => {
@@ -39,10 +87,30 @@ describe('computeDepartmentOverview', () => {
   it('counts distinct positions and managers, ignoring nulls', () => {
     const overview = computeDepartmentOverview(
       [
-        { employmentStatus: 'ACTIVE', positionId: 'pos-1', managerId: 'mgr-1' },
-        { employmentStatus: 'ACTIVE', positionId: 'pos-1', managerId: 'mgr-2' },
-        { employmentStatus: 'ACTIVE', positionId: 'pos-2', managerId: null },
-        { employmentStatus: 'ACTIVE', positionId: null, managerId: null },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'ACTIVE' },
+          positionId: 'pos-1',
+          managerId: 'mgr-1',
+        },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'ACTIVE' },
+          positionId: 'pos-1',
+          managerId: 'mgr-2',
+        },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'ACTIVE' },
+          positionId: 'pos-2',
+          managerId: null,
+        },
+        {
+          employmentStatus: 'ACTIVE',
+          user: { status: 'ACTIVE' },
+          positionId: null,
+          managerId: null,
+        },
       ],
       0,
     );

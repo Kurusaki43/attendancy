@@ -1,5 +1,8 @@
-import { AttendanceStatus } from '@/generated/prisma/enums';
+import { AttendanceStatus, EmploymentStatus, UserStatus } from '@/generated/prisma/enums';
 import { attendanceRepository } from '@/server/attendance/repositories/attendance.repository';
+import { collectDepartmentAndDescendantIds } from '@/server/departments/lib/collect-department-descendant-ids';
+import { departmentRepository } from '@/server/departments/repositories/department.repository';
+import { employeeRepository } from '@/server/employees/repositories/employee.repository';
 import { startOfUtcDay } from '@/shared/utils/date';
 
 export type DepartmentAttendanceOverview = {
@@ -15,22 +18,30 @@ export async function getDepartmentAttendanceSummary(
 ): Promise<DepartmentAttendanceOverview> {
   const today = startOfUtcDay();
 
-  const todayAttendance = await attendanceRepository.findMany({
-    where: { date: today, employee: { departmentId } },
-  });
+  const allDepartments = await departmentRepository.findAllForEmployeeRollup();
+  const departmentIds = collectDepartmentAndDescendantIds(departmentId, allDepartments);
 
-  const presentToday = todayAttendance.filter(
-    (record) => record.status === AttendanceStatus.PRESENT,
-  ).length;
+  const [activeEmployees, presentToday, todayAttendance] = await Promise.all([
+    employeeRepository.count({
+      departmentId: { in: departmentIds },
+      employmentStatus: EmploymentStatus.ACTIVE,
+      user: { status: UserStatus.ACTIVE },
+    }),
+    attendanceRepository.count({
+      date: today,
+      status: AttendanceStatus.PRESENT,
+      employee: { departmentId: { in: departmentIds } },
+    }),
 
-  const absentToday = todayAttendance.filter(
-    (record) => record.status === AttendanceStatus.ABSENT,
-  ).length;
+    attendanceRepository.findMany({
+      where: { date: today, employee: { departmentId: { in: departmentIds } } },
+    }),
+  ]);
+
+  const absentToday = Math.max(activeEmployees - presentToday, 0);
 
   const attendanceRate =
-    todayAttendance.length > 0
-      ? Math.round((presentToday / todayAttendance.length) * 1000) / 10
-      : 0;
+    activeEmployees === 0 ? 0 : Number(((presentToday / activeEmployees) * 100).toFixed(1));
 
   const totalWorkedMinutes = todayAttendance.reduce((sum, record) => sum + record.workedMinutes, 0);
 
