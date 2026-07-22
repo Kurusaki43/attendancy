@@ -1,6 +1,7 @@
 import type {
   AttendanceCompletionStatus,
   AttendanceEventType,
+  AttendanceMethod,
   AttendanceStatus,
 } from '@/generated/prisma/enums';
 import type { PaginationMeta } from '@/shared/types/api-feature';
@@ -47,6 +48,7 @@ export type AttendanceEventResult = {
   id: string;
   type: AttendanceEventType;
   occurredAt: Date;
+  method: AttendanceMethod;
   reason: string | null;
 };
 
@@ -58,6 +60,7 @@ export type AttendanceResult = {
   workedMinutes: number;
   status: AttendanceStatus;
   completionStatus: AttendanceCompletionStatus | null;
+  hasManualChanges: boolean;
   employee: AttendanceEmployeeResult;
   events?: AttendanceEventResult[];
 };

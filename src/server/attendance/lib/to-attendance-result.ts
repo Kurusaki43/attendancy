@@ -12,6 +12,7 @@ export function toAttendanceResult(
     workedMinutes: attendance.workedMinutes,
     status: attendance.status,
     completionStatus: attendance.completionStatus,
+    hasManualChanges: attendance.hasManualChanges,
     employee: {
       id: attendance.employee.id,
       employeeCode: attendance.employee.employeeCode,
@@ -24,6 +25,7 @@ export function toAttendanceResult(
         id: event.id,
         type: event.type,
         occurredAt: event.occurredAt,
+        method: event.method,
         reason: event.reason,
       })),
     }),
