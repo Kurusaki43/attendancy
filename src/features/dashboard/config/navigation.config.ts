@@ -86,7 +86,7 @@ export const NAV_GROUPS: NavGroup[] = [
         title: 'Clock In / Out',
         href: '/dashboard/attendance/clock',
         icon: Clock,
-        permission: PERMISSIONS.ATTENDANCE_CLOCK_IN,
+        permission: PERMISSIONS.ATTENDANCE_SCAN_QR,
       },
       {
         title: 'My Attendance',

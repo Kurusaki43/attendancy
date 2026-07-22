@@ -45,9 +45,11 @@ export const PERMISSIONS = {
 
   ATTENDANCE_READ_SELF: permission('attendance', 'read:self', 'View personal attendance records'),
 
-  ATTENDANCE_CLOCK_IN: permission('attendance', 'clock-in', 'Clock in to work'),
-
-  ATTENDANCE_CLOCK_OUT: permission('attendance', 'clock-out', 'Clock out from work'),
+  ATTENDANCE_SCAN_QR: permission(
+    'attendance',
+    'scan-qr',
+    'Scan the attendance QR code to clock in/out',
+  ),
 
   ATTENDANCE_EDIT: permission('attendance', 'edit', 'Edit attendance records'),
 

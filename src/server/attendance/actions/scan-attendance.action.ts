@@ -30,8 +30,7 @@ export async function scanAttendanceAction(
   }
 
   const result = await runAction(async () => {
-    const user = await requirePermission(PERMISSIONS.ATTENDANCE_CLOCK_IN);
-    await requirePermission(PERMISSIONS.ATTENDANCE_CLOCK_OUT);
+    const user = await requirePermission(PERMISSIONS.ATTENDANCE_SCAN_QR);
 
     const employee = await employeeRepository.findByUserId(user.id);
 
