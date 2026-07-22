@@ -9,6 +9,12 @@ export function parseUtcDate(isoDate: string): Date {
   return new Date(Date.UTC(year, month - 1, day));
 }
 
+export function parseLocalDate(isoDate: string): Date | undefined {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  if (!year || !month || !day) return undefined;
+  return new Date(year, month - 1, day);
+}
+
 export function subUtcDays(date: Date, days: number): Date {
   return new Date(date.getTime() - days * MS_PER_DAY);
 }
