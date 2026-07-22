@@ -2,6 +2,7 @@ import { addHours, addMinutes } from 'date-fns';
 
 import { logger } from '@/lib/logger';
 import { prisma } from '@/lib/prisma';
+import { computeAttendanceSummary } from '@/server/attendance/lib/compute-attendance-summary';
 import { isUtcWeekend, startOfUtcDay, subUtcDays } from '@/shared/utils/date';
 
 const DAYS_OF_HISTORY = 14;
@@ -46,23 +47,33 @@ export async function seedAttendance() {
         addHours(date, CLOCK_OUT_HOUR),
         seededJitter(`${seedKey}-out`, 30),
       );
-      const workedMinutes = Math.round((lastClockOut.getTime() - firstClockIn.getTime()) / 60_000);
+
+      const summary = computeAttendanceSummary([
+        { type: 'CLOCK_IN', occurredAt: firstClockIn },
+        { type: 'CLOCK_OUT', occurredAt: lastClockOut },
+      ]);
 
       const attendance = await prisma.attendance.upsert({
         where: { employeeId_date: { employeeId: employee.id, date } },
-        update: { firstClockIn, lastClockOut, workedMinutes, status: 'PRESENT' },
+        update: {
+          firstClockIn: summary.firstClockIn,
+          lastClockOut: summary.lastClockOut,
+          workedMinutes: summary.workedMinutes,
+          status: 'PRESENT',
+          completionStatus: summary.completionStatus,
+          hasManualChanges: false,
+        },
         create: {
           employeeId: employee.id,
           date,
-          firstClockIn,
-          lastClockOut,
-          workedMinutes,
+          firstClockIn: summary.firstClockIn,
+          lastClockOut: summary.lastClockOut,
+          workedMinutes: summary.workedMinutes,
           status: 'PRESENT',
+          completionStatus: summary.completionStatus,
         },
       });
 
-      // AttendanceEvent has no natural unique key of its own, so replace the pair on every
-      // reseed rather than accumulating duplicates.
       await prisma.attendanceEvent.deleteMany({ where: { attendanceId: attendance.id } });
       await prisma.attendanceEvent.createMany({
         data: [
