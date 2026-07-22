@@ -17,8 +17,11 @@ export type DepartmentResult = {
     icon: string | null;
     color: string | null;
   } | null;
-  // Only populated by the list endpoint — same reasoning as `parent`.
+  // Only populated by the list endpoint — same reasoning as `parent`. Direct employees only.
   employeeCount?: number;
+  // Only populated by the list endpoint. Own employeeCount for a leaf department, or the summed
+  // employeeCount across every descendant for a department with children.
+  totalEmployeeCount?: number;
   // Only populated by the list endpoint — same reasoning as `parent`. A non-empty array means
   // this department is not a leaf (can't take employees directly) and can't be deleted.
   children?: { id: string; name: string }[];

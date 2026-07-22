@@ -38,7 +38,7 @@ export function DepartmentFlowNode({ data }: NodeProps<DepartmentNode>) {
       <div className="mt-2.5 flex items-center justify-between">
         <span className="text-muted-foreground flex items-center gap-1 text-xs">
           <Users className="size-3" />
-          {department.employeeCount ?? 0}
+          {department.totalEmployeeCount ?? 0}
         </span>
         {department.isActive ? (
           <Badge className="bg-green-500/15 text-[10px] text-green-700 dark:bg-green-500/20 dark:text-green-400">

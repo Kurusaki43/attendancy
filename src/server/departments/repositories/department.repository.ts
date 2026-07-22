@@ -69,4 +69,13 @@ export const departmentRepository = {
   count(where?: Prisma.DepartmentWhereInput) {
     return prisma.department.count({ where });
   },
+
+  // Lightweight, unfiltered/unpaginated fetch of the whole tree's own employee counts — used to
+  // roll a parent's total up across all its descendants regardless of which page or filter the
+  // caller's own listing query is using.
+  findAllForEmployeeRollup() {
+    return prisma.department.findMany({
+      select: { id: true, parentId: true, _count: { select: { employees: true } } },
+    });
+  },
 };

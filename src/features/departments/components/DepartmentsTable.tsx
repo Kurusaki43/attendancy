@@ -130,7 +130,7 @@ function buildColumns(userLocale: UserLocale): ColumnDef<DepartmentResult>[] {
       cell: (row) => (
         <span className="text-muted-foreground flex items-center justify-center gap-1.5 text-center">
           <Users className="size-3.5" />
-          {row.employeeCount ?? 0}
+          {row.totalEmployeeCount ?? row.employeeCount ?? 0}
         </span>
       ),
       headerClassName: 'text-center',

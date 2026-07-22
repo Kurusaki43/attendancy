@@ -1,6 +1,7 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { computeTotalEmployeeCounts } from '@/server/departments/lib/compute-total-employee-counts';
 import type { DepartmentWithRelations } from '@/server/departments/repositories/department.repository';
 import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import type { DepartmentQueryInput } from '@/server/departments/schemas/get-all-departments-query-schema';
@@ -12,7 +13,7 @@ const DEPARTMENT_SEARCHABLE_FIELDS = ['name', 'code', 'description'];
 const DEPARTMENT_FILTERABLE_FIELDS = ['isActive', 'parentId'];
 
 export interface GetAllDepartmentsResult {
-  departments: DepartmentWithRelations[];
+  departments: (DepartmentWithRelations & { totalEmployeeCount: number })[];
   pagination: PaginationMeta;
 }
 
@@ -53,13 +54,25 @@ export async function getAllDepartments(
 
   const query = features.build();
 
-  const [departments, totalCount] = await Promise.all([
+  const [departments, totalCount, allForRollup] = await Promise.all([
     departmentRepository.findMany(query),
     departmentRepository.count(query.where),
+    departmentRepository.findAllForEmployeeRollup(),
   ]);
 
+  const totalEmployeeCounts = computeTotalEmployeeCounts(
+    allForRollup.map((department) => ({
+      id: department.id,
+      parentId: department.parentId,
+      employeeCount: department._count.employees,
+    })),
+  );
+
   return {
-    departments,
+    departments: departments.map((department) => ({
+      ...department,
+      totalEmployeeCount: totalEmployeeCounts.get(department.id) ?? 0,
+    })),
     pagination: features.getPaginationMeta(totalCount),
   };
 }
