@@ -55,6 +55,7 @@ const presentAttendance = {
   employeeId: 'employee-1',
   date: attendanceDate,
   status: 'PRESENT',
+  hasManualChanges: false,
   events: [existingClockIn, existingClockOut],
 };
 
@@ -313,6 +314,62 @@ describe('updateAttendance', () => {
       },
     });
     expect(prisma.attendanceEvent.createMany).not.toHaveBeenCalled();
+  });
+
+  it('leaves untouched events alone and does not flip hasManualChanges when nothing changed', async () => {
+    await updateAttendance('attendance-1', {
+      events: [
+        {
+          id: 'event-1',
+          type: 'CLOCK_IN',
+          occurredAt: existingClockIn.occurredAt,
+          reason: existingClockIn.reason,
+        },
+        {
+          id: 'event-2',
+          type: 'CLOCK_OUT',
+          occurredAt: existingClockOut.occurredAt,
+          reason: existingClockOut.reason,
+        },
+      ],
+    });
+
+    expect(prisma.attendanceEvent.update).not.toHaveBeenCalled();
+    expect(prisma.attendanceEvent.delete).not.toHaveBeenCalled();
+    expect(prisma.attendanceEvent.createMany).not.toHaveBeenCalled();
+    expect(prisma.attendance.update).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ hasManualChanges: false }) }),
+    );
+  });
+
+  it('only stamps MANUAL on the event that actually changed, leaving its sibling alone', async () => {
+    await updateAttendance('attendance-1', {
+      events: [
+        {
+          id: 'event-1',
+          type: 'CLOCK_IN',
+          occurredAt: existingClockIn.occurredAt,
+          reason: existingClockIn.reason,
+        },
+        {
+          id: 'event-2',
+          type: 'CLOCK_OUT',
+          occurredAt: new Date('2026-07-19T18:00:00.000Z'),
+          reason: existingClockOut.reason,
+        },
+      ],
+    });
+
+    expect(prisma.attendanceEvent.update).toHaveBeenCalledTimes(1);
+    expect(prisma.attendanceEvent.update).toHaveBeenCalledWith({
+      where: { id: 'event-2' },
+      data: {
+        type: 'CLOCK_OUT',
+        occurredAt: new Date('2026-07-19T18:00:00.000Z'),
+        reason: existingClockOut.reason,
+        method: 'MANUAL',
+      },
+    });
   });
 
   it('creates new events, forces status to PRESENT, and computes the resulting summary', async () => {

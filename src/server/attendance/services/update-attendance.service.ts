@@ -10,6 +10,7 @@ import { InternalServerError } from '@/lib/errors/internal-server.error';
 import { NotFoundError } from '@/lib/errors/not-found.error';
 import { prisma } from '@/lib/prisma';
 import { computeAttendanceSummary } from '@/server/attendance/lib/compute-attendance-summary';
+import { getChangedAttendanceEvents } from '@/server/attendance/lib/get-changed-attendance-events';
 import { validateAttendanceEvents } from '@/server/attendance/lib/validate-attendance-events';
 import { attendanceRepository } from '@/server/attendance/repositories/attendance.repository';
 import type { UpdateAttendanceInput } from '@/server/attendance/schemas/update-attendance.schema';
@@ -93,11 +94,14 @@ export async function updateAttendance(
   const toUpdate = input.events.filter((event) => event.id);
   const toCreate = input.events.filter((event) => !event.id);
 
+  const changedUpdates = getChangedAttendanceEvents(attendance.events, toUpdate);
+  const hasChanges = toDelete.length > 0 || toCreate.length > 0 || changedUpdates.length > 0;
+
   const summary = computeAttendanceSummary(input.events);
 
   await prisma.$transaction([
     ...toDelete.map((event) => prisma.attendanceEvent.delete({ where: { id: event.id } })),
-    ...toUpdate.map((event) =>
+    ...changedUpdates.map((event) =>
       prisma.attendanceEvent.update({
         where: { id: event.id },
         data: {
@@ -129,7 +133,7 @@ export async function updateAttendance(
         firstClockIn: summary.firstClockIn,
         lastClockOut: summary.lastClockOut,
         workedMinutes: summary.workedMinutes,
-        hasManualChanges: true,
+        hasManualChanges: hasChanges ? true : attendance.hasManualChanges,
       },
     }),
   ]);
