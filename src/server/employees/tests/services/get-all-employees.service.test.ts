@@ -7,7 +7,14 @@ vi.mock('../../repositories/employee.repository', () => ({
   },
 }));
 
+vi.mock('../../../departments/repositories/department.repository', () => ({
+  departmentRepository: {
+    findAllForEmployeeRollup: vi.fn(),
+  },
+}));
+
 const { employeeRepository } = await import('../../repositories/employee.repository');
+const { departmentRepository } = await import('../../../departments/repositories/department.repository');
 const { BadRequestError } = await import('@/lib/errors/bad-request.error');
 const { getAllEmployees } = await import('../../services/get-all-employees.service');
 
@@ -118,14 +125,20 @@ describe('getAllEmployees', () => {
     );
   });
 
-  it('applies the departmentId filter when provided', async () => {
+  it('applies the departmentId filter across the department and its descendants', async () => {
     vi.mocked(employeeRepository.findMany).mockResolvedValue([] as never);
     vi.mocked(employeeRepository.count).mockResolvedValue(0);
+    vi.mocked(departmentRepository.findAllForEmployeeRollup).mockResolvedValue([
+      { id: 'dept-1', parentId: null, _count: { employees: 0 } },
+      { id: 'dept-2', parentId: 'dept-1', _count: { employees: 0 } },
+    ] as never);
 
     await getAllEmployees({ departmentId: 'dept-1' });
 
     expect(employeeRepository.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: expect.objectContaining({ departmentId: 'dept-1' }) }),
+      expect.objectContaining({
+        where: expect.objectContaining({ departmentId: { in: ['dept-1', 'dept-2'] } }),
+      }),
     );
   });
 

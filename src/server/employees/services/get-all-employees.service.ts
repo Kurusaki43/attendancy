@@ -1,6 +1,8 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
+import { collectDepartmentAndDescendantIds } from '@/server/departments/lib/collect-department-descendant-ids';
+import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import { employeeRepository } from '@/server/employees/repositories/employee.repository';
 import type { EmployeeQueryInput } from '@/server/employees/schemas/get-all-employees-query-schema';
 import { employeeQuerySchema } from '@/server/employees/schemas/get-all-employees-query-schema';
@@ -9,7 +11,7 @@ import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 
 const EMPLOYEE_SEARCHABLE_FIELDS = ['employeeCode', 'phone'];
-const EMPLOYEE_FILTERABLE_FIELDS = ['employmentStatus', 'departmentId', 'positionId'];
+const EMPLOYEE_FILTERABLE_FIELDS = ['employmentStatus', 'positionId'];
 
 export interface GetAllEmployeesResult {
   employees: EmployeeWithRelations[];
@@ -75,6 +77,13 @@ export async function getAllEmployees(
 
   if (validated.accountStatus) {
     query.where = { ...query.where, user: { status: validated.accountStatus } };
+  }
+
+  if (validated.departmentId) {
+    const allDepartments = await departmentRepository.findAllForEmployeeRollup();
+    const departmentIds = collectDepartmentAndDescendantIds(validated.departmentId, allDepartments);
+
+    query.where = { ...query.where, departmentId: { in: departmentIds } };
   }
 
   const [employees, totalCount] = await Promise.all([

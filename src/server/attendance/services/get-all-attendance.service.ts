@@ -5,6 +5,8 @@ import { attendanceRepository } from '@/server/attendance/repositories/attendanc
 import type { AttendanceQueryInput } from '@/server/attendance/schemas/get-all-attendance-query-schema';
 import { attendanceQuerySchema } from '@/server/attendance/schemas/get-all-attendance-query-schema';
 import type { AttendanceWithEmployee } from '@/server/attendance/types';
+import { collectDepartmentAndDescendantIds } from '@/server/departments/lib/collect-department-descendant-ids';
+import { departmentRepository } from '@/server/departments/repositories/department.repository';
 import { ApiFeaturesBuilder } from '@/shared/builders/api-features.builder';
 import type { PaginationMeta } from '@/shared/types/api-feature';
 import { parseUtcDate } from '@/shared/utils/date';
@@ -60,7 +62,10 @@ export async function getAllAttendance(
   const employeeWhere: Prisma.EmployeeWhereInput = {};
 
   if (validated.departmentId) {
-    employeeWhere.departmentId = validated.departmentId;
+    const allDepartments = await departmentRepository.findAllForEmployeeRollup();
+    const departmentIds = collectDepartmentAndDescendantIds(validated.departmentId, allDepartments);
+
+    employeeWhere.departmentId = { in: departmentIds };
   }
 
   if (validated.search) {
