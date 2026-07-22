@@ -10,6 +10,7 @@ export type DeleteDepartmentServiceResult = void;
 
 export type GetDepartmentStatsServiceResult = {
   totalDepartments: number;
-  totalEmployees: number;
+  activeDepartments: number;
+  inactiveDepartments: number;
   averageDepartmentSize: number;
 };

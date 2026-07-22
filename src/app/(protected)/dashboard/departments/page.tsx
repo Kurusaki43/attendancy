@@ -32,7 +32,12 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
 
   const stats = statsResult.success
     ? statsResult.data
-    : { totalDepartments: 0, totalEmployees: 0, averageDepartmentSize: 0 };
+    : {
+        totalDepartments: 0,
+        activeDepartments: 0,
+        inactiveDepartments: 0,
+        averageDepartmentSize: 0,
+      };
 
   const parentOptions = parentDepartmentsResult.success
     ? parentDepartmentsResult.data.departments.map((department) => ({
