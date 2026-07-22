@@ -170,6 +170,7 @@ export function EmployeePersonalInfoCard({
                     onChange={field.onChange}
                     placeholder="Select date of birth"
                     disabled={isPending}
+                    maxDate={new Date()}
                   />
                 </FormControl>
                 <FormMessage />

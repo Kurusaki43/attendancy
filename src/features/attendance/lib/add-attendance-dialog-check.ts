@@ -1,12 +1,8 @@
+import { isFutureDate } from '@/shared/utils/date';
+
 import type { AttendanceEmployeeOption } from './attendance-employee-option';
 
-export function isFutureDate(candidate: Date): boolean {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const compareDate = new Date(candidate);
-  compareDate.setHours(0, 0, 0, 0);
-  return compareDate.getTime() > today.getTime();
-}
+export { isFutureDate };
 
 export function isBeforeHireDate(candidate: Date, hireDate: Date): boolean {
   const compareDate = new Date(candidate);

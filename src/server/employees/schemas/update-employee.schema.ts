@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { isFutureDate } from '@/shared/utils/date';
+
 const AVATAR_MAX_LENGTH = 3_000_000;
 
 export const updateEmployeeSchema = z.object({
@@ -30,10 +32,21 @@ export const updateEmployeeSchema = z.object({
 
   phone: z.string().trim().max(20, 'Phone must not exceed 20 characters.').optional(),
 
-  hireDate: z.coerce.date().optional(),
+  hireDate: z.coerce
+    .date()
+    .optional()
+    .refine((date) => !date || !isFutureDate(date), {
+      message: 'Hire date cannot be in the future.',
+    }),
 
   gender: z.enum(['MALE', 'FEMALE']).nullable().optional(),
-  birthDate: z.coerce.date().nullable().optional(),
+  birthDate: z.coerce
+    .date()
+    .nullable()
+    .optional()
+    .refine((date) => !date || !isFutureDate(date), {
+      message: 'Birth date cannot be in the future.',
+    }),
   address: z
     .string()
     .trim()

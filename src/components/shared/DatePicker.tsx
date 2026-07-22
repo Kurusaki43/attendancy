@@ -17,6 +17,9 @@ type DatePickerProps = {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  /** Calendar days strictly after this date are not selectable — e.g. pass `new Date()` to keep
+   * a hire/birth date from being set in the future. */
+  maxDate?: Date;
 };
 
 export function DatePicker({
@@ -26,6 +29,7 @@ export function DatePicker({
   placeholder = 'Select date',
   disabled,
   className,
+  maxDate,
 }: DatePickerProps) {
   const userLocale = useUserLocale();
   const generatedId = useId();
@@ -58,6 +62,7 @@ export function DatePicker({
           defaultMonth={value}
           selected={value}
           captionLayout="dropdown"
+          disabled={maxDate ? { after: maxDate } : undefined}
           onSelect={(date) => {
             onChange(date);
             setOpen(false);

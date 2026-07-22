@@ -24,3 +24,13 @@ export const WEEKEND_DAYS: number[] = [0, 6];
 export function isUtcWeekend(date: Date): boolean {
   return WEEKEND_DAYS.includes(date.getUTCDay());
 }
+
+/** True if `candidate` falls after today (local calendar day) — used to reject future-dated
+ * fields like a hire date or birth date. */
+export function isFutureDate(candidate: Date): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const compareDate = new Date(candidate);
+  compareDate.setHours(0, 0, 0, 0);
+  return compareDate.getTime() > today.getTime();
+}

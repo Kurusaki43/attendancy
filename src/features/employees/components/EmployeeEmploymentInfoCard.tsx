@@ -127,6 +127,7 @@ export function EmployeeEmploymentInfoCard({
                     value={toDateValue(field.value)}
                     onChange={field.onChange}
                     disabled={isPending}
+                    maxDate={new Date()}
                   />
                 </FormControl>
                 <FormMessage />
