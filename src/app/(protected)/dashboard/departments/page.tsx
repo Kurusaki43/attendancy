@@ -14,6 +14,9 @@ import { DepartmentStats } from '@/features/departments/components/DepartmentSta
 import { getAllDepartmentsAction } from '@/server/departments/actions/get-all-departments.action';
 import { getDepartmentStatsAction } from '@/server/departments/actions/get-department-stats.action';
 
+// Parent filter options — active departments only, capped at the max page size.
+const PARENT_OPTIONS_QUERY = { limit: '100', isActive: 'true', sort: 'name' };
+
 type DepartmentsPageProps = {
   searchParams: Promise<Record<string, string>>;
 };
@@ -21,16 +24,25 @@ type DepartmentsPageProps = {
 export default async function DepartmentsPage({ searchParams }: DepartmentsPageProps) {
   const params = await searchParams;
 
-  const [result, statsResult] = await Promise.all([
+  const [result, statsResult, parentDepartmentsResult] = await Promise.all([
     getAllDepartmentsAction(params),
     getDepartmentStatsAction(),
+    getAllDepartmentsAction(PARENT_OPTIONS_QUERY),
   ]);
 
   const stats = statsResult.success
     ? statsResult.data
     : { totalDepartments: 0, totalEmployees: 0, averageDepartmentSize: 0 };
 
-  const hasActiveFilters = Boolean(params.search) || Boolean(params.isActive);
+  const parentOptions = parentDepartmentsResult.success
+    ? parentDepartmentsResult.data.departments.map((department) => ({
+        label: department.name,
+        value: department.id,
+      }))
+    : [];
+
+  const hasActiveFilters =
+    Boolean(params.search) || Boolean(params.isActive) || Boolean(params.parentId);
 
   const isTrulyEmpty = result.success && result.data.departments.length === 0 && !hasActiveFilters;
 
@@ -93,6 +105,13 @@ export default async function DepartmentsPage({ searchParams }: DepartmentsPageP
                     { label: 'Inactive', value: 'false' },
                   ],
                 }}
+                filters={[
+                  {
+                    queryKey: 'parentId',
+                    label: 'Parent',
+                    options: parentOptions,
+                  },
+                ]}
               />
             </CardHeader>
             <CardContent className="">
