@@ -13,6 +13,7 @@ vi.mock('../../repositories/employee.repository', () => ({
 vi.mock('@/server/departments/repositories/department.repository', () => ({
   departmentRepository: {
     findById: vi.fn(),
+    count: vi.fn(),
   },
 }));
 
@@ -90,6 +91,34 @@ describe('updateEmployee', () => {
     expect(employeeRepository.update).not.toHaveBeenCalled();
   });
 
+  it('throws BadRequestError when the department is inactive', async () => {
+    vi.mocked(departmentRepository.findById).mockResolvedValue({
+      id: 'dept-1',
+      isActive: false,
+    } as never);
+
+    const result = updateEmployee('employee-1', { departmentId: 'dept-1' });
+
+    await expect(result).rejects.toBeInstanceOf(BadRequestError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.DEPARTMENT_NOT_ACTIVE });
+    expect(employeeRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('throws BadRequestError when the department has sub-departments', async () => {
+    vi.mocked(departmentRepository.findById).mockResolvedValue({
+      id: 'dept-1',
+      isActive: true,
+    } as never);
+    vi.mocked(departmentRepository.count).mockResolvedValue(3);
+
+    const result = updateEmployee('employee-1', { departmentId: 'dept-1' });
+
+    await expect(result).rejects.toBeInstanceOf(BadRequestError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.DEPARTMENT_NOT_LEAF });
+    expect(departmentRepository.count).toHaveBeenCalledWith({ parentId: 'dept-1' });
+    expect(employeeRepository.update).not.toHaveBeenCalled();
+  });
+
   it('throws NotFoundError when the position does not exist', async () => {
     vi.mocked(positionRepository.findById).mockResolvedValue(null);
 
@@ -97,6 +126,19 @@ describe('updateEmployee', () => {
 
     await expect(result).rejects.toBeInstanceOf(NotFoundError);
     await expect(result).rejects.toMatchObject({ code: ERROR_CODES.POSITION_NOT_FOUND });
+    expect(employeeRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('throws BadRequestError when the position is inactive', async () => {
+    vi.mocked(positionRepository.findById).mockResolvedValue({
+      id: 'position-1',
+      isActive: false,
+    } as never);
+
+    const result = updateEmployee('employee-1', { positionId: 'position-1' });
+
+    await expect(result).rejects.toBeInstanceOf(BadRequestError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.POSITION_NOT_ACTIVE });
     expect(employeeRepository.update).not.toHaveBeenCalled();
   });
 

@@ -190,12 +190,20 @@ export async function seedDepartments() {
     logger.debug(`Department synced: ${name}`);
   }
 
-  // Second pass: link parents now that every department has a stable id.
+  // Second pass: link parents now that every department has a stable id. Mirrors the
+  // create/update-department services' rule that an inactive department can never be a
+  // parent — fail loudly rather than seed data the app itself would reject.
   for (const department of DEPARTMENTS) {
     const parentName = 'parentName' in department ? department.parentName : undefined;
     const parent = parentName
       ? await prisma.department.findUniqueOrThrow({ where: { name: parentName } })
       : null;
+
+    if (parent && !parent.isActive) {
+      throw new Error(
+        `Seed error: "${parentName}" is inactive and cannot be the parent of "${department.name}".`,
+      );
+    }
 
     await prisma.department.update({
       where: { name: department.name },

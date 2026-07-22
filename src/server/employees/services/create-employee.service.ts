@@ -2,6 +2,7 @@ import { randomBytes } from 'crypto';
 import ms from 'ms';
 
 import { env } from '@/lib/env/env';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { InternalServerError } from '@/lib/errors/internal-server.error';
@@ -41,12 +42,35 @@ export async function createEmployee(
     if (!department) {
       throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Department not found!');
     }
+
+    if (!department.isActive) {
+      throw new BadRequestError(
+        ERROR_CODES.DEPARTMENT_NOT_ACTIVE,
+        'This department is inactive and cannot be assigned.',
+      );
+    }
+
+    const childrenCount = await departmentRepository.count({ parentId: input.departmentId });
+
+    if (childrenCount > 0) {
+      throw new BadRequestError(
+        ERROR_CODES.DEPARTMENT_NOT_LEAF,
+        'Employees can only be assigned to departments that have no sub-departments.',
+      );
+    }
   }
 
   if (input.positionId) {
     const position = await positionRepository.findById(input.positionId);
     if (!position) {
       throw new NotFoundError(ERROR_CODES.POSITION_NOT_FOUND, 'Position not found!');
+    }
+
+    if (!position.isActive) {
+      throw new BadRequestError(
+        ERROR_CODES.POSITION_NOT_ACTIVE,
+        'This position is inactive and cannot be assigned.',
+      );
     }
   }
 

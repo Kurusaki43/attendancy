@@ -19,6 +19,9 @@ export type DepartmentResult = {
   } | null;
   // Only populated by the list endpoint — same reasoning as `parent`.
   employeeCount?: number;
+  // Only populated by the list endpoint — same reasoning as `parent`. A non-empty array means
+  // this department is not a leaf (can't take employees directly) and can't be deleted.
+  children?: { id: string; name: string }[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

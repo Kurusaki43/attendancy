@@ -18,6 +18,7 @@ vi.mock('@/server/auth/repositories/user.repository', () => ({
 vi.mock('@/server/departments/repositories/department.repository', () => ({
   departmentRepository: {
     findById: vi.fn(),
+    count: vi.fn(),
   },
 }));
 
@@ -51,6 +52,7 @@ const { departmentRepository } =
 const { positionRepository } = await import('@/server/positions/repositories/position.repository');
 const { emailQueueService } = await import('@/server/mail/services/email-queue.service');
 const { prisma } = await import('@/lib/prisma');
+const { BadRequestError } = await import('@/lib/errors/bad-request.error');
 const { ConflictError } = await import('@/lib/errors/conflict.error');
 const { NotFoundError } = await import('@/lib/errors/not-found.error');
 const { InternalServerError } = await import('@/lib/errors/internal-server.error');
@@ -143,6 +145,46 @@ describe('createEmployee', () => {
     expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 
+  it('throws BadRequestError when the department is inactive', async () => {
+    vi.mocked(departmentRepository.findById).mockResolvedValue({
+      id: 'dept-1',
+      isActive: false,
+    } as never);
+
+    const result = createEmployee({ ...input, departmentId: 'dept-1' });
+
+    await expect(result).rejects.toBeInstanceOf(BadRequestError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.DEPARTMENT_NOT_ACTIVE });
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('throws BadRequestError when the department has sub-departments', async () => {
+    vi.mocked(departmentRepository.findById).mockResolvedValue({
+      id: 'dept-1',
+      isActive: true,
+    } as never);
+    vi.mocked(departmentRepository.count).mockResolvedValue(1);
+
+    const result = createEmployee({ ...input, departmentId: 'dept-1' });
+
+    await expect(result).rejects.toBeInstanceOf(BadRequestError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.DEPARTMENT_NOT_LEAF });
+    expect(departmentRepository.count).toHaveBeenCalledWith({ parentId: 'dept-1' });
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('creates the employee when the department is active and a leaf', async () => {
+    vi.mocked(departmentRepository.findById).mockResolvedValue({
+      id: 'dept-1',
+      isActive: true,
+    } as never);
+    vi.mocked(departmentRepository.count).mockResolvedValue(0);
+
+    await createEmployee({ ...input, departmentId: 'dept-1' });
+
+    expect(prisma.$transaction).toHaveBeenCalled();
+  });
+
   it('throws NotFoundError when the position does not exist', async () => {
     vi.mocked(positionRepository.findById).mockResolvedValue(null);
 
@@ -151,6 +193,30 @@ describe('createEmployee', () => {
     await expect(result).rejects.toBeInstanceOf(NotFoundError);
     await expect(result).rejects.toMatchObject({ code: ERROR_CODES.POSITION_NOT_FOUND });
     expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('throws BadRequestError when the position is inactive', async () => {
+    vi.mocked(positionRepository.findById).mockResolvedValue({
+      id: 'position-1',
+      isActive: false,
+    } as never);
+
+    const result = createEmployee({ ...input, positionId: 'position-1' });
+
+    await expect(result).rejects.toBeInstanceOf(BadRequestError);
+    await expect(result).rejects.toMatchObject({ code: ERROR_CODES.POSITION_NOT_ACTIVE });
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('creates the employee when the position is active', async () => {
+    vi.mocked(positionRepository.findById).mockResolvedValue({
+      id: 'position-1',
+      isActive: true,
+    } as never);
+
+    await createEmployee({ ...input, positionId: 'position-1' });
+
+    expect(prisma.$transaction).toHaveBeenCalled();
   });
 
   it('throws NotFoundError when the manager does not exist', async () => {

@@ -18,10 +18,13 @@ export default async function CreateEmployeePage() {
   ]);
 
   const departments = departmentsResult.success
-    ? departmentsResult.data.departments.map((department) => ({
-        id: department.id,
-        label: department.name,
-      }))
+    ? departmentsResult.data.departments
+        // Employees can only be assigned to leaf departments (no sub-departments).
+        .filter((department) => (department.children?.length ?? 0) === 0)
+        .map((department) => ({
+          id: department.id,
+          label: department.name,
+        }))
     : [];
   const positions = positionsResult.success
     ? positionsResult.data.positions.map((position) => ({

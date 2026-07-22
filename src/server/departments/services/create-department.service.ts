@@ -1,4 +1,5 @@
 import type { DepartmentUncheckedCreateInput } from '@/generated/prisma/models';
+import { BadRequestError } from '@/lib/errors/bad-request.error';
 import { ConflictError } from '@/lib/errors/conflict.error';
 import { ERROR_CODES } from '@/lib/errors/error-codes';
 import { NotFoundError } from '@/lib/errors/not-found.error';
@@ -28,6 +29,13 @@ export async function createDepartment(
 
     if (!parent) {
       throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Parent department not found!');
+    }
+
+    if (!parent.isActive) {
+      throw new BadRequestError(
+        ERROR_CODES.DEPARTMENT_NOT_ACTIVE,
+        'An inactive department cannot be assigned as a parent.',
+      );
     }
   }
 

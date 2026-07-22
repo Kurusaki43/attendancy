@@ -41,6 +41,13 @@ export async function updateDepartment(
       throw new NotFoundError(ERROR_CODES.DEPARTMENT_NOT_FOUND, 'Parent department not found!');
     }
 
+    if (!parent.isActive) {
+      throw new BadRequestError(
+        ERROR_CODES.DEPARTMENT_NOT_ACTIVE,
+        'An inactive department cannot be assigned as a parent.',
+      );
+    }
+
     let ancestor = parent;
 
     while (ancestor.parentId) {

@@ -20,9 +20,15 @@ const DEPARTMENT_PARENT_SELECT = {
   color: true,
 } satisfies Prisma.DepartmentSelect;
 
+const DEPARTMENT_CHILD_SELECT = {
+  id: true,
+  name: true,
+} satisfies Prisma.DepartmentSelect;
+
 export type DepartmentWithRelations = Prisma.DepartmentGetPayload<{
   include: {
     parent: { select: typeof DEPARTMENT_PARENT_SELECT };
+    children: { select: typeof DEPARTMENT_CHILD_SELECT };
     _count: { select: { employees: true } };
   };
 }>;
@@ -54,6 +60,7 @@ export const departmentRepository = {
       ...query,
       include: {
         parent: { select: DEPARTMENT_PARENT_SELECT },
+        children: { select: DEPARTMENT_CHILD_SELECT },
         _count: { select: { employees: true } },
       },
     });
