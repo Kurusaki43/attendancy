@@ -78,6 +78,7 @@ export default async function AllAttendancePage({ searchParams }: AllAttendanceP
                 sortOptions={[
                   { label: 'Newest Date', value: '-date' },
                   { label: 'Oldest Date', value: 'date' },
+                  { label: 'Recently Updated', value: '-updatedAt' },
                   { label: 'Most Worked', value: '-workedMinutes' },
                   { label: 'Least Worked', value: 'workedMinutes' },
                 ]}

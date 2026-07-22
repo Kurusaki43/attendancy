@@ -51,6 +51,12 @@ export async function getAllAttendance(
 
   const query = features.build();
 
+  // The requested sort field alone can tie (e.g. many records share the same date), and Postgres
+  // doesn't guarantee a stable order for ties across queries — an unrelated update can shuffle a
+  // record's row version and flip its position. Appending `id` as a tiebreaker keeps ordering
+  // deterministic regardless of what else changed.
+  query.orderBy = [...(query.orderBy ?? []), { id: 'desc' }];
+
   const employeeWhere: Prisma.EmployeeWhereInput = {};
 
   if (validated.departmentId) {

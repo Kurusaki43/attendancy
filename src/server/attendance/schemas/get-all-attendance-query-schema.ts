@@ -10,7 +10,16 @@ export const attendanceQuerySchema = BaseQuerySchema.extend({
   dateFrom: z.iso.date().optional(),
   dateTo: z.iso.date().optional(),
   sort: z
-    .enum(['date', '-date', 'createdAt', '-createdAt', 'workedMinutes', '-workedMinutes'])
+    .enum([
+      'date',
+      '-date',
+      'createdAt',
+      '-createdAt',
+      'updatedAt',
+      '-updatedAt',
+      'workedMinutes',
+      '-workedMinutes',
+    ])
     .default('-date'),
 });
 
