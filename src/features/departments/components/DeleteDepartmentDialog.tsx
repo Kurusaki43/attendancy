@@ -20,6 +20,9 @@ type DeleteDepartmentDialogProps = {
   department: DepartmentResult;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  // Called instead of the default `router.refresh()` — pass this when deleting the department the
+  // user is currently viewing (e.g. its own detail page), where refreshing would just 404.
+  onDeleted?: () => void;
 };
 
 const MAX_LISTED_CHILDREN = 5;
@@ -28,6 +31,7 @@ export function DeleteDepartmentDialog({
   department,
   open,
   onOpenChange,
+  onDeleted,
 }: DeleteDepartmentDialogProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -49,7 +53,12 @@ export function DeleteDepartmentDialog({
 
       toast.success(result.message);
       onOpenChange(false);
-      router.refresh();
+
+      if (onDeleted) {
+        onDeleted();
+      } else {
+        router.refresh();
+      }
     });
   };
 
