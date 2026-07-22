@@ -89,21 +89,6 @@ describe('createAttendance', () => {
     expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 
-  it('allows attendance for an employee who is on leave', async () => {
-    vi.mocked(employeeRepository.findById).mockResolvedValue({
-      ...activeEmployee,
-      employmentStatus: 'ON_LEAVE',
-    } as never);
-
-    await createAttendance({
-      employeeId: 'employee-1',
-      date: '2026-07-19',
-      events: [{ type: 'CLOCK_IN', occurredAt: new Date('2026-07-19T08:00:00.000Z'), reason: 'x' }],
-    });
-
-    expect(prisma.$transaction).toHaveBeenCalled();
-  });
-
   it('throws BadRequestError when the employee user account is not active', async () => {
     vi.mocked(employeeRepository.findById).mockResolvedValue({
       ...activeEmployee,

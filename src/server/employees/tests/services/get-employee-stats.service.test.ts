@@ -14,25 +14,22 @@ beforeEach(() => {
 });
 
 describe('getEmployeeStats', () => {
-  it('returns total, active, on-leave, and inactive employee counts', async () => {
+  it('returns total, active, and inactive employee counts', async () => {
     vi.mocked(employeeRepository.count).mockResolvedValueOnce(10);
     vi.mocked(employeeRepository.count).mockResolvedValueOnce(7);
-    vi.mocked(employeeRepository.count).mockResolvedValueOnce(2);
-    vi.mocked(employeeRepository.count).mockResolvedValueOnce(1);
+    vi.mocked(employeeRepository.count).mockResolvedValueOnce(3);
 
     const result = await getEmployeeStats();
 
     expect(employeeRepository.count).toHaveBeenNthCalledWith(1);
     expect(employeeRepository.count).toHaveBeenNthCalledWith(2, { employmentStatus: 'ACTIVE' });
-    expect(employeeRepository.count).toHaveBeenNthCalledWith(3, { employmentStatus: 'ON_LEAVE' });
-    expect(employeeRepository.count).toHaveBeenNthCalledWith(4, {
+    expect(employeeRepository.count).toHaveBeenNthCalledWith(3, {
       employmentStatus: 'TERMINATED',
     });
     expect(result).toEqual({
       totalEmployees: 10,
       activeEmployees: 7,
-      onLeaveEmployees: 2,
-      inactiveEmployees: 1,
+      inactiveEmployees: 3,
     });
   });
 });

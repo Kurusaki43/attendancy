@@ -36,7 +36,7 @@ export default async function EmployeesPage({ searchParams }: EmployeesPageProps
 
   const stats = statsResult.success
     ? statsResult.data
-    : { totalEmployees: 0, activeEmployees: 0, onLeaveEmployees: 0, inactiveEmployees: 0 };
+    : { totalEmployees: 0, activeEmployees: 0, inactiveEmployees: 0 };
 
   const departments = departmentsResult.success
     ? departmentsResult.data.departments.map((department) => ({

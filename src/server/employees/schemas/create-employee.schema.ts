@@ -47,7 +47,7 @@ export const createEmployeeSchema = z.object({
   positionId: z.string().trim().optional(),
   managerId: z.string().trim().optional(),
 
-  employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).default('ACTIVE'),
+  employmentStatus: z.enum(['ACTIVE', 'TERMINATED']).default('ACTIVE'),
 
   avatar: z
     .string()

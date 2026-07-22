@@ -119,7 +119,7 @@ const EMPLOYEES = [
     role: ROLE_NAMES.EMPLOYEE,
     departmentName: 'Information Technology',
     positionTitle: 'DevOps Engineer',
-    employmentStatus: 'ON_LEAVE',
+    employmentStatus: 'TERMINATED',
   },
   {
     employeeCode: 'EMP-010',

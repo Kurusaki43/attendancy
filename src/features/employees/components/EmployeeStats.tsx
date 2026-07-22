@@ -1,4 +1,4 @@
-import { UserRoundCheck, UserRoundMinus, UserRoundX, Users } from 'lucide-react';
+import { UserRoundCheck, UserRoundX, Users } from 'lucide-react';
 
 import { StatCard } from '@/components/shared/StatCard';
 import type { GetEmployeeStatsActionResult } from '@/server/employees/types/action-results';
@@ -31,13 +31,6 @@ export function EmployeeStats({ stats }: EmployeeStatsProps) {
       iconClassName: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
     },
     {
-      label: 'On Leave',
-      value: stats.onLeaveEmployees,
-      caption: percentOfTotal(stats.onLeaveEmployees, totalEmployees),
-      icon: UserRoundMinus,
-      iconClassName: 'bg-orange-500/15 text-orange-600 dark:text-orange-400',
-    },
-    {
       label: 'Inactive Employees',
       value: stats.inactiveEmployees,
       caption: percentOfTotal(stats.inactiveEmployees, totalEmployees),
@@ -47,7 +40,7 @@ export function EmployeeStats({ stats }: EmployeeStatsProps) {
   ];
 
   return (
-    <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map((stat) => (
         <StatCard key={stat.label} {...stat} />
       ))}

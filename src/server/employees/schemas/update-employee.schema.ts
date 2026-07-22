@@ -58,7 +58,7 @@ export const updateEmployeeSchema = z.object({
   positionId: z.string().trim().nullable().optional(),
   managerId: z.string().trim().nullable().optional(),
 
-  employmentStatus: z.enum(['ACTIVE', 'ON_LEAVE', 'TERMINATED']).optional(),
+  employmentStatus: z.enum(['ACTIVE', 'TERMINATED']).optional(),
 
   avatar: z
     .string()

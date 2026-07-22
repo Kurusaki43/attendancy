@@ -26,7 +26,7 @@ export type EmployeeResult = {
   gender: 'MALE' | 'FEMALE' | null;
   birthDate: Date | null;
   address: string | null;
-  employmentStatus: 'ACTIVE' | 'ON_LEAVE' | 'TERMINATED';
+  employmentStatus: 'ACTIVE' | 'TERMINATED';
   createdAt: Date;
   updatedAt: Date;
   user: EmployeeUserResult;
@@ -65,6 +65,5 @@ export type GenerateEmployeeCodeActionResult = {
 export type GetEmployeeStatsActionResult = {
   totalEmployees: number;
   activeEmployees: number;
-  onLeaveEmployees: number;
   inactiveEmployees: number;
 };
