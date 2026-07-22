@@ -4,6 +4,12 @@ import { prisma } from '@/lib/prisma';
 // icon/color values mirror the picker options in
 // src/features/departments/lib/department-visuals.ts. Child departments reuse their parent's
 // color so the hierarchy reads as a color family in the UI, distinguished by icon.
+//
+// Employees can only be assigned to leaf departments (see seed-employees.ts), so every
+// top-level department that needs its own general headcount (Engineering, Information
+// Technology, Human Resources, Finance, Marketing) gets one plain leaf child — Software
+// Engineering, IT Support, HR Operations, Accounting, Marketing Operations — alongside its
+// more specialized children, instead of holding employees on the parent row itself.
 const DEPARTMENTS = [
   {
     name: 'Engineering',
@@ -86,6 +92,15 @@ const DEPARTMENTS = [
     isActive: true,
   },
   {
+    name: 'Software Engineering',
+    code: 'SWE',
+    description: 'Core product engineering — application development and platform infrastructure.',
+    icon: 'code-2',
+    color: 'bg-blue-500',
+    isActive: true,
+    parentName: 'Engineering',
+  },
+  {
     name: 'Quality Assurance',
     code: 'QA',
     description: 'Quality control, testing, audits, and continuous improvement.',
@@ -113,6 +128,15 @@ const DEPARTMENTS = [
     parentName: 'Engineering',
   },
   {
+    name: 'IT Support',
+    code: 'ITSUP',
+    description: 'Helpdesk, hardware provisioning, and day-to-day infrastructure operations.',
+    icon: 'settings',
+    color: 'bg-slate-500',
+    isActive: true,
+    parentName: 'Information Technology',
+  },
+  {
     name: 'Cybersecurity',
     code: 'SEC',
     description: 'Information security, risk management, incident response, and compliance.',
@@ -122,6 +146,15 @@ const DEPARTMENTS = [
     parentName: 'Information Technology',
   },
   {
+    name: 'HR Operations',
+    code: 'HROPS',
+    description: 'Core HR administration, recruitment, employee relations, and benefits.',
+    icon: 'users',
+    color: 'bg-emerald-500',
+    isActive: true,
+    parentName: 'Human Resources',
+  },
+  {
     name: 'Training & Development',
     code: 'TD',
     description: 'Employee learning, professional development, and organizational training.',
@@ -129,6 +162,15 @@ const DEPARTMENTS = [
     color: 'bg-emerald-500',
     isActive: true,
     parentName: 'Human Resources',
+  },
+  {
+    name: 'Accounting',
+    code: 'ACCT',
+    description: 'General ledger, accounts payable/receivable, and financial analysis.',
+    icon: 'briefcase',
+    color: 'bg-amber-500',
+    isActive: true,
+    parentName: 'Finance',
   },
   {
     name: 'Procurement',
@@ -147,6 +189,15 @@ const DEPARTMENTS = [
     color: 'bg-amber-500',
     isActive: false,
     parentName: 'Finance',
+  },
+  {
+    name: 'Marketing Operations',
+    code: 'MKTOPS',
+    description: 'Campaign execution, marketing programs, and channel management.',
+    icon: 'megaphone',
+    color: 'bg-pink-500',
+    isActive: true,
+    parentName: 'Marketing',
   },
   {
     name: 'Communications',
