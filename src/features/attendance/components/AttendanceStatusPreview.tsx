@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, Palmtree, PartyPopper, XCircle } from 'lucide-react';
 
+import type { AttendanceStatus } from '@/features/attendance/lib/attendance-status';
 import {
   ATTENDANCE_STATUS_DOT_CLASSES,
   ATTENDANCE_STATUS_LABELS,
@@ -8,18 +9,22 @@ import {
 } from '@/features/attendance/lib/attendance-status';
 import { cn } from '@/lib/utils';
 
-type PreviewStatus = 'PRESENT' | 'ABSENT';
-
-const STATUS_PREVIEW_ICONS: Record<PreviewStatus, typeof CheckCircle2> = {
+const STATUS_PREVIEW_ICONS: Record<AttendanceStatus, LucideIcon> = {
   PRESENT: CheckCircle2,
   ABSENT: XCircle,
+  ON_LEAVE: Palmtree,
+  HOLIDAY: PartyPopper,
 };
 
 type AttendanceStatusPreviewProps = {
-  status: PreviewStatus;
+  status: AttendanceStatus;
+  caption?: string;
 };
 
-export function AttendanceStatusPreview({ status }: AttendanceStatusPreviewProps) {
+export function AttendanceStatusPreview({
+  status,
+  caption = 'This attendance will be marked as:',
+}: AttendanceStatusPreviewProps) {
   const Icon = STATUS_PREVIEW_ICONS[status];
 
   return (
@@ -38,7 +43,7 @@ export function AttendanceStatusPreview({ status }: AttendanceStatusPreviewProps
         <Icon className="size-5" />
       </span>
       <div className="space-y-0.5">
-        <p className="text-muted-foreground text-xs">This attendance will be marked as:</p>
+        <p className="text-muted-foreground text-xs">{caption}</p>
         <p className="text-sm font-semibold">{ATTENDANCE_STATUS_LABELS[status]}</p>
       </div>
     </div>

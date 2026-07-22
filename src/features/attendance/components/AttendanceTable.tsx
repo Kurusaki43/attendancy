@@ -1,6 +1,6 @@
 'use client';
 
-import { Building2, PencilIcon, SearchX } from 'lucide-react';
+import { Building2, Cpu, EyeIcon, PencilIcon, SearchX, User } from 'lucide-react';
 import Link from 'next/link';
 
 import ClearFiltersButton from '@/components/shared/data-table/ClearFilterButton';
@@ -15,7 +15,6 @@ import {
   ATTENDANCE_STATUS_BADGE_CLASSES,
   ATTENDANCE_STATUS_DOT_CLASSES,
   ATTENDANCE_STATUS_LABELS,
-  formatWorkedMinutes,
 } from '@/features/attendance/lib/attendance-status';
 import { UserAvatar } from '@/features/dashboard/components/UserAvatar';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
@@ -23,6 +22,8 @@ import { DEPARTMENT_ICON_MAP } from '@/features/departments/lib/department-visua
 import { cn } from '@/lib/utils';
 import type { AttendanceEmployeeResult, AttendanceResult } from '@/server/attendance/types';
 import { DATE_FORMAT, formatDate, TIME_FORMAT } from '@/shared/utils/format-date';
+
+import { formatWorkedMinutes } from '../lib/format-worked-date';
 
 function DepartmentCell({ department }: { department: AttendanceEmployeeResult['department'] }) {
   if (!department) {
@@ -82,6 +83,28 @@ function CompletionBadge({
   );
 }
 
+function SourceBadge({
+  hasManualChanges,
+}: {
+  hasManualChanges: AttendanceResult['hasManualChanges'];
+}) {
+  if (hasManualChanges) {
+    return (
+      <Badge className="rounded-sm bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">
+        <User className="size-3" />
+        Manual
+      </Badge>
+    );
+  }
+
+  return (
+    <Badge className="rounded-sm bg-slate-500/15 text-slate-700 dark:bg-slate-500/20 dark:text-slate-400">
+      <Cpu className="size-3" />
+      Automatic
+    </Badge>
+  );
+}
+
 function RowActions({ attendance }: { attendance: AttendanceResult }) {
   const isEditable = attendance.status !== 'ON_LEAVE' && attendance.status !== 'HOLIDAY';
 
@@ -89,6 +112,14 @@ function RowActions({ attendance }: { attendance: AttendanceResult }) {
     <TableRowActions
       label={`Actions for ${attendance.employee.user.firstName} ${attendance.employee.user.lastName}`}
     >
+      <DropdownMenuItem
+        className="cursor-pointer"
+        render={<Link href={`/dashboard/attendance/${attendance.id}`} />}
+      >
+        <EyeIcon />
+        Preview
+      </DropdownMenuItem>
+
       {isEditable ? (
         <DropdownMenuItem
           className="cursor-pointer"
@@ -203,6 +234,13 @@ function buildColumns(userLocale: UserLocale): ColumnDef<AttendanceResult>[] {
       key: 'completion',
       header: 'Completion',
       cell: (row) => <CompletionBadge completionStatus={row.completionStatus} />,
+      headerClassName: 'text-center',
+      cellClassName: 'text-center',
+    },
+    {
+      key: 'source',
+      header: 'Source',
+      cell: (row) => <SourceBadge hasManualChanges={row.hasManualChanges} />,
       headerClassName: 'text-center',
       cellClassName: 'text-center',
     },

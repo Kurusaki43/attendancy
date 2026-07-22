@@ -15,12 +15,18 @@ const COMPLETION_PREVIEW_ICONS: Record<AttendanceCompletionStatus, typeof CheckC
 
 type AttendanceCompletionPreviewProps = {
   status: AttendanceCompletionStatus;
+  caption?: string;
 };
 
 /** Read-only preview of the auto-computed completion status — derived from events, not
  * user-selectable. */
-export function AttendanceCompletionPreview({ status }: AttendanceCompletionPreviewProps) {
+export function AttendanceCompletionPreview({ status, caption }: AttendanceCompletionPreviewProps) {
   const Icon = COMPLETION_PREVIEW_ICONS[status];
+  const resolvedCaption =
+    caption ??
+    (status === 'INCOMPLETE'
+      ? 'Missing a Clock Out — this will need HR follow-up.'
+      : 'Every clock in has a matching clock out.');
 
   return (
     <div
@@ -38,11 +44,7 @@ export function AttendanceCompletionPreview({ status }: AttendanceCompletionPrev
         <Icon className="size-5" />
       </span>
       <div>
-        <p className="text-muted-foreground text-xs">
-          {status === 'INCOMPLETE'
-            ? 'Missing a Clock Out — this will need HR follow-up.'
-            : 'Every clock in has a matching clock out.'}
-        </p>
+        <p className="text-muted-foreground text-xs">{resolvedCaption}</p>
         <p className="text-sm font-semibold">{ATTENDANCE_COMPLETION_STATUS_LABELS[status]}</p>
       </div>
     </div>

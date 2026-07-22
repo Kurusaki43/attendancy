@@ -64,6 +64,8 @@ export function AttendanceUserPreview({
     );
   }
 
+  const subtitle = [employee.position, employee.department].filter(Boolean).join(' • ');
+
   return (
     <div className={cn('flex items-center gap-3', className)}>
       <UserAvatar
@@ -77,7 +79,10 @@ export function AttendanceUserPreview({
         <p className="truncate text-sm font-medium">
           {employee.firstName} {employee.lastName}
         </p>
-        <p className="text-muted-foreground truncate text-xs">{employee.employeeCode}</p>
+        <p className="text-muted-foreground truncate text-xs">
+          {employee.employeeCode}
+          {subtitle && ` • ${subtitle}`}
+        </p>
       </div>
     </div>
   );
