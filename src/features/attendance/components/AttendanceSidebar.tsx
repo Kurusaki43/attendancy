@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Clock3, Info } from 'lucide-react';
+import { Calendar, Clock3, Cpu, Info, User } from 'lucide-react';
 import type { Control } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 
@@ -13,17 +13,19 @@ import {
   combineDateAndTime,
   computeFormSummary,
   type CreateAttendanceFormValues,
+  haveAttendanceEventsChanged,
   type UpdateAttendanceFormValues,
 } from '@/features/attendance/lib/attendance-form';
 import {
   ATTENDANCE_COMPLETION_STATUS_BADGE_CLASSES,
   ATTENDANCE_COMPLETION_STATUS_LABELS,
-  formatWorkedMinutes,
 } from '@/features/attendance/lib/attendance-status';
 import { useUserLocale } from '@/features/dashboard/lib/user-locale-context';
 import { cn } from '@/lib/utils';
 import type { AttendanceResult } from '@/server/attendance/types/action-results';
 import { DATE_FORMAT, formatDate } from '@/shared/utils/format-date';
+
+import { formatWorkedMinutes } from '../lib/format-worked-date';
 
 const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -52,6 +54,11 @@ export function AttendanceSidebar(props: AttendanceSidebarProps) {
   const events = useWatch({ control, name: 'events' }) ?? [];
   const hasEvents = events.length > 0;
   const summary = computeFormSummary(resolvedDate, events);
+
+  const isManualSource = isUpdateMode
+    ? haveAttendanceEventsChanged(props.attendance.events ?? [], events) ||
+      props.attendance.hasManualChanges
+    : true;
 
   const timelineEvents = resolvedDate
     ? [...events]
@@ -133,10 +140,18 @@ export function AttendanceSidebar(props: AttendanceSidebarProps) {
         </div>
 
         <div className="flex items-center justify-between border-t pt-4">
-          <p className="text-muted-foreground text-xs font-medium tracking-wide">Method</p>
-          <Badge variant="ghost" className="bg-primary/10 text-primary rounded-sm">
-            Manual
-          </Badge>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide">Source</p>
+          {isManualSource ? (
+            <Badge className="rounded-sm bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">
+              <User className="size-3" />
+              Manual
+            </Badge>
+          ) : (
+            <Badge className="rounded-sm bg-slate-500/15 text-slate-700 dark:bg-slate-500/20 dark:text-slate-400">
+              <Cpu className="size-3" />
+              Automatic
+            </Badge>
+          )}
         </div>
 
         <div className="bg-primary/5 border-border/60 flex items-start gap-2.5 rounded-md border p-3 text-xs">

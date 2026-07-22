@@ -2,7 +2,7 @@
 
 import { Info, LogIn, LogOut, Plus, Trash2 } from 'lucide-react';
 import type { Control } from 'react-hook-form';
-import { useFieldArray, useFormState } from 'react-hook-form';
+import { useFieldArray, useFormState, useWatch } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -22,21 +22,51 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type {
-  CreateAttendanceFormValues,
-  UpdateAttendanceFormValues,
+import { AttendanceMethodBadge } from '@/features/attendance/components/AttendanceMethodBadge';
+import {
+  type CreateAttendanceFormValues,
+  toTimeInputValue,
+  type UpdateAttendanceFormValues,
 } from '@/features/attendance/lib/attendance-form';
+import type { AttendanceMethod } from '@/features/attendance/lib/attendance-status';
+import type { AttendanceEventResult } from '@/server/attendance/types/action-results';
 
 type AttendanceEventsTableProps = {
   control: Control<CreateAttendanceFormValues | UpdateAttendanceFormValues>;
   isPending: boolean;
   mode: 'create' | 'update';
+  originalEvents?: AttendanceEventResult[];
 };
 
-export function AttendanceEventsTable({ control, isPending, mode }: AttendanceEventsTableProps) {
+export function AttendanceEventsTable({
+  control,
+  isPending,
+  mode,
+  originalEvents = [],
+}: AttendanceEventsTableProps) {
   const { fields, append, remove } = useFieldArray({ control, name: 'events' });
   const { errors } = useFormState({ control });
   const eventsError = errors.events?.message as string | undefined;
+  const originalEventsById = new Map(originalEvents.map((event) => [event.id, event]));
+  const liveEvents = useWatch({ control, name: 'events' }) ?? [];
+
+  // Method reflects the live edit state: an event keeps its original method (e.g. QR) only as
+  // long as its type/time/reason still match what's stored — the moment the user changes any of
+  // them it becomes MANUAL, matching what actually happens on save.
+  const getCurrentMethod = (index: number): AttendanceMethod => {
+    const liveEvent = liveEvents[index];
+    const original = liveEvent?.id ? originalEventsById.get(liveEvent.id) : undefined;
+
+    if (!original) return 'MANUAL';
+
+    const normalizedReason = liveEvent.reason?.trim() || null;
+    const isUnchanged =
+      original.type === liveEvent.type &&
+      toTimeInputValue(original.occurredAt) === liveEvent.time &&
+      (original.reason ?? null) === normalizedReason;
+
+    return isUnchanged ? original.method : 'MANUAL';
+  };
 
   const handleAddEvent = () => {
     const lastType = fields.length > 0 ? fields[fields.length - 1].type : undefined;
@@ -79,6 +109,7 @@ export function AttendanceEventsTable({ control, isPending, mode }: AttendanceEv
               <TableHead className="w-10">#</TableHead>
               <TableHead className="min-w-32 text-center">Type</TableHead>
               <TableHead className="min-w-32 text-center">Time</TableHead>
+              <TableHead className="text-center">Method</TableHead>
               <TableHead className="min-w-48 text-center">Notes (Optional)</TableHead>
               <TableHead className="text-center">Action</TableHead>
             </TableRow>
@@ -86,104 +117,111 @@ export function AttendanceEventsTable({ control, isPending, mode }: AttendanceEv
           <TableBody>
             {fields.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-muted-foreground p-4 text-center text-xs">
+                <TableCell colSpan={6} className="text-muted-foreground p-4 text-center text-xs">
                   Start adding events
                 </TableCell>
               </TableRow>
             )}
             {fields.length > 0 &&
-              fields.map((field, index) => (
-                <TableRow key={field.id}>
-                  <TableCell className="text-muted-foreground">{index + 1}</TableCell>
-                  <TableCell>
-                    <FormField
-                      control={control}
-                      name={`events.${index}.type`}
-                      render={({ field: typeField }) => (
-                        <Select
-                          value={typeField.value}
-                          onValueChange={typeField.onChange}
-                          disabled={isPending}
-                        >
-                          <SelectTrigger
-                            className={`h-8! w-36 shadow-none ${field.type === 'CLOCK_IN' ? 'bg-green-50/50' : 'bg-red-50/50'}`}
+              fields.map((field, index) => {
+                const currentMethod = getCurrentMethod(index);
+
+                return (
+                  <TableRow key={field.id}>
+                    <TableCell className="text-muted-foreground">{index + 1}</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={control}
+                        name={`events.${index}.type`}
+                        render={({ field: typeField }) => (
+                          <Select
+                            value={typeField.value}
+                            onValueChange={typeField.onChange}
+                            disabled={isPending}
                           >
-                            <SelectValue>
-                              {(selected: string) =>
-                                selected === 'CLOCK_IN' ? (
-                                  <span className="flex items-center gap-1.5 font-medium text-green-600 dark:text-green-400">
-                                    <LogIn className="size-3" />
-                                    Clock In
-                                  </span>
-                                ) : (
-                                  <span className="flex items-center gap-1.5 font-medium text-red-600 dark:text-red-400">
-                                    <LogOut className="size-3" />
-                                    Clock Out
-                                  </span>
-                                )
-                              }
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="CLOCK_IN">Clock In</SelectItem>
-                            <SelectItem value="CLOCK_OUT">Clock Out</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <FormField
-                      control={control}
-                      name={`events.${index}.time`}
-                      render={({ field: timeField }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              type="time"
-                              {...timeField}
-                              disabled={isPending}
-                              className="h-8 min-w-32 text-xs font-light shadow-none"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <FormField
-                      control={control}
-                      name={`events.${index}.reason`}
-                      render={({ field: reasonField }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              placeholder="Optional notes"
-                              {...reasonField}
-                              disabled={isPending}
-                              className="h-8 text-sm shadow-none"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      disabled={isPending}
-                      onClick={() => remove(index)}
-                      aria-label="Remove event"
-                    >
-                      <Trash2 className="text-destructive size-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                            <SelectTrigger
+                              className={`h-8! w-36 shadow-none ${field.type === 'CLOCK_IN' ? 'bg-green-50/50' : 'bg-red-50/50'}`}
+                            >
+                              <SelectValue>
+                                {(selected: string) =>
+                                  selected === 'CLOCK_IN' ? (
+                                    <span className="flex items-center gap-1.5 font-medium text-green-600 dark:text-green-400">
+                                      <LogIn className="size-3" />
+                                      Clock In
+                                    </span>
+                                  ) : (
+                                    <span className="flex items-center gap-1.5 font-medium text-red-600 dark:text-red-400">
+                                      <LogOut className="size-3" />
+                                      Clock Out
+                                    </span>
+                                  )
+                                }
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="CLOCK_IN">Clock In</SelectItem>
+                              <SelectItem value="CLOCK_OUT">Clock Out</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={control}
+                        name={`events.${index}.time`}
+                        render={({ field: timeField }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="time"
+                                {...timeField}
+                                disabled={isPending}
+                                className="h-8 min-w-32 text-xs font-light shadow-none"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <AttendanceMethodBadge method={currentMethod} />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={control}
+                        name={`events.${index}.reason`}
+                        render={({ field: reasonField }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                placeholder="Optional notes"
+                                {...reasonField}
+                                disabled={isPending}
+                                className="h-8 text-sm shadow-none"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        disabled={isPending}
+                        onClick={() => remove(index)}
+                        aria-label="Remove event"
+                      >
+                        <Trash2 className="text-destructive size-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </div>

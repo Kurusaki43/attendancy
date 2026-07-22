@@ -39,6 +39,43 @@ export function toTimeInputValue(date: Date | null | undefined): string {
   return `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}`;
 }
 
+type OriginalAttendanceEvent = {
+  id: string;
+  type: 'CLOCK_IN' | 'CLOCK_OUT';
+  occurredAt: Date;
+  reason: string | null;
+};
+
+/**
+ * True if the live form events differ from the original record in any way (added, removed, or
+ * edited) — mirrors the server's own change detection so the UI can preview whether saving now
+ * would flip the record's source to Manual.
+ */
+export function haveAttendanceEventsChanged(
+  originalEvents: OriginalAttendanceEvent[],
+  liveEvents: EventFormValues[],
+): boolean {
+  const originalById = new Map(originalEvents.map((event) => [event.id, event]));
+  const liveIds = new Set(liveEvents.flatMap((event) => (event.id ? [event.id] : [])));
+
+  const hasRemoved = originalEvents.some((event) => !liveIds.has(event.id));
+  const hasAdded = liveEvents.some((event) => !event.id);
+  const hasEdited = liveEvents.some((event) => {
+    if (!event.id) return false;
+    const original = originalById.get(event.id);
+    if (!original) return true;
+
+    const normalizedReason = event.reason?.trim() || null;
+    return (
+      original.type !== event.type ||
+      toTimeInputValue(original.occurredAt) !== event.time ||
+      (original.reason ?? null) !== normalizedReason
+    );
+  });
+
+  return hasRemoved || hasAdded || hasEdited;
+}
+
 export type FormAttendanceSummary = {
   firstClockIn: Date | null;
   lastClockOut: Date | null;

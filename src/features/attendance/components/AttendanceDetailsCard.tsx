@@ -114,7 +114,12 @@ export function AttendanceDetailsCard(props: AttendanceDetailsCardProps) {
         </div>
 
         <div className="border-border/60 border-t pt-6">
-          <AttendanceEventsTable control={control} isPending={isPending} mode={mode} />
+          <AttendanceEventsTable
+            control={control}
+            isPending={isPending}
+            mode={mode}
+            originalEvents={isUpdateMode ? (props.attendance.events ?? []) : []}
+          />
         </div>
       </CardContent>
 
