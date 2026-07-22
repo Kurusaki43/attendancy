@@ -1,7 +1,7 @@
 import { BadgeCheck, CircleAlert, Clock3, LogIn, LogOut } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { formatWorkedMinutes } from '@/features/attendance/lib/attendance-status';
+import { formatWorkedMinutes } from '@/features/attendance/lib/format-worked-date';
 import { cn } from '@/lib/utils';
 import type { ScanAttendanceActionResult } from '@/server/attendance/types';
 import { formatDate, TIME_FORMAT } from '@/shared/utils/format-date';

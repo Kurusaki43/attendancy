@@ -61,11 +61,20 @@ export const ATTENDANCE_COMPLETION_STATUS_PANEL_CLASSES: Record<
   INCOMPLETE: 'border-amber-500/20 bg-amber-500/10',
 };
 
-export function formatWorkedMinutes(workedMinutes: number) {
-  const hours = Math.floor(workedMinutes / 60);
-  const minutes = workedMinutes % 60;
+export const ATTENDANCE_METHODS = ['QR', 'FACE', 'FINGERPRINT', 'MANUAL'] as const;
 
-  if (hours === 0) return `${minutes}m`;
+export type AttendanceMethod = (typeof ATTENDANCE_METHODS)[number];
 
-  return `${hours}h ${minutes}m`;
-}
+export const ATTENDANCE_METHOD_LABELS: Record<AttendanceMethod, string> = {
+  QR: 'QR Scan',
+  FACE: 'Face Scan',
+  FINGERPRINT: 'Fingerprint',
+  MANUAL: 'Manual',
+};
+
+export const ATTENDANCE_METHOD_BADGE_CLASSES: Record<AttendanceMethod, string> = {
+  QR: 'bg-blue-500/15 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400',
+  FACE: 'bg-purple-500/15 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400',
+  FINGERPRINT: 'bg-cyan-500/15 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400',
+  MANUAL: 'bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400',
+};
